@@ -1,6 +1,5 @@
 
 package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import com.grupo01.softwarenominas.CapaEntidad.Contrato;
 import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
 import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;

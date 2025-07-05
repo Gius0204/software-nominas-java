@@ -5,10 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Usuario
- */
 public class CConexion {
     String usuario = "user123";
     String contrasenia = "123";

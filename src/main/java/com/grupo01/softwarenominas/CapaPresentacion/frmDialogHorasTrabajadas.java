@@ -1,23 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaPresentacion;
 
 import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 
 import com.grupo01.softwarenominas.CapaEntidad.Contrato;
 
-/**
- *
- * @author Usuario
- */
 public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
 
-    /**
-     * Creates new form frmDialogHorasTrabajadas
-     */
-    
     ContratoDAO contratoDao = new ContratoDAO();
 
 
