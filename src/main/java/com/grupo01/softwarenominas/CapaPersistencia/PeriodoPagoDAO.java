@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaPersistencia;
 import com.grupo01.softwarenominas.CapaConexion.CConexion;
 import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,5 +34,4 @@ public class PeriodoPagoDAO {
     }
     return p;
 }
-
 }

@@ -14,9 +14,7 @@ public class CConexion {
     String contrasenia = "123";
     String bd="NominasDB";
     String ip="localhost";
-    String puerto="1433";
-    
-    
+    String puerto="1433"; 
     String cadena="jdbc:sqlserver://"+ip+":"+puerto+"/"+bd;
     
     public Connection establecerConexion(){
@@ -25,9 +23,7 @@ public class CConexion {
                     +"user="+usuario+";"
                     +"password="+contrasenia+";"
                     +"encrypt=true;trustServerCertificate=true;";
-        try{
-            //String cadena="jdbc:sqlserver://"+ip+":"+"databaseName="+bd;
-            
+        try{         
             Connection conectar = DriverManager.getConnection(conexionUrl);
             System.out.println("Se conectó correctamente a la base de datos");
             return conectar;

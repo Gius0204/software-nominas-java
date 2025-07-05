@@ -2,8 +2,6 @@ package com.grupo01.softwarenominas.CapaNegocio;
 
 import com.grupo01.softwarenominas.CapaEntidad.Nomina2;
 import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina2;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
 import com.grupo01.softwarenominas.CapaPersistencia.NominaDAO;
 import java.util.Date;

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaNegocio.NominaNegocio;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,8 +9,6 @@ import java.util.Date;
  */
 public class NominaNegocioCalculo {
     private static final double SUELDO_MINIMO_2025 = 1025.00;
-    //Calculos como SueldoPorHora
-    // === UTILITY ===
     private static double redondear(double valor) {
         return Math.round(valor * 100.0) / 100.0;
     }
@@ -29,9 +24,6 @@ public class NominaNegocioCalculo {
     public static int calcularHorasNoCompletadas(int horasTrabajadas, int horasTotales) {
         return Math.max(0, horasTotales - horasTrabajadas);
     }
-    
-    //Todos los metodos para calcular Ingresos
-    // === INGRESOS ===
 
     public static double calcularPagoHorasExtras(double sueldoBase, int horasExtras, int horasMensuales) {
         double pagoHora = calcularSueldoPorHora(sueldoBase, horasMensuales);
@@ -44,38 +36,17 @@ public class NominaNegocioCalculo {
             return redondear((primeras6 * pagoHora * 1.25) + (restantes * pagoHora * 1.35)); // 35% adicional
         }
     }
-
-    //public static double calcularGratificacionLegal(double sueldoBase, Date fechaInicioContrato, Date fechaFinPeriodo) {
-    //    Calendar ini = Calendar.getInstance();
-    //    ini.setTime(fechaInicioContrato);
-
-    //    Calendar fin = Calendar.getInstance();
-    //    fin.setTime(fechaFinPeriodo); // se usa FechaFin del periodo para mayor precisión
-
-    //    int meses = (fin.get(Calendar.YEAR) - ini.get(Calendar.YEAR)) * 12 +
-    //                (fin.get(Calendar.MONTH) - ini.get(Calendar.MONTH));
-
-    //    if (meses < 0) meses = 0;
-
-    //    if (meses >= 6) {
-    //        return redondear(sueldoBase * 0.09);
-    //    } else {
-    //        return redondear((sueldoBase * 0.09 * meses) / 6.0);
-    //    }
-    //}
     
     public static double calcularGratificacionLegal(double sueldoBase, Date fechaInicioContrato, Date fechaFinPeriodo, String tipoSeguro) {
         Calendar finPeriodo = Calendar.getInstance();
         finPeriodo.setTime(fechaFinPeriodo);
 
-        int mesFin = finPeriodo.get(Calendar.MONTH) + 1; // Enero = 0 en Java, por eso +1
+        int mesFin = finPeriodo.get(Calendar.MONTH) + 1;
 
-        // Verificar si es Julio (7) o Diciembre (12)
         if (mesFin != 7 && mesFin != 12) {
-            return 0.0; // No corresponde gratificación en otros meses
+            return 0.0;
         }
 
-        // Determinar semestre correspondiente
         Calendar inicioContrato = Calendar.getInstance();
         inicioContrato.setTime(fechaInicioContrato);
 
@@ -83,28 +54,20 @@ public class NominaNegocioCalculo {
         Calendar finSemestre = Calendar.getInstance();
 
         if (mesFin == 7) {
-            // Semestre Enero-Junio
             inicioSemestre.set(finPeriodo.get(Calendar.YEAR), Calendar.JANUARY, 1);
             finSemestre.set(finPeriodo.get(Calendar.YEAR), Calendar.JUNE, 30);
         } else {
-            // Semestre Julio-Diciembre
             inicioSemestre.set(finPeriodo.get(Calendar.YEAR), Calendar.JULY, 1);
             finSemestre.set(finPeriodo.get(Calendar.YEAR), Calendar.DECEMBER, 31);
         }
-
-        // Ajustar inicio del semestre si el contrato empezó después
         if (inicioContrato.after(inicioSemestre)) {
             inicioSemestre = inicioContrato;
         }
-
-        // Calcular meses completos trabajados en el semestre
         int meses = (finSemestre.get(Calendar.YEAR) - inicioSemestre.get(Calendar.YEAR)) * 12 +
                     (finSemestre.get(Calendar.MONTH) - inicioSemestre.get(Calendar.MONTH)) + 1;
 
         if (meses < 0) meses = 0;
         if (meses > 6) meses = 6;
-
-        // Calcular gratificación proporcional
         double gratificacion = (sueldoBase * meses) / 6.0;
         
         double porcentajeBonificacion = 0.0;
@@ -113,9 +76,7 @@ public class NominaNegocioCalculo {
             porcentajeBonificacion = 0.09;
         } else if ("EPS".equalsIgnoreCase(tipoSeguro)) {
             porcentajeBonificacion = 0.0675;
-        } 
-
-        // Bonificación extraordinaria
+        }
         double bonificacionExtra = gratificacion * porcentajeBonificacion;
 
         return redondear(gratificacion + bonificacionExtra);
@@ -129,9 +90,6 @@ public class NominaNegocioCalculo {
     public static double calcularCTS(double sueldoBase, double asignacionFamiliar, double gratificacionLegal) {
         return 0.5 * ((gratificacionLegal / 6.0) + sueldoBase + asignacionFamiliar);
     }
-    
-    //Todos los metodos para calcular Descuentos
-    // === DESCUENTOS ===
 
     public static double calcularDescuentoHorasNoCompletadas(double sueldoBase, int horasNoCompletadas, int horasMensuales) {
         double pagoHora = calcularSueldoPorHora(sueldoBase, horasMensuales);
@@ -153,17 +111,13 @@ public class NominaNegocioCalculo {
     }
 
     public static double calcularDescuentoAFP(double sueldoBase) {
-        return redondear(sueldoBase * 0.10); // Comisión promedio (ONP podría ir por separado)
+        return redondear(sueldoBase * 0.10);
     }
 
     public static double calcularRenta(double sueldoBase, boolean esExterno) {
-        double tasa = esExterno ? 0.08 : 0.05; // 8% 4ta categoría, 5% 5ta categoría
+        double tasa = esExterno ? 0.08 : 0.05;
         return redondear(sueldoBase * tasa);
     }
-        
-    
-    //Metodo para calcular IngresoTotal, DescuentoTotal, SueldoNeto
-    // === TOTALES ===
 
     public static double calcularTotalIngresos(double sueldoBase, double pagoHorasExtras, double gratificacion,
                                                double asignacion, double cts) {

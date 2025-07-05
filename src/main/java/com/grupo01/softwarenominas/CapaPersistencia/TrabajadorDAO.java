@@ -39,16 +39,13 @@ public class TrabajadorDAO {
             if (tieneResultados) {
                 try (ResultSet rs = stmt.getResultSet()) {
 
-                    // Obtener columnas dinámicamente
                     ResultSetMetaData metaData = rs.getMetaData();
                     int columnas = metaData.getColumnCount();
 
-                    // Agregar nombres de columnas
                     for (int i = 1; i <= columnas; i++) {
                         modelo.addColumn(metaData.getColumnLabel(i));
                     }
 
-                    // Agregar filas
                     while (rs.next()) {
                         Object[] fila = new Object[columnas];
                         for (int i = 0; i < columnas; i++) {
@@ -62,15 +59,6 @@ public class TrabajadorDAO {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al obtener trabajadores:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        //modelo.addColumn("Nombres");
-        //modelo.addColumn("Apellido Paterno");
-        //modelo.addColumn("Apellido Materno");
-        //modelo.addColumn("Tipo Documento");
-        //modelo.addColumn("Documento de Identidad");
-        //modelo.addColumn("Telefono");
-        //modelo.addColumn("Correo");
-        //modelo.addColumn("Direccion");
     }
 
     public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {
@@ -79,13 +67,11 @@ public class TrabajadorDAO {
         DefaultTableModel modelo = new DefaultTableModel();
         paramTablaTrabajadores.setModel(modelo);
 
-        // Definir las columnas que quieres mostrar en el JTable
         String[] columnasDeseadas = {
             "Nombres", "ApellidoPaterno", "ApellidoMaterno", 
             "TipoDocumento", "DocumentoIdentidad", "Telefono", "CorreoElectronico"
         };
 
-        // Agregar columnas al modelo
         for (String col : columnasDeseadas) {
             modelo.addColumn(col);
         }
@@ -150,7 +136,6 @@ public class TrabajadorDAO {
         
         return totalResultados;
     }
-
 
     public void cargarAreas(JComboBox<Area> comboBoxArea) {
         comboBoxArea.removeAllItems();
@@ -235,8 +220,6 @@ public class TrabajadorDAO {
             stmt.setDate(9, new java.sql.Date(t.getFechaNacimiento().getTime()));
             stmt.setString(10, t.getDireccion());
             stmt.setString(11, t.getDescripcion());
-            //stmt.setInt(12, t.getIdArea());
-            //stmt.setInt(13, t.getIdEspecialidad());
 
             stmt.execute();
             return true;

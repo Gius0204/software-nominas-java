@@ -45,7 +45,6 @@ public class TrabajadorNegocioVarios {
         return trabajadorDAO.eliminarTrabajador(id);
     }
     
-    // ==== Validaciones ==== //
     public String validarTrabajador(Trabajador t) {
         try {
             if (t == null) {
@@ -56,8 +55,6 @@ public class TrabajadorNegocioVarios {
             if (mensajeObligatorios != null) {
                 return mensajeObligatorios;
             }
-
-            // Validaciones de cada campo obligatorio del trabajador //
             validarNombres(t.getNombres());
             validarApellido("Apellido Paterno", t.getApellidoPaterno());
             validarApellido("Apellido Materno", t.getApellidoMaterno());
@@ -75,7 +72,6 @@ public class TrabajadorNegocioVarios {
                 validarDescripcion(t.getDescripcion());
             }
 
-            // Validación de documento duplicado //
             Trabajador existente = trabajadorDAO.buscarPorDocumentoIdentidad(t.getDocumentoIdentidad());
             if (existente != null && (t.getIdTrabajador()== 0 || existente.getIdTrabajador()!= t.getIdTrabajador())) {
                 return "Este documento de identidad ya está registrado.";
@@ -104,11 +100,9 @@ public class TrabajadorNegocioVarios {
             return "Debe llenar todos los campos obligatorios: Nombres, Apellido Paterno, Apellido Materno, Tipo de documento, Documento de identidad, Correo electrónico, Teléfono y Fecha de nacimiento.";
         }
 
-        return null; // No hay errores
+        return null;
     }
     
-    // ==== Métodos de validación ==== //
-
     private static void validarNombres(String nombres) throws Exception {
         if (nombres == null || nombres.trim().isEmpty()) {
             throw new Exception("El campo Nombres es obligatorio.");
@@ -210,5 +204,4 @@ public class TrabajadorNegocioVarios {
             throw new Exception("La descripción no debe exceder los 200 caracteres.");
         }
     }
-   
 }

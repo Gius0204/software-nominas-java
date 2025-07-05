@@ -9,8 +9,6 @@ import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
 
 import com.grupo01.softwarenominas.CapaEntidad.Nomina;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina;
-import com.grupo01.softwarenominas.CapaEntidad.ContratoPeriodo;
 import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
 
 import java.sql.*;
@@ -133,12 +131,11 @@ public class NominaDAO {
         return d;
     }    
     
-    
     public void cargarPeriodosPago(JComboBox<PeriodoPago> comboBoxPeriodo) {
         comboBoxPeriodo.removeAllItems();
-        comboBoxPeriodo.addItem(new PeriodoPago(0, null, null, "-- Periodo de Pago --", "", true, null)); // opción por defecto
+        comboBoxPeriodo.addItem(new PeriodoPago(0, null, null, "-- Periodo de Pago --", "", true, null));
 
-        CConexion objetoConexion = new CConexion(); // o usar ConexionMySQL si es tu clase de conexión principal
+        CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
         try {
@@ -201,12 +198,11 @@ public class NominaDAO {
         JOptionPane.showMessageDialog(null, "Error al insertar la nómina.");
     }
     return idNomina;
-}
-    
+    }
     
     public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {
         
-        CConexion objetoConexion = new CConexion(); // o usar ConexionMySQL si es tu clase de conexión principal
+        CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         
         String sql = "{call sp_ExistePeriodoAnteriorPendientePorContrato(?, ?, ?)}";
@@ -226,7 +222,7 @@ public class NominaDAO {
     }
     
     public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {
-        CConexion objetoConexion = new CConexion(); // o usar ConexionMySQL si es tu clase de conexión principal
+        CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         String sql = "{call sp_ExistePeriodoAnteriorPendiente(?, ?)}";
 
@@ -243,35 +239,33 @@ public class NominaDAO {
             return false;
         }
     }
-
-
-    
+ 
     public TipoContrato obtenerTipoContratoPorId(int idTipoContrato) {
-    TipoContrato tipoContrato = null;
+        TipoContrato tipoContrato = null;
 
-    CConexion objetoConexion = new CConexion();
-    Connection conn = objetoConexion.establecerConexion();
+        CConexion objetoConexion = new CConexion();
+        Connection conn = objetoConexion.establecerConexion();
 
-    try {
-        CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTipoContratoPorId(?)}");
-        stmt.setInt(1, idTipoContrato);
+        try {
+            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTipoContratoPorId(?)}");
+            stmt.setInt(1, idTipoContrato);
 
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            tipoContrato = new TipoContrato();
-            tipoContrato.setIdTipoContrato(rs.getInt("IdTipoContrato"));
-            tipoContrato.setNombre(rs.getString("Nombre"));
-            tipoContrato.setDescripcion(rs.getString("Descripcion"));
-            tipoContrato.setEstado(rs.getBoolean("Estado"));
-            tipoContrato.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                tipoContrato = new TipoContrato();
+                tipoContrato.setIdTipoContrato(rs.getInt("IdTipoContrato"));
+                tipoContrato.setNombre(rs.getString("Nombre"));
+                tipoContrato.setDescripcion(rs.getString("Descripcion"));
+                tipoContrato.setEstado(rs.getBoolean("Estado"));
+                tipoContrato.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener tipo de contrato: " + e.getMessage());
         }
 
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error al obtener tipo de contrato: " + e.getMessage());
+        return tipoContrato;
     }
-
-    return tipoContrato;
-}
 
     public void listarNominas1(JTable tabla) {
         CConexion objetoConexion = new CConexion();
@@ -302,9 +296,7 @@ public class NominaDAO {
             System.err.println("Error al listar nóminas: " + e.getMessage());
         }
     }
-
-    
-    
+   
     public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {
         ResultadoOperacion resultado = new ResultadoOperacion(false, -1, "");
 
@@ -351,8 +343,7 @@ public class NominaDAO {
 
         return resultado;
     }
-
-    
+  
     public int listarNominasPorPeriodo(JTable tabla, int idPeriodo) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
@@ -394,9 +385,4 @@ public class NominaDAO {
         
         return totalResultados;
     }
-
 }
-
-
-    
-

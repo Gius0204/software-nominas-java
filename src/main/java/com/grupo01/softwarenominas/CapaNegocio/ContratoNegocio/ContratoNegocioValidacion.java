@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
 
 /**
@@ -15,8 +12,7 @@ public class ContratoNegocioValidacion {
 
         if (!texto.matches("^\\d{8,9}$")) esValido = false;
         
-        return esValido;
-        
+        return esValido;       
     }
     
     public boolean validarHoras(String horasStr) {
@@ -33,27 +29,22 @@ public class ContratoNegocioValidacion {
 
         if (texto.length() > 250 || !texto.matches("[a-zA-Z0-9\\s]*")) esValido = false;
         
-        return esValido;
-        
+        return esValido;       
     }
     
     public boolean validarSalario(String valor) {
         try {
             double salario = Double.parseDouble(valor);
-            return salario >= 1025 && salario <= 999999; // Mínimo Perú y máximo 6 cifras
+            return salario >= 1025 && salario <= 999999;
         } catch (NumberFormatException e) {
             return false;
         }
     }
     
     public boolean validarSalario (String tipo, String salarioTexto){
-        // Salario
         if (tipo.equalsIgnoreCase("SERVICIO EXTERNO")) {
             validarSalario(salarioTexto);
         }
         return true;
-    }
-    
-    
-    
+    }  
 }

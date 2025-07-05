@@ -11,12 +11,9 @@ import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacio
 import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
 import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroDescripcion;
-import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroHoras;
 import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroNumerico;
 import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroSalario;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -26,9 +23,6 @@ import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 import com.grupo01.softwarenominas.CapaPresentacion.Utilities.Utilidades;
 import javax.swing.table.DefaultTableModel;
@@ -40,16 +34,13 @@ import javax.swing.text.AbstractDocument;
  *
  * @author alexv
  */
-public class frmContrato extends javax.swing.JFrame {
-    
-    Utilidades utilidades = new Utilidades();
-    
+public class frmContrato extends javax.swing.JFrame {   
+    Utilidades utilidades = new Utilidades();    
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
     private Trabajador trabajadorActual;
     private Contrato contratoActual;
-    private boolean modoEdicionContrato = false;
-    
+    private boolean modoEdicionContrato = false;    
     private DetalleContrato detalleContratoActual;
     
     public frmContrato() {
@@ -59,25 +50,18 @@ public class frmContrato extends javax.swing.JFrame {
         configurarListeners();
         configurarListenersCombobox();
         listenersFechas();
-        rtnESSALUD.setSelected(true);  // ← Aquí estableces el seleccionado por defecto
-        
-        inicializarCamposValidados();
-        
+        rtnESSALUD.setSelected(true);      
+        inicializarCamposValidados();       
         configurarFocusListeners();
-
     }
 
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
         trabajadorDAO.cargarAreas(cmbArea);
         contratoDAO.cargarTiposContrato(cmbTipoContrato);
-        contratoDAO.cargarCargos(cmbCargo);
-        //contratoDAO.listarContratosFiltrado(jtbTabla);
-        
-        inicializarTablaContrato(jtbTabla);
-        
-        listarContratosTabla(jtbTabla, null, null, "", "");
-        
+        contratoDAO.cargarCargos(cmbCargo);       
+        inicializarTablaContrato(jtbTabla);       
+        listarContratosTabla(jtbTabla, null, null, "", "");        
         jdcFechaInicial.addPropertyChangeListener("date", evt -> {
             Date fechaInicio = jdcFechaInicial.getDate();
             Date fechaFin = jdcFechaFinal.getDate();
@@ -90,15 +74,13 @@ public class frmContrato extends javax.swing.JFrame {
             }
         });
     }
-    
-    
+     
     private void inicializarTrueOrFalseComponents(){
         txtSalario.setEditable(false);
         jdcFechaFin.setDate(null);
         jdcFechaFin.setEnabled(false);
         btnRegistrar.setEnabled(false);
-        btnEditarHorasTrabajadas.setEnabled(false);
-        
+        btnEditarHorasTrabajadas.setEnabled(false);       
         jhcHabilitarFechas.setSelected(true);
         jhcSeguroSalud.setSelected(true);
     }
@@ -111,12 +93,9 @@ public class frmContrato extends javax.swing.JFrame {
         
         ((AbstractDocument) txtDocumentoBuscar.getDocument()).setDocumentFilter(new FiltroNumerico(9));
         ((AbstractDocument) txtNombresBuscar.getDocument()).setDocumentFilter(new FiltroDescripcion());
-
     }
     
     public void inicializarTablaContrato(JTable tabla){
-        // Si el usuario elige "-- Periodo de Pago --", se puede limpiar la tabla
-            // Crear un nuevo modelo con las columnas vacías pero visibles
             DefaultTableModel modelo = new DefaultTableModel();
             String[] columnasDeseadas = {
                 "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
@@ -126,8 +105,7 @@ public class frmContrato extends javax.swing.JFrame {
             for (String col : columnasDeseadas) {
                 modelo.addColumn(col);
             }
-            tabla.setModel(modelo);
-            
+            tabla.setModel(modelo);          
             utilidades.ajustarTabla(tabla);
     }
 
@@ -136,11 +114,7 @@ public class frmContrato extends javax.swing.JFrame {
         rtn3meses.addActionListener(duracionListener);
         rtn6meses.addActionListener(duracionListener);
         rtn1anio.addActionListener(duracionListener);
-
         txtDNI.addActionListener(e -> buscarTrabajadorPorDNI());
-        
-        
-
         jhcHabilitarFechas.addActionListener(e -> {
             boolean habilitar = jhcHabilitarFechas.isSelected();
             jdcFechaInicial.setEnabled(habilitar);
@@ -150,8 +124,7 @@ public class frmContrato extends javax.swing.JFrame {
                 jdcFechaInicial.setDate(null);
                 jdcFechaFinal.setDate(null);
             }
-        });
-        
+        });      
         jhcSeguroSalud.addActionListener(e -> {
             boolean habilitar = jhcSeguroSalud.isSelected();
             rtnESSALUD.setEnabled(habilitar);
@@ -175,14 +148,12 @@ public class frmContrato extends javax.swing.JFrame {
                     
                 String dni = txtDNI.getText().trim();
                 if (!dni.matches("^\\d{8,9}$")) {
-                    lblMensaje.setText("El DNI debe tener entre 8 y 9 dígitos numéricos.");
-                    
+                    lblMensaje.setText("El DNI debe tener entre 8 y 9 dígitos numéricos.");                  
                 }
-                validarFormularioCompleto(); // Llamar aquí
+                validarFormularioCompleto();
             }
         });
-        
-        // Horas
+
         txtHorasTotales.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -203,7 +174,6 @@ public class frmContrato extends javax.swing.JFrame {
             }
         });
 
-        // Descripción
         jtxDescripcion.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -215,11 +185,10 @@ public class frmContrato extends javax.swing.JFrame {
                     lblMensaje.setText("La descripción debe tener solo letras y números (máx. 250).");
                     
                 }
-                validarFormularioCompleto(); // Llamar aquí
+                validarFormularioCompleto();
             }
         });
 
-        // Salario (solo si es SERVICIO EXTERNO)
         txtSalario.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -235,17 +204,15 @@ public class frmContrato extends javax.swing.JFrame {
                             lblMensaje.setText("El salario debe ser mayor al mínimo de 1025 soles y tener hasta 6 cifras.");
                             
                         }
-                        validarFormularioCompleto(); // Llamar aquí
+                        validarFormularioCompleto();
                     } catch (NumberFormatException ex) {
                         lblMensaje.setText("Ingrese un número válido para salario.");
                     }
                 } else {
-                    //lblMensaje.setText("");
                 }
             }
         });
         
-        // Combobox
         cmbTipoContrato.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -257,7 +224,7 @@ public class frmContrato extends javax.swing.JFrame {
                     lblMensaje.setText("Seleccionar un tipo de contrato.");
                 }
                 
-                validarFormularioCompleto(); // Llamar aquí
+                validarFormularioCompleto();
             }
         });
         cmbCargo.addFocusListener(new FocusAdapter() {
@@ -271,7 +238,7 @@ public class frmContrato extends javax.swing.JFrame {
                     lblMensaje.setText("Seleccionar un cargo.");
                 }
                 
-                validarFormularioCompleto(); // Llamar aquí
+                validarFormularioCompleto();
             }
         });
         cmbArea.addFocusListener(new FocusAdapter() {
@@ -285,7 +252,7 @@ public class frmContrato extends javax.swing.JFrame {
                     lblMensaje.setText("Seleccionar un area.");
                 }
                 
-                validarFormularioCompleto(); // Llamar aquí
+                validarFormularioCompleto();
             }
         });
         cmbEspecialidad.addFocusListener(new FocusAdapter() {
@@ -298,18 +265,10 @@ public class frmContrato extends javax.swing.JFrame {
                 
                 if (especialidad.getNombre().equalsIgnoreCase("-- Especialidad --")){
                     lblMensaje.setText("Seleccionar una especialidad.");
-                }
-                
-                validarFormularioCompleto(); // Llamar aquí
+                }             
+                validarFormularioCompleto();
             }
-        });
-        
-        
-        
-                
-                
-                
-                
+        });         
     }
     
     private void listenersFechas(){
@@ -320,9 +279,9 @@ public class frmContrato extends javax.swing.JFrame {
                 if (jdcFechaInicio.getDate() == null || (!rtn3meses.isSelected() && !rtn6meses.isSelected() && !rtn1anio.isSelected())) {
                     jdcFechaFin.setDate(null);
                 } else {
-                    calcularFechaFin(); // Si ya hay selección, recalcula
+                    calcularFechaFin();
                 }
-                jdcFechaFin.setEnabled(false); // siempre deshabilitado
+                jdcFechaFin.setEnabled(false); 
             }
         });
     }
@@ -330,11 +289,9 @@ public class frmContrato extends javax.swing.JFrame {
     private void validarFormularioCompleto() {
         boolean esValido = true;
 
-        // DNI
         String dni = txtDNI.getText().trim();
         if (!dni.matches("^\\d{8,9}$")) esValido = false;
 
-        // Horas
         try {
             int horas = Integer.parseInt(txtHorasTotales.getText().trim());
             if (horas < 80 || horas > 200) esValido = false;
@@ -342,11 +299,9 @@ public class frmContrato extends javax.swing.JFrame {
             esValido = false;
         }
 
-        // Descripción
         String descripcion = jtxDescripcion.getText().trim();
         if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*")) esValido = false;
 
-        // Salario
         String tipo = cmbTipoContrato.getSelectedItem().toString();
         String salarioTexto = txtSalario.getText().trim();
 
@@ -374,8 +329,7 @@ public class frmContrato extends javax.swing.JFrame {
             }
             if (especialidad.getNombre().equalsIgnoreCase("-- Especialidad --")){
                 esValido = false;
-            }
-            
+            }       
             try {
                 double salario = Double.parseDouble(salarioTexto);
                 if (salario < 1025 || salario >= 1000000) esValido = false;
@@ -383,24 +337,16 @@ public class frmContrato extends javax.swing.JFrame {
                 esValido = false;
             }
         }
-        
-        //Fechas
+
         Date fechaInicio = jdcFechaInicio.getDate();
         Date fechaFin = jdcFechaFin.getDate();
 
         if (fechaInicio == null || fechaFin == null) {
             esValido = false;
         }
-
-        // Activar o desactivar botón
         btnRegistrar.setEnabled(esValido);
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -581,11 +527,6 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel1.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
 
         txtHorasTotales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtHorasTotales.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtHorasTotalesActionPerformed(evt);
-            }
-        });
         jPanel1.add(txtHorasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 320, 80, 30));
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -846,7 +787,7 @@ public class frmContrato extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+   
     private void calcularFechaFin() {
         Date fechaInicio = jdcFechaInicio.getDate();
         if (fechaInicio == null) {
@@ -855,8 +796,6 @@ public class frmContrato extends javax.swing.JFrame {
         }
 
         int meses = rtn3meses.isSelected() ? 3 : rtn6meses.isSelected() ? 6 : rtn1anio.isSelected() ? 12 : 0;
-        
-        
 
         if (meses > 0) {
             Calendar cal = Calendar.getInstance();
@@ -867,9 +806,8 @@ public class frmContrato extends javax.swing.JFrame {
             jdcFechaFin.setDate(null);
         }
 
-        jdcFechaFin.setEnabled(false); // asegúrate que siempre esté bloqueado
+        jdcFechaFin.setEnabled(false);
     }
-
 
     private void buscarTrabajadorPorDNI() {
         String dni = txtDNI.getText().trim();
@@ -887,9 +825,7 @@ public class frmContrato extends javax.swing.JFrame {
         } else {
             trabajadorActual = null;
             txtNombres.setText("");
-            //cmbArea.setSelectedIndex(-1);
             lblMensaje.setText("No se encontró al trabajador, vuelva a intentarlo antes de registrar el contrato.");
-            //JOptionPane.showMessageDialog(this, "Trabajador no encontrado. Registre el trabajador primero.");
         }
     }
     
@@ -909,8 +845,7 @@ public class frmContrato extends javax.swing.JFrame {
         jcbAsignacion.setSelected(false);
         jcbSeguroAccidentes.setSelected(false);
         jcbSeguroVida.setSelected(false);
-        jtxDescripcion.setText("");
-        
+        jtxDescripcion.setText("");     
         btnRegistrar.setEnabled(false);
     }
     
@@ -921,17 +856,13 @@ public class frmContrato extends javax.swing.JFrame {
         detalleContratoActual = null;
         btnRegistrar.setText("REGISTRAR");
         btnLimpiar.setText("LIMPIAR");
-        btnRegresar.setText("CERRAR");
-        
+        btnRegresar.setText("CERRAR");       
         rtn3meses.setEnabled(true);
         rtn6meses.setEnabled(true);
-        rtn1anio.setEnabled(true);
-        
-        jdcFechaInicio.setEnabled(true);
-        
+        rtn1anio.setEnabled(true);     
+        jdcFechaInicio.setEnabled(true);       
     }
     
-    //validaciones
     private void actualizarSalarioSiListo() {
         TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
         Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
@@ -939,7 +870,7 @@ public class frmContrato extends javax.swing.JFrame {
         Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
 
         if (tipoContrato == null || cargo == null || area == null || especialidad == null) {
-            return; // Aún no están todos seleccionados
+            return;
         }
         
         if (cmbTipoContrato.getSelectedIndex() == 0 ||
@@ -949,15 +880,9 @@ public class frmContrato extends javax.swing.JFrame {
             return;
         }
 
-
-        String tipoContratoNombre = tipoContrato.getNombre(); // e.g. "SERVICIO EXTERNO"
+        String tipoContratoNombre = tipoContrato.getNombre();
 
         if (!tipoContratoNombre.equalsIgnoreCase("SERVICIO EXTERNO")) {
-            
-            //System.out.println("Id de Area" + area.getIdArea());
-            //System.out.println("Id de Especialidad" + especialidad.getIdEspecialidad());
-            //System.out.println("Id de Cargo" + cargo.getIdCargo());
-            //System.out.println("Id de TipoContrato" + String.valueOf(tipoContrato.getIdTipoContrato()));
             
             double salario = contratoDAO.obtenerSalarioBase(
                 area.getIdArea(),
@@ -985,7 +910,7 @@ public class frmContrato extends javax.swing.JFrame {
     public boolean validarSalario(String valor) {
         try {
             double salario = Double.parseDouble(valor);
-            return salario >= 1025 && salario <= 999999; // Mínimo Perú y máximo 6 cifras
+            return salario >= 1025 && salario <= 999999;
         } catch (NumberFormatException e) {
             return false;
         }
@@ -999,7 +924,6 @@ public class frmContrato extends javax.swing.JFrame {
             return false;
         }
     }
-
 
     private void cargarFormularioConContrato() {
         if (trabajadorActual != null) {
@@ -1099,9 +1023,6 @@ public class frmContrato extends javax.swing.JFrame {
         frmMenu menu = new frmMenu();
         menu.setVisible(true);
         this.setVisible(false);
-
-        
-
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -1109,12 +1030,7 @@ public class frmContrato extends javax.swing.JFrame {
         salirModoEditar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    private void txtHorasTotalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorasTotalesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtHorasTotalesActionPerformed
-
     private void cmbAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAreaActionPerformed
-        // TODO add your handling code here:
         cmbArea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1140,7 +1056,6 @@ public class frmContrato extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarHorasTrabajadasActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
         
         if(modoEdicionContrato){
             try {

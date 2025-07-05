@@ -1,0 +1,6 @@
+projectKey=com.mycompany:SoftwareNominas
+serverUrl=http://localhost:9000
+serverVersion=25.6.0.109173
+dashboardUrl=http://localhost:9000/dashboard?id=com.mycompany%3ASoftwareNominas
+ceTaskId=b51c9782-41c6-4b56-b85a-6a77a642fb3a
+ceTaskUrl=http://localhost:9000/api/ce/task?id=b51c9782-41c6-4b56-b85a-6a77a642fb3a

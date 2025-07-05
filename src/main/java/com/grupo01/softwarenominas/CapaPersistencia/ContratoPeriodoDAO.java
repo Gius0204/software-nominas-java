@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaPersistencia;
 import com.grupo01.softwarenominas.CapaConexion.CConexion;
 
@@ -35,15 +32,13 @@ public class ContratoPeriodoDAO {
                 cp.setEstadoPago(rs.getString("EstadoPago"));
                 cp.setEstado(rs.getBoolean("Estado"));
                 cp.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
-                
-                 // También puedes cargar los objetos relacionados si lo necesitas
-                cp.setContrato(new Contrato()); // o usa contratoDAO.obtenerContratoPorId()
+
+                cp.setContrato(new Contrato());
                 cp.getContrato().setIdContrato(idContrato);
 
-                cp.setPeriodo(new PeriodoPago()); // o usa periodoDAO.obtenerPeriodoPorId()
+                cp.setPeriodo(new PeriodoPago());
                 cp.getPeriodo().setIdPeriodoPago(idPeriodo);
 
-                // También seteamos Contrato y Periodo (ya los tienes)
                 ContratoDAO contratoDAO = new ContratoDAO();
                 PeriodoPagoDAO periodoDAO = new PeriodoPagoDAO();
 
@@ -52,12 +47,12 @@ public class ContratoPeriodoDAO {
                 
                 if (contrato == null) {
                     JOptionPane.showMessageDialog(null, "No se pudo obtener el contrato relacionado.");
-                    return null; // o manejar de forma más segura
+                    return null;
                 }
                 
                 if (periodo == null) {
                     JOptionPane.showMessageDialog(null, "No se pudo obtener el periodo relacionado.");
-                    return null; // o manejar de forma más segura
+                    return null;
                 }
 
                 cp.setContrato(contrato);
@@ -71,4 +66,3 @@ public class ContratoPeriodoDAO {
         return cp;
     }
 }
-

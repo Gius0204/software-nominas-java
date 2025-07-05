@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaNegocio.NominaNegocio;
 
 
@@ -16,11 +13,8 @@ import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina;
  *
  * @author Usuario
  */
-public class NominaNegocioRegistro {
-    
+public class NominaNegocioRegistro {  
     NominaNegocioCalculo NominaProcesador = new NominaNegocioCalculo();
-    //Registrar Nomina -> ElPago
-    //Registrar DetalleNomina
     
     public Nomina procesarNominaCompleta(ContratoPeriodo cp, DetalleContrato detalleContrato, String metodoPago, String tipoSeguro) {
         Contrato contrato = cp.getContrato();
@@ -28,7 +22,7 @@ public class NominaNegocioRegistro {
         Nomina nomina = new Nomina();
 
         nomina.setContratoPeriodo(cp);
-        nomina.setMetodoPago(metodoPago); // Cambiar según UI
+        nomina.setMetodoPago(metodoPago);
         nomina.setDescripcion("Generado automáticamente");
         DetalleNomina detalle = new DetalleNomina();
 

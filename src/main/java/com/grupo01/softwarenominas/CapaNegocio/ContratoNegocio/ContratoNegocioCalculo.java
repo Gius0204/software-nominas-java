@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
 
 import com.grupo01.softwarenominas.CapaEntidad.Area;
@@ -33,17 +30,15 @@ public class ContratoNegocioCalculo {
         } else {
             return null;
         }
-    }
-    
+    } 
     
     public record Resultado(String salario, boolean estado, String mensaje) {}
-    //validaciones
     public Resultado actualizarSalarioSiListo(TipoContrato tipoContrato, Cargo cargo, Area area, Especialidad especialidad) {
         if (tipoContrato == null || cargo == null || area == null || especialidad == null) {
-            return new Resultado("", false, ""); // Aún no están todos seleccionados
+            return new Resultado("", false, "");
         }
         
-        String tipoContratoNombre = tipoContrato.getNombre(); // e.g. "SERVICIO EXTERNO"
+        String tipoContratoNombre = tipoContrato.getNombre();
         boolean estado = false;
         String mensaje = "";
 

@@ -173,14 +173,12 @@ public class ContratoDAO {
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
 
-        // Definir las columnas que quieres mostrar en el JTable
         String[] columnasDeseadas = {
             "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
             "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
             "TipoContratoNombre", "CargoNombre"
         };
 
-        // Agregar columnas al modelo
         for (String col : columnasDeseadas) {
             modelo.addColumn(col);
         }
@@ -331,7 +329,6 @@ public class ContratoDAO {
                 modelo.addRow(fila);
             }
 
-            // Ocultar columna IdContratoPeriodo
             tabla.getColumnModel().getColumn(0).setMinWidth(0);
             tabla.getColumnModel().getColumn(0).setMaxWidth(0);
             tabla.getColumnModel().getColumn(0).setWidth(0);
@@ -474,9 +471,6 @@ public class ContratoDAO {
         return totalResultados;
     }
 
-
-
-
     public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
         comboBox.removeAllItems();
         comboBox.addItem(new TipoContrato(0, "-- Tipo de Contrato --", "", true, new Date()));
@@ -571,7 +565,6 @@ public class ContratoDAO {
         }
     }
 
-    
     public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {
         Contrato contrato = null;
 
@@ -609,7 +602,6 @@ public class ContratoDAO {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al obtener contrato: " + e.getMessage());
         }
-
         return contrato;
     }
     
@@ -737,6 +729,4 @@ public class ContratoDAO {
         }
         return contrato;
     }
-
-
 }

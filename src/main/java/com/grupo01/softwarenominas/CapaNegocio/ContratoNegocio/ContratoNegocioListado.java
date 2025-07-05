@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
 
 import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
@@ -18,21 +15,16 @@ import javax.swing.JTable;
 public class ContratoNegocioListado {
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
-    
-    
-    
+     
     public void listarContratosFiltrado(JTable tabla) {
         try{
-            contratoDAO.listarContratosFiltrado(tabla); //solo por fecha
+            contratoDAO.listarContratosFiltrado(tabla);
         }
         catch (Exception ex) {
             System.out.println(ex.toString());
         }
     }
-    
-    //agregar metodo de listar busqueda por nombres y apellidos o Documento Identidad
-    
-    
+
     public record Resultado(Trabajador trabajador, String texto) {}
     
     public Resultado buscarTrabajadorPorDocumentoIdentidad(String documentoIdentidad) {
@@ -80,6 +72,5 @@ public class ContratoNegocioListado {
             System.out.println(ex.toString());
             return null;
         }
-    }
-    
+    }  
 }
