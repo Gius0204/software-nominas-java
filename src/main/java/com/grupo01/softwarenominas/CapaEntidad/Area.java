@@ -4,11 +4,6 @@ package com.grupo01.softwarenominas.CapaEntidad;
 import java.util.Date;
 import java.util.Objects;
 
-/**
- *
- * @author Usuario
- */
-
 public class Area {
     private int idArea;
     private String nombre;
@@ -77,7 +72,6 @@ public class Area {
         return nombre;
     }
     
-    // Recomendado: también equals y hashCode si usarás setSelectedItem directamente
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -86,11 +80,6 @@ public class Area {
         System.out.println("Comparando " + this.idArea + " con " + other.idArea);
         return idArea == other.idArea;
     }
-
-    //@Override
-    //public int hashCode() {
-    //    return Integer.hashCode(idArea);
-    //}
     
     @Override
     public int hashCode() {

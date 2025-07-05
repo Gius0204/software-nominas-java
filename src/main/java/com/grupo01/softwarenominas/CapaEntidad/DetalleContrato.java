@@ -3,11 +3,6 @@ package com.grupo01.softwarenominas.CapaEntidad;
 
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
-
 public class DetalleContrato {
     private int idDetalleContrato;
     private int idContrato;

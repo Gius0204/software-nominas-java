@@ -8,10 +8,6 @@ import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
 import javax.swing.JTable;
 
-/**
- *
- * @author Usuario
- */
 public class ContratoNegocioListado {
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();

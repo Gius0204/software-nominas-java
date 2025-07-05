@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaEntidad;
 
 import java.math.BigDecimal;
@@ -9,10 +5,6 @@ import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- *
- * @author UCV
- */
 public class DetalleNomina1 {
     private double gratificacionLegal;
     private double asignacionFamiliar;
@@ -44,8 +36,6 @@ public class DetalleNomina1 {
     public double calcularSueldoNeto(double sueldoBase) {
         return totalIngresos - totalDescuentos;
     }
-
-    // Getters para todos los campos (omitidos por brevedad)
 
     public DetalleNomina1() {
     }
@@ -143,7 +133,6 @@ public class DetalleNomina1 {
         this.totalDescuentos = totalDescuentos;
     }
     
-    // Ingresos
     public double calcularAsignacionFamiliar(double sueldoBase, boolean tieneHijos) {
         if (sueldoBase < 0) throw new IllegalArgumentException("Sueldo base no puede ser negativo");
         return redondear(sueldoBase * 0.10 + (tieneHijos ? 102.50 : 0.0));
@@ -154,14 +143,12 @@ public class DetalleNomina1 {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha);
-        int mes = calendar.get(Calendar.MONTH); // Enero = 0, Diciembre = 11
-
-        // Junio = 5, Diciembre = 11
+        int mes = calendar.get(Calendar.MONTH);
         return (mes == Calendar.JUNE || mes == Calendar.DECEMBER) ? redondear(sueldoBase) : 0.0;
     }
 
     public double calcularPagoHorasExtra(double sueldoBase, int horasExtra) {
-        double valorHora = sueldoBase / 240; // Supongamos 240h/mes
+        double valorHora = sueldoBase / 240;
         double total = 0.0;
         for (int i = 1; i <= horasExtra; i++) {
             if (i <= 2) {
@@ -181,7 +168,6 @@ public class DetalleNomina1 {
         return redondear(sueldoBase + asignacionFamiliar + gratificacion + pagoHorasExtra + cts);
     }
 
-    // Descuentos
     public double calcularSeguroSalud(double sueldoBase, String tipoSeguro) {
         if (tipoSeguro.equalsIgnoreCase("ESSALUD")) {
             return redondear(sueldoBase * 0.09);

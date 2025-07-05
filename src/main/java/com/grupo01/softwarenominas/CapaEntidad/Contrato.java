@@ -2,11 +2,6 @@
 package com.grupo01.softwarenominas.CapaEntidad;
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
-
 public class Contrato {
     private int idContrato;
     private int idTrabajador;
@@ -16,8 +11,6 @@ public class Contrato {
     private Date fechaFin;
     private double salarioBase;
     private int horasTotales;
-    //private int horasTrabajadas;
-    //private int horasExtra;
     private boolean estado;
     private String descripcion;
     
@@ -30,9 +23,7 @@ public class Contrato {
     public void setEstadoContrato(String estadoContrato) {
         this.estadoContrato = estadoContrato;
     }
-    
-    
-    
+
     private Date fechaRegistro;
 
     private int idArea;
@@ -57,8 +48,6 @@ public class Contrato {
         this.fechaFin = fechaFin;
         this.salarioBase = salarioBase;
         this.horasTotales = horasTotales;
-        //this.horasTrabajadas = horasTrabajadas;
-        //this.horasExtra = horasExtra;
         this.estado = estado;
         this.descripcion = descripcion;
         this.fechaRegistro = fechaRegistro;
@@ -85,8 +74,6 @@ public class Contrato {
         this.fechaFin = fechaFin;
         this.salarioBase = salarioBase;
         this.horasTotales = horasTotales;
-        //this.horasTrabajadas = horasTrabajadas;
-        //this.horasExtra = horasExtra;
         this.estado = estado;
         this.descripcion = descripcion;
         this.fechaRegistro = fechaRegistro;
@@ -94,8 +81,6 @@ public class Contrato {
         this.tipoContrato = tipoContrato;
         this.cargo = cargo;
     }
-
-    // Getters y Setters
 
     public int getIdContrato() {
         return idContrato;

@@ -13,7 +13,7 @@ public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
     public frmDialogHorasTrabajadas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(null); // <- Centrar en pantalla
+        setLocationRelativeTo(null);
     }
     
     public void inicializarConContrato(Contrato contrato) {
@@ -119,7 +119,7 @@ public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         contratoDao.guardarHorasTrabajadasDesdeTabla(jtbTablaHorasTrabajadas);
-        this.dispose(); // Cierra el JDialog y regresa al JFrame principal
+        this.dispose();
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 
     private void txtHorasTotalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorasTotalesActionPerformed

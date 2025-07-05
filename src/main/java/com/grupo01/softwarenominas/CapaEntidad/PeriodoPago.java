@@ -1,14 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaEntidad;
 import java.util.Date;
 
-/**
- *
- * @author UCV
- */
 public class PeriodoPago {
         private int idPeriodoPago;
     private Date fechaInicio;
@@ -30,7 +22,6 @@ public class PeriodoPago {
         this.fechaRegistro = fechaRegistro;
     }
 
-    // Getters y Setters
     public int getIdPeriodoPago() {
         return idPeriodoPago;
     }

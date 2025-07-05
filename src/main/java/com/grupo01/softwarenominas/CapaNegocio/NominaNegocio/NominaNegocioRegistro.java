@@ -9,10 +9,6 @@ import com.grupo01.softwarenominas.CapaEntidad.Contrato;
 import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina;
 
-/**
- *
- * @author Usuario
- */
 public class NominaNegocioRegistro {  
     NominaNegocioCalculo NominaProcesador = new NominaNegocioCalculo();
     

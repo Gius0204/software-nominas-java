@@ -1,14 +1,7 @@
 
 package com.grupo01.softwarenominas.CapaPresentacion;
-/**
- *
- * @author Usuario
- */
-public class frmMenu extends javax.swing.JFrame {
 
-    /**
-     * Creates new form frmMenu
-     */
+public class frmMenu extends javax.swing.JFrame {
     
     int xmouse,ymouse;
     

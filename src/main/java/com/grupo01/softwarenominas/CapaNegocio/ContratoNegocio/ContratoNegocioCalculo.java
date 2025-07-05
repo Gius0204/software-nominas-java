@@ -9,10 +9,6 @@ import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
 public class ContratoNegocioCalculo {
     
     ContratoDAO contratoDAO = new ContratoDAO();

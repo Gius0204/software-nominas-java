@@ -7,10 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-/**
- *
- * @author Usuario
- */
+
 public class PeriodoPagoDAO {
     public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {
     PeriodoPago p = null;

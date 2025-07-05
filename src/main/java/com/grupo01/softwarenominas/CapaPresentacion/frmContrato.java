@@ -29,11 +29,6 @@ import javax.swing.table.DefaultTableModel;
 
 import javax.swing.text.AbstractDocument;
 
-
-/**
- *
- * @author alexv
- */
 public class frmContrato extends javax.swing.JFrame {   
     Utilidades utilidades = new Utilidades();    
     ContratoDAO contratoDAO = new ContratoDAO();
@@ -167,7 +162,7 @@ public class frmContrato extends javax.swing.JFrame {
                         lblMensaje.setText("Las horas deben estar entre 80 y 200.");
                         
                     }
-                    validarFormularioCompleto(); // Llamar aquí
+                    validarFormularioCompleto();
                 } catch (NumberFormatException ex) {
                     lblMensaje.setText("Ingrese un número válido para horas.");
                 }
@@ -1183,17 +1178,12 @@ public class frmContrato extends javax.swing.JFrame {
                 contrato.setIdArea(area.getIdArea());
                 contrato.setIdEspecialidad(especialidad.getIdEspecialidad());
 
-                //int idContratoGenerado = contratoDAO.registrarContrato(contrato);
                 ResultadoOperacion resultado = contratoDAO.registrarContrato(contrato);
                 String mensajeHTML = "<html><div style='text-align: center; width: 300px;'>" + resultado.getMensaje() + "</div></html>";
                 lblMensaje.setText(mensajeHTML);
-                lblMensaje.setForeground(Color.RED); // para error
+                lblMensaje.setForeground(Color.RED);
                 
-                // if idContratoGenerado != -1
                 if (resultado.isExito()) {
-                    //JOptionPane.showMessageDialog(this, "Contrato registrado correctamente.");
-                    
-                    // Determinar tipo de seguro salud seleccionado
                     String tipoSeguroSalud = "NINGUNO";
                     
                     
@@ -1208,9 +1198,7 @@ public class frmContrato extends javax.swing.JFrame {
                         }
                     }
 
-                    // Crear detalle
                     DetalleContrato detalle = new DetalleContrato();
-                    //detalle.setIdContrato(idContratoGenerado);
                     detalle.setIdContrato(resultado.getIdGenerado());
                     detalle.setTipoSeguroSalud(tipoSeguroSalud);
                     detalle.setTieneSeguroDeVida(jcbSeguroVida.isSelected());
@@ -1221,12 +1209,7 @@ public class frmContrato extends javax.swing.JFrame {
                     String mensaje2HTML = "<html><div style='text-align: center; width: 300px;'>" + resultado.getMensaje() + "</div></html>";
                     lblMensaje.setText(mensaje2HTML);
                     
-                    // if contratoDAO.registrarDetalleContrato(detalle)
                     if (resultadoDetalle.isExito()) {
-                        //JOptionPane.showMessageDialog(this, "Contrato y detalle registrados correctamente.");
-                        //contratoDAO.listarContratosFiltrado(jtbTabla);
-                        //String mensaje3HTML = "<html><body style='width: 300px;'>" + "Contrato registrado con éxito" + "</body></html>";
-                        //lblMensaje.setText(mensaje3HTML);
                         
                         lblMensaje.setForeground(new Color(0,128,0)); // para error
                         
@@ -1234,22 +1217,19 @@ public class frmContrato extends javax.swing.JFrame {
                         
                         limpiar();
                     } else {
-                        //JOptionPane.showMessageDialog(this, "Contrato registrado, pero falló el detalle.");
                     }
 
                 } else {
-                    //JOptionPane.showMessageDialog(this, "Error al registrar contrato.");
                 }
 
             } catch (Exception e) {
-                //JOptionPane.showMessageDialog(this, "Error al registrar contrato: " + e.getMessage());
+                
             }
         }
         
         
         
         listarContratosTabla(jtbTabla, null, null, "", "");
-        //contratoDAO.listarContratosFiltrado(jtbTabla);
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtDocumentoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocumentoBuscarActionPerformed
@@ -1288,7 +1268,6 @@ public class frmContrato extends javax.swing.JFrame {
             
         }
 
-        // Ejecutar búsqueda
         listarContratosTabla(jtbTabla, fechaInicio, fechaFin, documento, nombres);
         
     }//GEN-LAST:event_btnBuscarActionPerformed
@@ -1304,10 +1283,8 @@ public class frmContrato extends javax.swing.JFrame {
         public void mouseClicked(MouseEvent e) {
             int fila = jtbTabla.getSelectedRow();
             if (fila != -1) {
-                // Obtener datos desde la tabla
                 String documentoIdentidad = jtbTabla.getValueAt(fila, 3).toString();
                 lblMensaje.setText("Contrato Encontrado de Trabajador con Documento de Identidad: " + documentoIdentidad);
-                //JOptionPane.showMessageDialog(null, documentoIdentidad);
                 
                 Trabajador t = trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
                 
@@ -1323,9 +1300,7 @@ public class frmContrato extends javax.swing.JFrame {
                     modoEdicionContrato = true;
                     btnRegistrar.setText("EDITAR");
                     btnLimpiar.setText("NUEVO");
-                    //btnRegresar.setText("ELIMINAR");
                     
-                    //Verificar si afecta un cambio de aquì para calcular nomina, la fecha si esta decidido a no poder editarse
                     rtn3meses.setEnabled(false);
                     rtn6meses.setEnabled(false);
                     rtn1anio.setEnabled(false);

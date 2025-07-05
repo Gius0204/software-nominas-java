@@ -10,10 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-/**
- *
- * @author Usuario
- */
+
 public class ContratoPeriodoDAO {
 
     public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {

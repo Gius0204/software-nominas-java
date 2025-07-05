@@ -9,10 +9,6 @@ import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
 import javax.swing.JComboBox;
 
-/**
- *
- * @author Usuario
- */
 public class ContratoNegocioLlenado {
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();

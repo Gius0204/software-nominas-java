@@ -3,10 +3,6 @@ package com.grupo01.softwarenominas.CapaNegocio.NominaNegocio;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
 public class NominaNegocioCalculo {
     private static final double SUELDO_MINIMO_2025 = 1025.00;
     private static double redondear(double valor) {

@@ -4,10 +4,6 @@ package com.grupo01.softwarenominas.CapaEntidad;
 import java.util.Date;
 import java.util.Objects;
 
-/**
- *
- * @author alexv
- */
 public class TipoContrato {
     private int idTipoContrato;
     private String nombre;
@@ -76,8 +72,7 @@ public class TipoContrato {
     public String toString() {
         return nombre;
     }
-    
-    // Recomendado: también equals y hashCode si usarás setSelectedItem directamente
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -86,11 +81,6 @@ public class TipoContrato {
         System.out.println("Comparando " + this.idTipoContrato + " con " + other.idTipoContrato);
         return idTipoContrato == other.idTipoContrato;
     }
-
-    //@Override
-    //public int hashCode() {
-    //    return Integer.hashCode(idTipoContrato);
-    //}
     
     @Override
     public int hashCode() {

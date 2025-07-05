@@ -42,11 +42,8 @@ public class ContratoDAO {
             
             idGenerado = stmt.getInt(11);
 
-            //return true;
-
         } catch (SQLException e) {
             System.err.println("Error al registrar contrato: " + e.getMessage());
-            //return false;
         }
         
         return idGenerado;
@@ -296,8 +293,7 @@ public class ContratoDAO {
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Solo permite editar la columna HorasTrabajadas si el EstadoPago es válido
-                String estado = (String) getValueAt(row, 5); // columna 5 = EstadoPago
+                String estado = (String) getValueAt(row, 5);
                 return column == 4 && !estado.equalsIgnoreCase("PAGADO") && !estado.equalsIgnoreCase("CANCELADO");
             }
         };
@@ -346,7 +342,7 @@ public class ContratoDAO {
             for (int i = 0; i < tabla.getRowCount(); i++) {
                 String estado = tabla.getValueAt(i, 5).toString(); // Columna EstadoPago
                 if (estado.equalsIgnoreCase("PAGADO") || estado.equalsIgnoreCase("CANCELADO")) {
-                    continue; // No actualizar estas filas
+                    continue;
                 }
 
                 int idContratoPeriodo = Integer.parseInt(tabla.getValueAt(i, 0).toString());
@@ -437,7 +433,6 @@ public class ContratoDAO {
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
 
-        // Columnas específicas que quieres mostrar
         String[] columnasDeseadas = {
             "FechaInicio", "FechaFin", "HorasTotales", "HorasTrabajadas", "EstadoPago", "DocumentoIdentidad", "Nombres",
             "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
@@ -678,7 +673,7 @@ public class ContratoDAO {
     }
     
     public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
-        double salario = -1; // -1 para indicar error si no se encuentra
+        double salario = -1;
         CConexion objetoConexion = new CConexion();
 
         try (Connection conn = objetoConexion.establecerConexion()) {

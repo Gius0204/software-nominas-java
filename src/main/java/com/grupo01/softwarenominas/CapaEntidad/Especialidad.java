@@ -4,10 +4,6 @@ package com.grupo01.softwarenominas.CapaEntidad;
 import java.util.Date;
 import java.util.Objects;
 
-/**
- *
- * @author Usuario
- */
 public class Especialidad {
     private int idEspecialidad;
     private int idArea;
@@ -35,8 +31,6 @@ public class Especialidad {
         this.idEspecialidad = idEspecialidad;
         this.nombre = nombre;
     }
-    
-    
 
     public Especialidad(int idEspecialidad, int idArea, String nombre) {
         this.idEspecialidad = idEspecialidad;
@@ -44,7 +38,6 @@ public class Especialidad {
         this.nombre = nombre;
     }        
     
-    //Adicional
     public Especialidad(int idEspecialidad, String nombre, String descripcion, boolean estado, Date fechaRegistro) {
         this.idEspecialidad = idEspecialidad;
         this.nombre = nombre;
@@ -114,7 +107,6 @@ public class Especialidad {
         return nombre;
     }
     
-    // Recomendado: también equals y hashCode si usarás setSelectedItem directamente
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -123,11 +115,6 @@ public class Especialidad {
         System.out.println("Comparando " + this.idEspecialidad + " con " + other.idEspecialidad);
         return idEspecialidad == other.idEspecialidad;
     }
-
-    //@Override
-    //public int hashCode() {
-    //    return Integer.hashCode(idEspecialidad);
-    //}
     
     @Override
     public int hashCode() {

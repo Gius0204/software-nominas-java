@@ -1,20 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaEntidad;
 
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
 public class Nomina {
     private int idNomina;
     private ContratoPeriodo contratoPeriodo;
     private double sueldoNeto;
-    private String metodoPago; // 'TRANSFERENCIA BANCARIA', etc.
+    private String metodoPago;
     private String descripcion;
     private boolean estado;
     private java.util.Date fechaRegistro;

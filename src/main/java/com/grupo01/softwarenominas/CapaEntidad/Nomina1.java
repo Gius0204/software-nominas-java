@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaEntidad;
 
 import java.util.Date;
 
-/**
- *
- * @author UCV
- */
 public class Nomina1 {
     private Contrato contrato;
     private PeriodoPago periodo;
@@ -34,25 +26,21 @@ public class Nomina1 {
         double sueldoBase = contrato.getSalarioBase();
         boolean tieneCargaFamiliar = detalleContrato.isTieneAsignacionFamiliar();
         boolean esExterno = "SERVICIO EXTERNO".equalsIgnoreCase(contrato.getTipoContrato().getNombre());
-        Date fechaPeriodo = periodoPago.getFechaInicio(); // Puedes usar fechaInicio o fechaFin según la lógica
+        Date fechaPeriodo = periodoPago.getFechaInicio();
 
-        // Cargar detalles de ingresos
         detalle.setGratificacionLegal(detalle.calcularGratificacionLegal(sueldoBase, fechaPeriodo));
         detalle.setAsignacionFamiliar(detalle.calcularAsignacionFamiliar(sueldoBase, tieneCargaFamiliar));
-        double pagoHorasExtras = (detalle.calcularPagoHorasExtra(sueldoBase, 4)); //En lugar de 4, van el calculo de horas extras
-        //double saldoBonificacion = (detalle.calcularSaldoBonificacion(sueldoBase, fechaPeriodo));
+        double pagoHorasExtras = (detalle.calcularPagoHorasExtra(sueldoBase, 4));
         detalle.setCts(detalle.calcularCTS(sueldoBase, detalle.getAsignacionFamiliar(), detalle.getGratificacionLegal()));
 
         detalle.setTotalIngresos(detalle.calcularTotalIngresos(sueldoBase, detalle.getAsignacionFamiliar(), detalle.getGratificacionLegal(), pagoHorasExtras, detalle.getCts()));// suma de todo lo anterior
 
-        // Cargar descuentos
         detalle.setDescuentoSeguroSalud(detalle.calcularSeguroSalud(sueldoBase, detalleContrato.getTipoSeguroSalud()));
         detalle.setDescuentoSeguroVida(detalle.calcularSeguroVida(sueldoBase, detalleContrato.isTieneSeguroDeVida()));
         detalle.setDescuentoSeguroAccidentes(detalle.calcularSeguroAccidentes(sueldoBase, detalleContrato.isTieneSeguroDeAccidentes()));
-        detalle.setDescuentoRenta(detalle.calcularRenta(sueldoBase, esExterno)); // usa lógica con tramos
-        detalle.setTotalDescuentos(sueldoNeto);// suma de todos los descuentos
+        detalle.setDescuentoRenta(detalle.calcularRenta(sueldoBase, esExterno));
+        detalle.setTotalDescuentos(sueldoNeto);
 
-        // Calcular sueldo neto
         sueldoNeto = detalle.calcularSueldoNeto(detalle.getTotalIngresos(), detalle.getTotalDescuentos());
     }
 
@@ -69,9 +57,6 @@ public class Nomina1 {
     public Nomina1() {
     }
     
-    
-
-    // Getters para DAO (incluyendo detalle)
 
     public Contrato getContrato() {
         return contrato;
@@ -120,6 +105,4 @@ public class Nomina1 {
     public void setDetalle(DetalleNomina1 detalle) {
         this.detalle = detalle;
     }
-
-
 }

@@ -16,10 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Usuario
- */
 public class TrabajadorDAO {
     public void listarTrabajadores(JTable paramTablaTrabajadores){
         
@@ -181,7 +177,7 @@ public class TrabajadorDAO {
     }
     
     public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
-        comboBoxEspecialidad.removeAllItems(); // Limpiar antes de cargar nuevas
+        comboBoxEspecialidad.removeAllItems();
         comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();

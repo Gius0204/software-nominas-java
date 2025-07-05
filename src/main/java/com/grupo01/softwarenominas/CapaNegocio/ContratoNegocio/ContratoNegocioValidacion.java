@@ -1,10 +1,6 @@
 
 package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
 
-/**
- *
- * @author Usuario
- */
 public class ContratoNegocioValidacion {
     
     public boolean validarDocumentoIdentidad (String texto){

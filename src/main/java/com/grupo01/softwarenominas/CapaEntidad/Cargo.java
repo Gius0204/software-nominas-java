@@ -4,10 +4,6 @@ package com.grupo01.softwarenominas.CapaEntidad;
 import java.util.Date;
 import java.util.Objects;
 
-/**
- *
- * @author alexv
- */
 public class Cargo {
     private int idCargo;
     private String nombre;
@@ -21,8 +17,6 @@ public class Cargo {
         this.idCargo = idCargo;
         this.nombre = nombre;
     }
-    
-    
 
     public Cargo(int idCargo, String nombre, String descripcion, boolean estado, Date fechaRegistro) {
         this.idCargo = idCargo;
@@ -76,8 +70,7 @@ public class Cargo {
     public String toString() {
         return nombre;
     }
-    
-    // Recomendado: también equals y hashCode si usarás setSelectedItem directamente
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -87,11 +80,6 @@ public class Cargo {
         return idCargo == other.idCargo;
     }
 
-    //@Override
-    //public int hashCode() {
-    //    return Integer.hashCode(idCargo);
-    //}
-    
     @Override
     public int hashCode() {
         return Objects.hash(idCargo);

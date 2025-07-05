@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaEntidad;
 
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
 public class ContratoPeriodo {
     private int idContratoPeriodo;
     private int idContrato;
@@ -17,11 +9,9 @@ public class ContratoPeriodo {
     private Contrato contrato;
     private PeriodoPago periodo;
     private int horasTrabajadas;
-    private String estadoPago; // 'PENDIENTE', 'PAGADO', 'CANCELADO'
+    private String estadoPago;
     private boolean estado;
     private java.util.Date fechaRegistro;
-
-    // Getters y setters omitidos por brevedad
 
     public ContratoPeriodo() {
     }
@@ -59,8 +49,6 @@ public class ContratoPeriodo {
         this.idPeriodo = idPeriodo;
     }
 
-    
-    
     public int getIdContratoPeriodo() {
         return idContratoPeriodo;
     }
@@ -116,7 +104,6 @@ public class ContratoPeriodo {
     public void setFechaRegistro(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
-    
     
 }
 

@@ -6,14 +6,7 @@ import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacio
 import com.grupo01.softwarenominas.CapaNegocio.NominaNegocio.NominaNegocioRegistro;
 import com.grupo01.softwarenominas.CapaPersistencia.*;
 import com.grupo01.softwarenominas.CapaPresentacion.Utilities.Utilidades;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -53,8 +46,6 @@ public class frmNomina1 extends javax.swing.JFrame {
     
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
-        //contratoDAO.listarContratosFiltrado(tableContrato);
-        //nominas.listarNominas1(tableNominas);
         
         inicializarTablaContrato(tableContrato);
         inicializarTablaNominas(tableNominas);
@@ -93,7 +84,6 @@ public class frmNomina1 extends javax.swing.JFrame {
     public void listarContratosTabla(JTable tabla){
         int idPeriodo = obtenerIdPeriodoSeleccionado2();
         if (idPeriodo > 0) {
-            // Ejecutar búsqueda
             int resultados = contratoDAO.listarContratosPorPeriodo(tabla, idPeriodo);
 
             utilidades.ajustarTabla(tabla);
@@ -105,7 +95,6 @@ public class frmNomina1 extends javax.swing.JFrame {
             } else {
                 lblContratos.setText("Se encontraron " + resultados + " contratos.");
             }
-            //contratoDAO.listarContratosPorPeriodo(tableContrato, idPeriodo);
         } else {
             inicializarTablaContrato(tableContrato);
         }
@@ -113,8 +102,6 @@ public class frmNomina1 extends javax.swing.JFrame {
     }
     
     public void inicializarTablaContrato(JTable tabla){
-        // Si el usuario elige "-- Periodo de Pago --", se puede limpiar la tabla
-            // Crear un nuevo modelo con las columnas vacías pero visibles
             DefaultTableModel modelo = new DefaultTableModel();
             String[] columnasDeseadas = {
                 "FechaInicio", "FechaFin", "HorasTotales", "HorasTrabajadas", "EstadoPago", "DocumentoIdentidad", "Nombres",
@@ -134,7 +121,6 @@ public class frmNomina1 extends javax.swing.JFrame {
     public void listarNominasTabla(JTable tabla){
         int idPeriodo = obtenerIdPeriodoSeleccionado1();
         if (idPeriodo > 0) {
-            // Ejecutar búsqueda
             int resultados = nominas.listarNominasPorPeriodo(tabla, idPeriodo);
 
             utilidades.ajustarTabla(tabla);
@@ -417,11 +403,9 @@ public class frmNomina1 extends javax.swing.JFrame {
 
             int registrosExitosos = 0;
 
-            // ✅ 1) Validación global: ¿hay períodos anteriores pendientes?
             boolean existeGlobalPendiente = dao.existePeriodoAnteriorPendiente(p.getIdPeriodoPago());
 
             if (existeGlobalPendiente) {
-                // 🚫 Si hay deuda global, revisa cada contrato seleccionado para DETALLAR nombres:
                 for (int fila : filasSeleccionadas) {
                     String documentoIdentidad = tableContrato.getValueAt(fila, 5).toString();
 
@@ -439,7 +423,6 @@ public class frmNomina1 extends javax.swing.JFrame {
                     }
                 }
 
-                // Arma mensaje detallado:
                 if (!trabajadoresConDeuda.isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     sb.append("<html>Antes de procesar estos contratos debe pagar los períodos anteriores de los trabajadores, incluidos:<br>");
@@ -449,13 +432,11 @@ public class frmNomina1 extends javax.swing.JFrame {
                     sb.append("</html>");
                     lblProcesados.setText(sb.toString());
                 } else {
-                    // Si por alguna razón no se encontró ninguno individual:
                     lblProcesados.setText("Error: Hay períodos anteriores sin pagar. Verifique todos los contratos.");
                 }
-                return; // 🚫 NO procesar nada
+                return;
             }
 
-            // ✅ 2) Si no hay deuda global, procesar normalmente:
             for (int fila : filasSeleccionadas) {
                 String documentoIdentidad = tableContrato.getValueAt(fila, 5).toString();
 

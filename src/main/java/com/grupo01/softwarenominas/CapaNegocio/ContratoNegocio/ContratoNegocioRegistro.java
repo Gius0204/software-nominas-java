@@ -5,10 +5,6 @@ import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
 import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
 
-/**
- *
- * @author Usuario
- */
 public class ContratoNegocioRegistro {
     
     ContratoDAO contratoDAO = new ContratoDAO();

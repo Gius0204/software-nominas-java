@@ -1,18 +1,11 @@
 package com.grupo01.softwarenominas.CapaPresentacion;
-
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
 import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import com.grupo01.softwarenominas.CapaNegocio.TrabajadorNegocioVarios;
 import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroDescripcion;
 import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroNumerico;
-import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroSalario;
 import com.grupo01.softwarenominas.CapaPresentacion.Utilities.Utilidades;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +31,6 @@ public class frmTrabajador extends javax.swing.JFrame {
         inicializarCamposValidados();
         inicializarTablaTrabajadores(tableTrabajador);
         listarTrabajadoresTabla(null, null);
-        //negocio.listarTrabajadores(tableTrabajador);
     }
     
     private void inicializarCamposValidados(){
@@ -47,7 +39,6 @@ public class frmTrabajador extends javax.swing.JFrame {
         ((AbstractDocument) txtApellidoMaterno.getDocument()).setDocumentFilter(new FiltroDescripcion());
         ((AbstractDocument) txtDocumentoIdentidad.getDocument()).setDocumentFilter(new FiltroNumerico(9));
         
-        //((AbstractDocument) txtCorreo.getDocument()).setDocumentFilter(new FiltroNumerico(9));
         ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new FiltroNumerico(9));
         ((AbstractDocument) txtDireccion.getDocument()).setDocumentFilter(new FiltroDescripcion());
         ((AbstractDocument) txtDescripcion.getDocument()).setDocumentFilter(new FiltroDescripcion());
@@ -55,8 +46,6 @@ public class frmTrabajador extends javax.swing.JFrame {
     }
     
     public void inicializarTablaTrabajadores(JTable tabla){
-        // Si el usuario elige "-- Periodo de Pago --", se puede limpiar la tabla
-        // Crear un nuevo modelo con las columnas vacías pero visibles
         DefaultTableModel modelo = new DefaultTableModel();
         String[] columnasDeseadas = {
             "Nombres", "ApellidoPaterno", "ApellidoMaterno", 
@@ -71,7 +60,6 @@ public class frmTrabajador extends javax.swing.JFrame {
     }
     
     public void listarTrabajadoresTabla(Date fechaInicio, Date fechaFin){
-        // Ejecutar búsqueda
         int resultados = 0;
         
         if (fechaInicio != null && fechaFin != null) {
@@ -99,14 +87,12 @@ public class frmTrabajador extends javax.swing.JFrame {
 
                 if (fechaInicio != null && fechaFin != null) {
                     listarTrabajadoresTabla(fechaInicio, fechaFin);
-                    //negocio.listarTrabajadoresFiltradoPorFecha(tableTrabajador, fechaInicio, fechaFin);
                 } else {
                     JOptionPane.showMessageDialog(this, "Debe seleccionar ambas fechas.");
                     jhcHabilitarFechas.setSelected(false);
                 }
             } else {
                 listarTrabajadoresTabla(null, null);
-                //negocio.listarTrabajadoresFiltrado(tableTrabajador);
             }
         });
     }
@@ -428,7 +414,6 @@ public class frmTrabajador extends javax.swing.JFrame {
         } else {
             trabajadorActual = null;
             txtNombres.setText("");
-            //cmbArea.setSelectedIndex(-1);
             JOptionPane.showMessageDialog(this, "Trabajador no encontrado. Registre el trabajador primero.");
         }
     }
@@ -457,7 +442,6 @@ public class frmTrabajador extends javax.swing.JFrame {
         if (modoEdicion) {
             if(trabajadorActual!=null){
                 try {
-                    // Asignar valores actualizados a trabajadorActual
                     trabajadorActual.setNombres(txtNombres.getText());
                     trabajadorActual.setApellidoPaterno(txtApellidoPaterno.getText());
                     trabajadorActual.setApellidoMaterno(txtApellidoMaterno.getText());
@@ -534,13 +518,11 @@ public class frmTrabajador extends javax.swing.JFrame {
             }
         }
 
-        limpiar(); // Luego de editar o registrar
+        limpiar();
         listarTrabajadoresTabla(null, null);
-        //negocio.listarTrabajadoresFiltrado(tableTrabajador); // Actualiza tabla
     }
     
     private void cargarFormularioConTrabajador(Trabajador t){
-        // Establecer en cajas de texto
         txtNombres.setText(t.getNombres());
         txtApellidoPaterno.setText(t.getApellidoPaterno());
         txtApellidoMaterno.setText(t.getApellidoMaterno());
@@ -548,20 +530,17 @@ public class frmTrabajador extends javax.swing.JFrame {
         txtTelefono.setText(t.getTelefono());
         txtCorreo.setText(t.getCorreo());
 
-        // Seleccionar el radio button correcto
         if (t.getTipoDocumento().equalsIgnoreCase("DNI")) {
             rbDNI.setSelected(true);
         } else if (t.getTipoDocumento().equalsIgnoreCase("CE")) {
             rbCE.setSelected(true);
         }
-        
-        //Fecha Nacimiento (data chooser)
+
         dcFechaNacimiento.setDate(t.getFechaNacimiento());
         
         txtDireccion.setText(t.getTelefono());
         txtDescripcion.setText(t.getDescripcion());
         
-        // Seleccionar el radio button correcto
         if (t.getSexo().equalsIgnoreCase("M")) {
             rbMasculino.setSelected(true);
         } else if (t.getTipoDocumento().equalsIgnoreCase("F")) {
@@ -579,7 +558,6 @@ public class frmTrabajador extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Trabajador eliminado correctamente.");
                         limpiar();
                         listarTrabajadoresTabla(null, null);
-                        //negocio.listarTrabajadoresFiltrado(tableTrabajador);
                         modoEdicion = false;
                         trabajadorActual = null;
                         btnRegistra.setText("REGISTRAR");
@@ -616,7 +594,6 @@ public class frmTrabajador extends javax.swing.JFrame {
         public void mouseClicked(MouseEvent e) {
             int fila = tableTrabajador.getSelectedRow();
             if (fila != -1) {
-                // Obtener datos desde la tabla
                 String documentoIdentidad = tableTrabajador.getValueAt(fila, 4).toString();
                 
                 Trabajador t = negocio.buscarPorDocumentoIdentidad(documentoIdentidad);

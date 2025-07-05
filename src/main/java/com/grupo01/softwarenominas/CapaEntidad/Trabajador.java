@@ -1,13 +1,8 @@
 
 package com.grupo01.softwarenominas.CapaEntidad;
 
-//import java.time.LocalDate;
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
 public class Trabajador {
     private int idTrabajador;
     private String nombres;
@@ -21,13 +16,8 @@ public class Trabajador {
     private Date fechaNacimiento;
     private String direccion;
     private String descripcion;
-    //private int idArea;
-    //private int idEspecialidad;
     private boolean estado;
     private Date fechaRegistro;
-
-    //private Area area;
-    //private Especialidad especialidad;
 
     public String getNombreCompleto() {
         return nombres + " " + apellidoPaterno + " " + apellidoMaterno;
@@ -52,8 +42,6 @@ public class Trabajador {
         this.estado = estado;
         this.fechaRegistro = fechaRegistro;
     }
-
-    
 
     public int getIdTrabajador() {
         return idTrabajador;

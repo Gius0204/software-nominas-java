@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaPresentacion.Utilities;
 
 import java.awt.Component;
@@ -12,16 +8,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-/**
- *
- * @author Usuario
- */
 public class Utilidades {
     public void ajustarTabla(JTable tabla){
-        // 1️⃣ Desactiva auto resize
         tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        int extraPadding = 15; // Puedes ajustar
+        int extraPadding = 15;
 
         for (int column = 0; column < tabla.getColumnCount(); column++) {
             TableColumn tableColumn = tabla.getColumnModel().getColumn(column);
@@ -57,7 +48,6 @@ public class Utilidades {
         
         tabla.setIntercellSpacing(new Dimension(5, 5));
         
-        // Centrar TODO el contenido de las celdas
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -65,7 +55,6 @@ public class Utilidades {
             tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
         
-        // Cabecera
         ((DefaultTableCellRenderer) tabla.getTableHeader().getDefaultRenderer())
             .setHorizontalAlignment(SwingConstants.CENTER);
     }

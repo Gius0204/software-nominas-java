@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaEntidad;
 
 import java.util.Date;
 
-/**
- *
- * @author Usuario
- */
 public class DetalleNomina {
     private double pagoHorasExtras;
     private double gratificacionLegal;
@@ -27,8 +19,6 @@ public class DetalleNomina {
     private double totalDescuentos;
 
     private java.util.Date fechaRegistro;
-
-    // Getters y setters omitidos por brevedad
 
     public DetalleNomina() {
     }
@@ -167,7 +157,6 @@ public class DetalleNomina {
     public void setFechaRegistro(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
-    
     
 }
 

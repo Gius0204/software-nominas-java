@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones;
 
-/**
- *
- * @author Usuario
- */
 import javax.swing.text.*;
 
 public class FiltroSalario extends DocumentFilter {
@@ -21,19 +13,16 @@ public class FiltroSalario extends DocumentFilter {
         Document doc = fb.getDocument();
         String original = doc.getText(0, doc.getLength());
 
-        // Simular el nuevo texto después del cambio
         StringBuilder nuevoTexto = new StringBuilder(original);
         nuevoTexto.replace(offset, offset + length, text);
 
         String textoFinal = nuevoTexto.toString();
 
-        // Permitir vacío
         if (textoFinal.isEmpty()) {
             super.replace(fb, offset, length, text, attrs);
             return;
         }
 
-        // Permitir solo formato válido: hasta 6 enteros, opcional punto, hasta 2 decimales
         if (textoFinal.matches("\\d{0,6}(\\.\\d{0,2})?")) {
             super.replace(fb, offset, length, text, attrs);
             
