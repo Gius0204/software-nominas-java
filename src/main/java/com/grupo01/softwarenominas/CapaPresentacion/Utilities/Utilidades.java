@@ -1,0 +1,73 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.grupo01.softwarenominas.CapaPresentacion.Utilities;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
+/**
+ *
+ * @author Usuario
+ */
+public class Utilidades {
+    public void ajustarTabla(JTable tabla){
+        // 1️⃣ Desactiva auto resize
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        int extraPadding = 15; // Puedes ajustar
+
+        for (int column = 0; column < tabla.getColumnCount(); column++) {
+            TableColumn tableColumn = tabla.getColumnModel().getColumn(column);
+            int preferredWidth = 50;
+            int maxWidth = 500;
+
+            for (int row = 0; row < tabla.getRowCount(); row++) {
+                TableCellRenderer cellRenderer = tabla.getCellRenderer(row, column);
+                Component c = tabla.prepareRenderer(cellRenderer, row, column);
+                int width = c.getPreferredSize().width + tabla.getIntercellSpacing().width + extraPadding;
+                preferredWidth = Math.max(preferredWidth, width);
+            }
+
+            TableCellRenderer headerRenderer = tabla.getTableHeader().getDefaultRenderer();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(
+                tabla, tableColumn.getHeaderValue(), false, false, -1, column);
+            int headerWidth = headerComp.getPreferredSize().width + tabla.getIntercellSpacing().width + extraPadding;
+            preferredWidth = Math.max(preferredWidth, headerWidth);
+
+            preferredWidth = Math.min(preferredWidth, maxWidth);
+
+            tableColumn.setPreferredWidth(preferredWidth);
+        }
+
+        int anchoTotal = 0;
+        for (int col = 0; col < tabla.getColumnCount(); col++) {
+            anchoTotal += tabla.getColumnModel().getColumn(col).getPreferredWidth();
+        }
+        
+        tabla.setPreferredScrollableViewportSize(new Dimension(
+            anchoTotal, tabla.getRowHeight() * tabla.getRowCount()
+        ));
+        
+        tabla.setIntercellSpacing(new Dimension(5, 5));
+        
+        // Centrar TODO el contenido de las celdas
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        for (int i = 0; i < tabla.getColumnCount(); i++) {
+            tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        
+        // Cabecera
+        ((DefaultTableCellRenderer) tabla.getTableHeader().getDefaultRenderer())
+            .setHorizontalAlignment(SwingConstants.CENTER);
+    }
+    
+}

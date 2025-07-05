@@ -1,0 +1,5 @@
+Server=localhost
+DataBase=NominasDB
+User=usersql2
+Password=TuContraseñaSegura123!
+Cadena = jdbc:sqlserver://localhost:1433;databaseName=NominasDB;user=usersql2;password=TuContraseñaSegura123!;encrypt=true;trustServerCertificate=true;
