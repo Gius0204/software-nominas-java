@@ -341,6 +341,234 @@ public class frmContrato extends javax.swing.JFrame {
         }
         btnRegistrar.setEnabled(esValido);
     }
+    
+    private void calcularFechaFin() {
+        Date fechaInicio = jdcFechaInicio.getDate();
+        if (fechaInicio == null) {
+            jdcFechaFin.setDate(null);
+            return;
+        }
+
+        int meses = rtn3meses.isSelected() ? 3 : rtn6meses.isSelected() ? 6 : rtn1anio.isSelected() ? 12 : 0;
+
+        if (meses > 0) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fechaInicio);
+            cal.add(Calendar.MONTH, meses);
+            jdcFechaFin.setDate(cal.getTime());
+        } else {
+            jdcFechaFin.setDate(null);
+        }
+
+        jdcFechaFin.setEnabled(false);
+    }
+
+    private void buscarTrabajadorPorDNI() {
+        String dni = txtDNI.getText().trim();
+        if (dni.isEmpty()) return;
+
+        trabajadorActual = trabajadorDAO.buscarPorDocumentoIdentidad(dni);
+
+        if (trabajadorActual != null) {
+            txtNombres.setText(trabajadorActual.getNombres() + " " +
+                               trabajadorActual.getApellidoPaterno() + " " +
+                               trabajadorActual.getApellidoMaterno());
+
+            lblMensaje.setText("Trabajador Encontrado");
+
+        } else {
+            trabajadorActual = null;
+            txtNombres.setText("");
+            lblMensaje.setText("No se encontró al trabajador, vuelva a intentarlo antes de registrar el contrato.");
+        }
+    }
+    
+    private void limpiar(){
+        txtDNI.setText("");
+        txtNombres.setText("");
+        cmbArea.setSelectedIndex(0);
+        cmbCargo.setSelectedIndex(0);
+        cmbTipoContrato.setSelectedIndex(0);
+        txtHorasTotales.setText("");
+        txtSalario.setText("");
+        jdcFechaInicio.setDate(null);
+        jdcFechaFin.setDate(null);
+        rtn3meses.setSelected(false);
+        rtn6meses.setSelected(false);
+        rtn1anio.setSelected(false);
+        jcbAsignacion.setSelected(false);
+        jcbSeguroAccidentes.setSelected(false);
+        jcbSeguroVida.setSelected(false);
+        jtxDescripcion.setText("");     
+        btnRegistrar.setEnabled(false);
+    }
+    
+    private void salirModoEditar(){
+        modoEdicionContrato = false;
+        trabajadorActual = null;
+        contratoActual = null;
+        detalleContratoActual = null;
+        btnRegistrar.setText("REGISTRAR");
+        btnLimpiar.setText("LIMPIAR");
+        btnRegresar.setText("CERRAR");       
+        rtn3meses.setEnabled(true);
+        rtn6meses.setEnabled(true);
+        rtn1anio.setEnabled(true);     
+        jdcFechaInicio.setEnabled(true);       
+    }
+    
+    private void actualizarSalarioSiListo() {
+        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
+        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
+        Area area = (Area) cmbArea.getSelectedItem();
+        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
+
+        if (tipoContrato == null || cargo == null || area == null || especialidad == null) {
+            return;
+        }
+        
+        if (cmbTipoContrato.getSelectedIndex() == 0 ||
+            cmbCargo.getSelectedIndex() == 0 ||
+            cmbArea.getSelectedIndex() == 0 ||
+            cmbEspecialidad.getSelectedIndex() == 0) {
+            return;
+        }
+
+        String tipoContratoNombre = tipoContrato.getNombre();
+
+        if (!tipoContratoNombre.equalsIgnoreCase("SERVICIO EXTERNO")) {
+            
+            double salario = contratoDAO.obtenerSalarioBase(
+                area.getIdArea(),
+                especialidad.getIdEspecialidad(),
+                cargo.getIdCargo(),
+                tipoContrato.getIdTipoContrato()
+            );
+
+            if (salario != -1) {
+                txtSalario.setText(String.valueOf(salario));
+                txtSalario.setEditable(false);
+                lblMensaje.setText("Se muestra el salario base del trabajador");
+            } else {
+                txtSalario.setText("");
+                txtSalario.setEditable(false);
+                lblMensaje.setText("No se encontró salario base para su elección.");
+            }
+        } else {
+            txtSalario.setText("");
+            txtSalario.setEditable(true);
+            lblMensaje.setText("Ingrese el salario manualmente. No debe ser menor al sueldo mínimo.");
+        }
+    }
+
+    public boolean validarSalario(String valor) {
+        try {
+            double salario = Double.parseDouble(valor);
+            return salario >= 1025 && salario <= 999999;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    public boolean validarHoras(String horasStr) {
+        try {
+            int horas = Integer.parseInt(horasStr);
+            return horas >= 80 && horas <= 200;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void cargarFormularioConContrato() {
+        if (trabajadorActual != null) {
+            txtDNI.setText(trabajadorActual.getDocumentoIdentidad());
+            txtNombres.setText(trabajadorActual.getNombres() + " " +
+                               trabajadorActual.getApellidoPaterno() + " " +
+                               trabajadorActual.getApellidoMaterno());
+        }
+
+        if (contratoActual != null) {
+            jdcFechaInicio.setDate(contratoActual.getFechaInicio());
+            jdcFechaFin.setDate(contratoActual.getFechaFin());
+            txtSalario.setText(String.valueOf(contratoActual.getSalarioBase()));
+            txtHorasTotales.setText(String.valueOf(contratoActual.getHorasTotales()));
+            jtxDescripcion.setText(contratoActual.getDescripcion());
+            
+            trabajadorDAO.cargarAreas(cmbArea);
+            
+            trabajadorDAO.cargarEspecialidadesPorArea(cmbEspecialidad, contratoActual.getArea().getIdArea());
+            
+            cmbArea.setSelectedItem(contratoActual.getArea());
+            cmbEspecialidad.setSelectedItem(contratoActual.getEspecialidad());
+            
+            cmbTipoContrato.setSelectedItem(contratoActual.getTipoContrato());
+            cmbCargo.setSelectedItem(contratoActual.getCargo());
+            
+            System.out.println("Id de Area " + contratoActual.getArea().getNombre());
+            System.out.println("Id de Especialidad " + contratoActual.getEspecialidad().getNombre());
+            System.out.println("Id de Cargo " + contratoActual.getCargo().getNombre());
+            System.out.println("Id de TipoContrato " + contratoActual.getTipoContrato().getNombre());
+
+            System.out.println("Id de Area" + contratoActual.getArea().getIdArea());
+            System.out.println("Id de Especialidad" + contratoActual.getEspecialidad().getIdEspecialidad());
+            System.out.println("Id de Cargo" + contratoActual.getCargo().getIdCargo());
+            System.out.println("Id de TipoContrato" + String.valueOf(contratoActual.getTipoContrato().getIdTipoContrato()));
+
+            long diff = contratoActual.getFechaFin().getTime() - contratoActual.getFechaInicio().getTime();
+            int meses = (int) (diff / (1000L * 60 * 60 * 24 * 30)); 
+            
+            if (meses <= 3) {
+                rtn3meses.setSelected(true);
+            } else if (meses <= 6) {
+                rtn6meses.setSelected(true);
+            } else {
+                rtn1anio.setSelected(true);
+            }
+            
+            String tipo = cmbTipoContrato.getSelectedItem().toString();
+            if (tipo.equalsIgnoreCase("SERVICIO EXTERNO")) {
+                txtSalario.setText(String.valueOf(contratoActual.getSalarioBase()));
+            }
+        }
+
+        if (detalleContratoActual != null) {
+            if ("ESSALUD".equalsIgnoreCase(detalleContratoActual.getTipoSeguroSalud())) {
+                jhcSeguroSalud.setSelected(true);
+                rtnESSALUD.setSelected(true);
+                rtnESSALUD.setEnabled(true);
+                rtnEPS.setEnabled(true);
+            } else if ("EPS".equalsIgnoreCase(detalleContratoActual.getTipoSeguroSalud())) {
+                jhcSeguroSalud.setSelected(true);
+                rtnEPS.setSelected(true);
+                rtnESSALUD.setEnabled(true);
+                rtnEPS.setEnabled(true);
+            } else{
+                jhcSeguroSalud.setSelected(false);
+                rtnESSALUD.setSelected(false);
+                rtnEPS.setSelected(false);
+                rtnESSALUD.setEnabled(false);
+                rtnEPS.setEnabled(false);
+            }
+            
+            jcbSeguroVida.setSelected(detalleContratoActual.isTieneSeguroDeVida());
+            jcbSeguroAccidentes.setSelected(detalleContratoActual.isTieneSeguroDeAccidentes());
+            jcbAsignacion.setSelected(detalleContratoActual.isTieneAsignacionFamiliar());
+        }
+    }
+    
+    public void listarContratosTabla(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres){
+        int resultados = contratoDAO.listarContratosFiltrado(tabla, fechaInicio, fechaFin, documentoIdentidad, nombres);
+        
+        utilidades.ajustarTabla(tabla);
+
+        if (resultados == 0) {
+            lblMensajeBuscar.setText("No se encontraron contratos en la base de datos.");
+        } else if (resultados == 1) {
+            lblMensajeBuscar.setText("Se encontró " + resultados + " contrato.");
+        } else {
+            lblMensajeBuscar.setText("Se encontraron " + resultados + " contratos.");
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -783,237 +1011,6 @@ public class frmContrato extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
    
-    private void calcularFechaFin() {
-        Date fechaInicio = jdcFechaInicio.getDate();
-        if (fechaInicio == null) {
-            jdcFechaFin.setDate(null);
-            return;
-        }
-
-        int meses = rtn3meses.isSelected() ? 3 : rtn6meses.isSelected() ? 6 : rtn1anio.isSelected() ? 12 : 0;
-
-        if (meses > 0) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(fechaInicio);
-            cal.add(Calendar.MONTH, meses);
-            jdcFechaFin.setDate(cal.getTime());
-        } else {
-            jdcFechaFin.setDate(null);
-        }
-
-        jdcFechaFin.setEnabled(false);
-    }
-
-    private void buscarTrabajadorPorDNI() {
-        String dni = txtDNI.getText().trim();
-        if (dni.isEmpty()) return;
-
-        trabajadorActual = trabajadorDAO.buscarPorDocumentoIdentidad(dni);
-
-        if (trabajadorActual != null) {
-            txtNombres.setText(trabajadorActual.getNombres() + " " +
-                               trabajadorActual.getApellidoPaterno() + " " +
-                               trabajadorActual.getApellidoMaterno());
-
-            lblMensaje.setText("Trabajador Encontrado");
-
-        } else {
-            trabajadorActual = null;
-            txtNombres.setText("");
-            lblMensaje.setText("No se encontró al trabajador, vuelva a intentarlo antes de registrar el contrato.");
-        }
-    }
-    
-    private void limpiar(){
-        txtDNI.setText("");
-        txtNombres.setText("");
-        cmbArea.setSelectedIndex(0);
-        cmbCargo.setSelectedIndex(0);
-        cmbTipoContrato.setSelectedIndex(0);
-        txtHorasTotales.setText("");
-        txtSalario.setText("");
-        jdcFechaInicio.setDate(null);
-        jdcFechaFin.setDate(null);
-        rtn3meses.setSelected(false);
-        rtn6meses.setSelected(false);
-        rtn1anio.setSelected(false);
-        jcbAsignacion.setSelected(false);
-        jcbSeguroAccidentes.setSelected(false);
-        jcbSeguroVida.setSelected(false);
-        jtxDescripcion.setText("");     
-        btnRegistrar.setEnabled(false);
-    }
-    
-    private void salirModoEditar(){
-        modoEdicionContrato = false;
-        trabajadorActual = null;
-        contratoActual = null;
-        detalleContratoActual = null;
-        btnRegistrar.setText("REGISTRAR");
-        btnLimpiar.setText("LIMPIAR");
-        btnRegresar.setText("CERRAR");       
-        rtn3meses.setEnabled(true);
-        rtn6meses.setEnabled(true);
-        rtn1anio.setEnabled(true);     
-        jdcFechaInicio.setEnabled(true);       
-    }
-    
-    private void actualizarSalarioSiListo() {
-        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-        Area area = (Area) cmbArea.getSelectedItem();
-        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-
-        if (tipoContrato == null || cargo == null || area == null || especialidad == null) {
-            return;
-        }
-        
-        if (cmbTipoContrato.getSelectedIndex() == 0 ||
-            cmbCargo.getSelectedIndex() == 0 ||
-            cmbArea.getSelectedIndex() == 0 ||
-            cmbEspecialidad.getSelectedIndex() == 0) {
-            return;
-        }
-
-        String tipoContratoNombre = tipoContrato.getNombre();
-
-        if (!tipoContratoNombre.equalsIgnoreCase("SERVICIO EXTERNO")) {
-            
-            double salario = contratoDAO.obtenerSalarioBase(
-                area.getIdArea(),
-                especialidad.getIdEspecialidad(),
-                cargo.getIdCargo(),
-                tipoContrato.getIdTipoContrato()
-            );
-
-            if (salario != -1) {
-                txtSalario.setText(String.valueOf(salario));
-                txtSalario.setEditable(false);
-                lblMensaje.setText("Se muestra el salario base del trabajador");
-            } else {
-                txtSalario.setText("");
-                txtSalario.setEditable(false);
-                lblMensaje.setText("No se encontró salario base para su elección.");
-            }
-        } else {
-            txtSalario.setText("");
-            txtSalario.setEditable(true);
-            lblMensaje.setText("Ingrese el salario manualmente. No debe ser menor al sueldo mínimo.");
-        }
-    }
-
-    public boolean validarSalario(String valor) {
-        try {
-            double salario = Double.parseDouble(valor);
-            return salario >= 1025 && salario <= 999999;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-    
-    public boolean validarHoras(String horasStr) {
-        try {
-            int horas = Integer.parseInt(horasStr);
-            return horas >= 80 && horas <= 200;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private void cargarFormularioConContrato() {
-        if (trabajadorActual != null) {
-            txtDNI.setText(trabajadorActual.getDocumentoIdentidad());
-            txtNombres.setText(trabajadorActual.getNombres() + " " +
-                               trabajadorActual.getApellidoPaterno() + " " +
-                               trabajadorActual.getApellidoMaterno());
-        }
-
-        if (contratoActual != null) {
-            jdcFechaInicio.setDate(contratoActual.getFechaInicio());
-            jdcFechaFin.setDate(contratoActual.getFechaFin());
-            txtSalario.setText(String.valueOf(contratoActual.getSalarioBase()));
-            txtHorasTotales.setText(String.valueOf(contratoActual.getHorasTotales()));
-            jtxDescripcion.setText(contratoActual.getDescripcion());
-            
-            trabajadorDAO.cargarAreas(cmbArea);
-            
-            trabajadorDAO.cargarEspecialidadesPorArea(cmbEspecialidad, contratoActual.getArea().getIdArea());
-            
-            cmbArea.setSelectedItem(contratoActual.getArea());
-            cmbEspecialidad.setSelectedItem(contratoActual.getEspecialidad());
-            
-            cmbTipoContrato.setSelectedItem(contratoActual.getTipoContrato());
-            cmbCargo.setSelectedItem(contratoActual.getCargo());
-            
-            System.out.println("Id de Area " + contratoActual.getArea().getNombre());
-            System.out.println("Id de Especialidad " + contratoActual.getEspecialidad().getNombre());
-            System.out.println("Id de Cargo " + contratoActual.getCargo().getNombre());
-            System.out.println("Id de TipoContrato " + contratoActual.getTipoContrato().getNombre());
-
-            System.out.println("Id de Area" + contratoActual.getArea().getIdArea());
-            System.out.println("Id de Especialidad" + contratoActual.getEspecialidad().getIdEspecialidad());
-            System.out.println("Id de Cargo" + contratoActual.getCargo().getIdCargo());
-            System.out.println("Id de TipoContrato" + String.valueOf(contratoActual.getTipoContrato().getIdTipoContrato()));
-
-            // Calcular la duración en meses
-            long diff = contratoActual.getFechaFin().getTime() - contratoActual.getFechaInicio().getTime();
-            int meses = (int) (diff / (1000L * 60 * 60 * 24 * 30)); // Aproximación de meses
-
-            // Seleccionar radio button según duración
-            if (meses <= 3) {
-                rtn3meses.setSelected(true);
-            } else if (meses <= 6) {
-                rtn6meses.setSelected(true);
-            } else {
-                rtn1anio.setSelected(true);
-            }
-            
-            String tipo = cmbTipoContrato.getSelectedItem().toString();
-            if (tipo.equalsIgnoreCase("SERVICIO EXTERNO")) {
-                txtSalario.setText(String.valueOf(contratoActual.getSalarioBase()));
-            }
-        }
-
-        if (detalleContratoActual != null) {
-            if ("ESSALUD".equalsIgnoreCase(detalleContratoActual.getTipoSeguroSalud())) {
-                jhcSeguroSalud.setSelected(true);
-                rtnESSALUD.setSelected(true);
-                rtnESSALUD.setEnabled(true);
-                rtnEPS.setEnabled(true);
-            } else if ("EPS".equalsIgnoreCase(detalleContratoActual.getTipoSeguroSalud())) {
-                jhcSeguroSalud.setSelected(true);
-                rtnEPS.setSelected(true);
-                rtnESSALUD.setEnabled(true);
-                rtnEPS.setEnabled(true);
-            } else{
-                jhcSeguroSalud.setSelected(false);
-                rtnESSALUD.setSelected(false);
-                rtnEPS.setSelected(false);
-                rtnESSALUD.setEnabled(false);
-                rtnEPS.setEnabled(false);
-            }
-            
-            jcbSeguroVida.setSelected(detalleContratoActual.isTieneSeguroDeVida());
-            jcbSeguroAccidentes.setSelected(detalleContratoActual.isTieneSeguroDeAccidentes());
-            jcbAsignacion.setSelected(detalleContratoActual.isTieneAsignacionFamiliar());
-        }
-    }
-    
-    public void listarContratosTabla(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres){
-        // Ejecutar búsqueda
-        int resultados = contratoDAO.listarContratosFiltrado(tabla, fechaInicio, fechaFin, documentoIdentidad, nombres);
-        
-        utilidades.ajustarTabla(tabla);
-
-        if (resultados == 0) {
-            lblMensajeBuscar.setText("No se encontraron contratos en la base de datos.");
-        } else if (resultados == 1) {
-            lblMensajeBuscar.setText("Se encontró " + resultados + " contrato.");
-        } else {
-            lblMensajeBuscar.setText("Se encontraron " + resultados + " contratos.");
-        }
-    }
-
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         frmMenu menu = new frmMenu();
         menu.setVisible(true);
