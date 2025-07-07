@@ -1,10 +1,11 @@
 package com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones;
 
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
 
 public class FiltroSalario extends DocumentFilter {
-    private final double minimo = 1025.00;
-    private final double maximo = 999999.99;
 
     @Override
     public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)

@@ -1,19 +1,20 @@
 
 package com.grupo01.softwarenominas.CapaPersistencia;
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-
-import com.grupo01.softwarenominas.CapaEntidad.ContratoPeriodo;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
+
+import com.grupo01.softwarenominas.CapaConexion.CConexion;
+import com.grupo01.softwarenominas.CapaEntidad.Contrato;
+import com.grupo01.softwarenominas.CapaEntidad.ContratoPeriodo;
+import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 
 public class ContratoPeriodoDAO {
 
-    public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {//si
+    public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {
         ContratoPeriodo cp = null;
 
         try (Connection conn = new CConexion().establecerConexion()) {

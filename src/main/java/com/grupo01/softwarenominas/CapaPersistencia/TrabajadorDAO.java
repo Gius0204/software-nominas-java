@@ -1,24 +1,25 @@
 package com.grupo01.softwarenominas.CapaPersistencia;
 
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
+
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.grupo01.softwarenominas.CapaConexion.CConexion;
+import com.grupo01.softwarenominas.CapaEntidad.Area;
+import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
+import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
+
 public class TrabajadorDAO {
 
-    public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {//este si
+    public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -56,7 +57,7 @@ public class TrabajadorDAO {
         return totalResultados;
     }
     
-    public int listarTrabajadoresFiltradoPorFecha(JTable tabla, Date fechaInicio, Date fechaFin) { //este si
+    public int listarTrabajadoresFiltradoPorFecha(JTable tabla, Date fechaInicio, Date fechaFin) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -94,7 +95,7 @@ public class TrabajadorDAO {
         return totalResultados;
     }
 
-    public void cargarAreas(JComboBox<Area> comboBoxArea) {//este si
+    public void cargarAreas(JComboBox<Area> comboBoxArea) {
         comboBoxArea.removeAllItems();
         comboBoxArea.addItem(new Area(0, "-- Area --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
@@ -110,12 +111,11 @@ public class TrabajadorDAO {
             }
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error cargando áreas.");
         }
     }
 
-    public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {//este si
+    public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
         comboBoxEspecialidad.removeAllItems();
         comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
@@ -132,12 +132,11 @@ public class TrabajadorDAO {
             }
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error cargando especialidades por área.");
         }
     }
     
-    public boolean registrarTrabajador(Trabajador t) {//este si
+    public boolean registrarTrabajador(Trabajador t) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -165,7 +164,7 @@ public class TrabajadorDAO {
         }
     }
 
-    public Trabajador buscarPorDNI(String dni) {//este si
+    public Trabajador buscarPorDNI(String dni) {
         Trabajador trabajador = null;
         CConexion conn = new CConexion();
         Connection cn = conn.establecerConexion();
@@ -190,7 +189,7 @@ public class TrabajadorDAO {
         return trabajador;
     }
     
-    public Trabajador buscarPorDocumentoIdentidad(String documentoIdentidad){//este si
+    public Trabajador buscarPorDocumentoIdentidad(String documentoIdentidad){
         Trabajador trabajador = null;
         
         CConexion objetoConexion = new CConexion();
@@ -227,7 +226,7 @@ public class TrabajadorDAO {
         return trabajador;
     }
     
-    public boolean actualizarTrabajador(Trabajador t) {//este si
+    public boolean actualizarTrabajador(Trabajador t) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -256,7 +255,7 @@ public class TrabajadorDAO {
         }
     }
     
-    public boolean eliminarTrabajador(int idTrabajador) {//este si
+    public boolean eliminarTrabajador(int idTrabajador) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 

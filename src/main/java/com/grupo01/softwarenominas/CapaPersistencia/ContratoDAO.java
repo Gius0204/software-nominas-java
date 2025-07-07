@@ -1,23 +1,32 @@
 package com.grupo01.softwarenominas.CapaPersistencia;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
+
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 import com.grupo01.softwarenominas.CapaConexion.CConexion;
 import com.grupo01.softwarenominas.CapaEntidad.Area;
 import com.grupo01.softwarenominas.CapaEntidad.Cargo;
 import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
 import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
 import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
+import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
 import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.sql.*;
-import java.util.Date;
-
 public class ContratoDAO {
-    public ResultadoOperacion registrarContrato(Contrato c) {//si
-        int idGenerado = -1;
-        String mensaje = "";
+    public ResultadoOperacion registrarContrato(Contrato c) {
+        int idGenerado;
+        String mensaje;
 
         try (Connection conn = new CConexion().establecerConexion()) {
             CallableStatement stmt = conn.prepareCall("{call sp_CrearContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
@@ -53,7 +62,7 @@ public class ContratoDAO {
         }
     }
 
-    public boolean actualizarContrato(Contrato c) {//si
+    public boolean actualizarContrato(Contrato c) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -80,7 +89,7 @@ public class ContratoDAO {
         }
     }
 
-    public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {//si
+    public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -128,19 +137,19 @@ public class ContratoDAO {
         }
     }
     
-    public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {//si
+    public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
         try {
             for (int i = 0; i < tabla.getRowCount(); i++) {
-                String estado = tabla.getValueAt(i, 5).toString(); // Columna EstadoPago
+                String estado = tabla.getValueAt(i, 5).toString();
                 if (estado.equalsIgnoreCase("PAGADO") || estado.equalsIgnoreCase("CANCELADO")) {
                     continue;
                 }
 
                 int idContratoPeriodo = Integer.parseInt(tabla.getValueAt(i, 0).toString());
-                int horasTrabajadas = Integer.parseInt(tabla.getValueAt(i, 4).toString()); // Horas Trabajadas
+                int horasTrabajadas = Integer.parseInt(tabla.getValueAt(i, 4).toString());
 
                 CallableStatement stmt = conn.prepareCall("{call sp_ActualizarHorasContratoPeriodo(?, ?)}");
                 stmt.setInt(1, idContratoPeriodo);
@@ -156,7 +165,7 @@ public class ContratoDAO {
         }
     }
     
-    public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {//si
+    public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -220,7 +229,7 @@ public class ContratoDAO {
         return totalResultados;
     }
     
-    public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {//si
+    public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -260,7 +269,7 @@ public class ContratoDAO {
         return totalResultados;
     }
 
-    public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {//este si
+    public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
         comboBox.removeAllItems();
         comboBox.addItem(new TipoContrato(0, "-- Tipo de Contrato --", "", true, new Date()));
 
@@ -284,7 +293,7 @@ public class ContratoDAO {
         }
     }
 
-    public void cargarCargos(JComboBox<Cargo> comboBox) {//si
+    public void cargarCargos(JComboBox<Cargo> comboBox) {
         comboBox.removeAllItems();
         comboBox.addItem(new Cargo(0, "-- Cargo --", "", true, new Date()));
 
@@ -308,8 +317,8 @@ public class ContratoDAO {
         }
     }
     
-    public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {//si
-        String mensaje = "";
+    public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {
+        String mensaje;
 
         try (Connection conn = new CConexion().establecerConexion()) {
             CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleContrato(?, ?, ?, ?, ?, ?)}");
@@ -332,7 +341,7 @@ public class ContratoDAO {
         }
     }
 
-    public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {//si
+    public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {
         Contrato contrato = null;
 
         CConexion objetoConexion = new CConexion();
@@ -372,7 +381,7 @@ public class ContratoDAO {
         return contrato;
     }
     
-    public DetalleContrato obtenerDetalleContratoPorDocumentoIdentidad(String documentoIdentidad) {//si
+    public DetalleContrato obtenerDetalleContratoPorDocumentoIdentidad(String documentoIdentidad) {
         DetalleContrato detalle = null;
 
         CConexion objetoConexion = new CConexion();
@@ -403,7 +412,7 @@ public class ContratoDAO {
         return detalle;
     }
     
-    public boolean actualizarDetalleContrato(DetalleContrato detalle) {//si
+    public boolean actualizarDetalleContrato(DetalleContrato detalle) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -415,7 +424,7 @@ public class ContratoDAO {
             stmt.setBoolean(3, detalle.isTieneSeguroDeVida());
             stmt.setBoolean(4, detalle.isTieneSeguroDeAccidentes());
             stmt.setBoolean(5, detalle.isTieneAsignacionFamiliar());
-            stmt.setString(6, detalle.getDescripcion()); // Opcional, puede ser null
+            stmt.setString(6, detalle.getDescripcion());
 
             stmt.execute();
             return true;
@@ -426,7 +435,7 @@ public class ContratoDAO {
         }
     }
     
-    public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) { //si
+    public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
         double salario = -1;
         CConexion objetoConexion = new CConexion();
 
@@ -449,7 +458,7 @@ public class ContratoDAO {
         return salario;
     }
     
-    public Contrato obtenerContratoPorId(int idContrato) { //si, de contratoperiododao
+    public Contrato obtenerContratoPorId(int idContrato) {
         Contrato contrato = null;
         try (Connection conn = new CConexion().establecerConexion()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Contrato WHERE IdContrato = ?");
@@ -469,7 +478,7 @@ public class ContratoDAO {
                 contrato.setIdEspecialidad(rs.getInt("IdEspecialidad"));
                 contrato.setIdTipoContrato(rs.getInt("IdTipoContrato"));
                 contrato.setIdCargo(rs.getInt("IdCargo"));
-                contrato.setEstadoContrato(rs.getString("EstadoContrato")); //faltaba este
+                contrato.setEstadoContrato(rs.getString("EstadoContrato"));
                 contrato.setEstado(rs.getBoolean("Estado"));
                 contrato.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
             }

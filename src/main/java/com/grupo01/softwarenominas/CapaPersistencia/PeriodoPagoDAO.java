@@ -1,15 +1,17 @@
 
 package com.grupo01.softwarenominas.CapaPersistencia;
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
 
+import com.grupo01.softwarenominas.CapaConexion.CConexion;
+import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
+
 public class PeriodoPagoDAO {
-    public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {//si de contratoperiododao
+    public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {
     PeriodoPago p = null;
     try (Connection conn = new CConexion().establecerConexion()) {
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM PeriodoPago WHERE IdPeriodo = ?");

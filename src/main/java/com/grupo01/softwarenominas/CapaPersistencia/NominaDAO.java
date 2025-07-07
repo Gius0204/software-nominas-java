@@ -1,23 +1,26 @@
 package com.grupo01.softwarenominas.CapaPersistencia;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.Nomina2;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina2;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina1;
-import com.grupo01.softwarenominas.CapaEntidad.Nomina1;
+import com.grupo01.softwarenominas.CapaEntidad.Nomina;
 import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
-
-import com.grupo01.softwarenominas.CapaEntidad.Nomina;
 import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
-
-import java.sql.*;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 public class NominaDAO {
 
-    public void cargarPeriodosPago(JComboBox<PeriodoPago> comboBoxPeriodo) {//si
+    public void cargarPeriodosPago(JComboBox<PeriodoPago> comboBoxPeriodo) {
         comboBoxPeriodo.removeAllItems();
         comboBoxPeriodo.addItem(new PeriodoPago(0, null, null, "-- Periodo de Pago --", "", true, null));
 
@@ -41,19 +44,18 @@ public class NominaDAO {
             }
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error cargando periodos de pago.");
         } finally {
             try {
                 if (conn != null) conn.close();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex);
             }
         }
     }
     
     
-    public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {//si
+    public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {
         
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
@@ -74,7 +76,7 @@ public class NominaDAO {
         }
     }
     
-    public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {//si
+    public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         String sql = "{call sp_ExistePeriodoAnteriorPendiente(?, ?)}";
@@ -93,7 +95,7 @@ public class NominaDAO {
         }
     }
  
-    public TipoContrato obtenerTipoContratoPorId(int idTipoContrato) {//si
+    public TipoContrato obtenerTipoContratoPorId(int idTipoContrato) {
         TipoContrato tipoContrato = null;
 
         CConexion objetoConexion = new CConexion();
@@ -120,8 +122,8 @@ public class NominaDAO {
         return tipoContrato;
     }
 
-    public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {//si
-        ResultadoOperacion resultado = new ResultadoOperacion(false, -1, "");
+    public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {
+        ResultadoOperacion resultado;
 
         String sql = "{call sp_InsertarNominaCompleta(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
@@ -167,7 +169,7 @@ public class NominaDAO {
         return resultado;
     }
   
-    public int listarNominasPorPeriodo(JTable tabla, int idPeriodo) {//si
+    public int listarNominasPorPeriodo(JTable tabla, int idPeriodo) {
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
