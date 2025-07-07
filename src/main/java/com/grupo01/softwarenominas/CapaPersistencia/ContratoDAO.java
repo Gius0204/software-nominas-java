@@ -15,40 +15,6 @@ import java.sql.*;
 import java.util.Date;
 
 public class ContratoDAO {
-
-    public int registrarContrato2(Contrato c) {
-        int idGenerado = -1;
-
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_CrearContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-
-            stmt.setInt(1, c.getIdTrabajador());
-            stmt.setInt(2, c.getIdTipoContrato());
-            stmt.setInt(3, c.getIdCargo());
-            stmt.setDate(4, new java.sql.Date(c.getFechaInicio().getTime()));
-            stmt.setDate(5, new java.sql.Date(c.getFechaFin().getTime()));
-            stmt.setDouble(6, c.getSalarioBase());
-            stmt.setInt(7, c.getHorasTotales());
-            stmt.setString(8, c.getDescripcion());
-            stmt.setInt(9, c.getIdArea());
-            stmt.setInt(10, c.getIdEspecialidad());
-            
-            stmt.registerOutParameter(11, java.sql.Types.INTEGER); // Id generado
-
-            stmt.execute();
-            
-            idGenerado = stmt.getInt(11);
-
-        } catch (SQLException e) {
-            System.err.println("Error al registrar contrato: " + e.getMessage());
-        }
-        
-        return idGenerado;
-    }
-    
     public ResultadoOperacion registrarContrato(Contrato c) {//si
         int idGenerado = -1;
         String mensaje = "";
@@ -87,7 +53,6 @@ public class ContratoDAO {
         }
     }
 
-
     public boolean actualizarContrato(Contrato c) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
@@ -115,177 +80,6 @@ public class ContratoDAO {
         }
     }
 
-
-    public boolean eliminarContrato(int idContrato) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_EliminarContrato(?)}");
-            stmt.setInt(1, idContrato);
-            stmt.execute();
-            return true;
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar contrato: " + e.getMessage());
-            return false;
-        }
-    }
-
-
-    public void listarContratos(JTable tabla) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratos()}");
-            ResultSet rs = stmt.executeQuery();
-            ResultSetMetaData meta = rs.getMetaData();
-            int columnas = meta.getColumnCount();
-
-            for (int i = 1; i <= columnas; i++) {
-                modelo.addColumn(meta.getColumnLabel(i));
-            }
-
-            while (rs.next()) {
-                Object[] fila = new Object[columnas];
-                for (int i = 0; i < columnas; i++) {
-                    fila[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(fila);
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error al listar contratos: " + e.getMessage());
-        }
-    }
-    
-    public void listarContratosFiltrado(JTable tabla) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        String[] columnasDeseadas = {
-            "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
-            "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
-            "TipoContratoNombre", "CargoNombre"
-        };
-
-        for (String col : columnasDeseadas) {
-            modelo.addColumn(col);
-        }
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratos}");
-            boolean tieneResultados = stmt.execute();
-
-            if (tieneResultados) {
-                try (ResultSet rs = stmt.getResultSet()) {
-                    while (rs.next()) {
-                        Object[] fila = new Object[columnasDeseadas.length];
-                        for (int i = 0; i < columnasDeseadas.length; i++) {
-                            fila[i] = rs.getObject(columnasDeseadas[i]);
-                        }
-                        modelo.addRow(fila);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener trabajadores:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void listarContratosPorFechas2(JTable tabla, Date fechaInicio, Date fechaFin) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        DefaultTableModel modelo = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        tabla.setModel(modelo);
-
-        CallableStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            stmt = conn.prepareCall("{call sp_ObtenerContratosPorFechas(?, ?)}");
-            stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
-            stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
-            rs = stmt.executeQuery();
-
-            ResultSetMetaData meta = rs.getMetaData();
-            int columnas = meta.getColumnCount();
-
-            for (int i = 1; i <= columnas; i++) {
-                modelo.addColumn(meta.getColumnLabel(i));
-            }
-
-            while (rs.next()) {
-                Object[] fila = new Object[columnas];
-                for (int i = 0; i < columnas; i++) {
-                    fila[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(fila);
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error al listar contratos por fechas: " + e.getMessage());
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    
-    public void listarContratosPorFechas(JTable tabla, Date fechaInicio, Date fechaFin) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        String[] columnasDeseadas = {
-            "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad","Nombres", 
-            "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
-            "TipoContratoNombre", "CargoNombre"
-        };
-
-        for (String col : columnasDeseadas) {
-            modelo.addColumn(col);
-        }
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosPorFechas(?, ?)}");
-            stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
-            stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Object[] fila = new Object[columnasDeseadas.length];
-                for (int i = 0; i < columnasDeseadas.length; i++) {
-                    fila[i] = rs.getObject(columnasDeseadas[i]);
-                }
-                modelo.addRow(fila);
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener contratos por fechas:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
     public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
@@ -514,28 +308,6 @@ public class ContratoDAO {
         }
     }
     
-    public boolean registrarDetalleContrato2(DetalleContrato detalle) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleContrato(?, ?, ?, ?, ?, ?)}");
-
-            stmt.setInt(1, detalle.getIdContrato());
-            stmt.setString(2, detalle.getTipoSeguroSalud());
-            stmt.setBoolean(3, detalle.isTieneSeguroDeVida());
-            stmt.setBoolean(4, detalle.isTieneSeguroDeAccidentes());
-            stmt.setBoolean(5, detalle.isTieneAsignacionFamiliar());
-            stmt.setString(6, detalle.getDescripcion());
-
-            stmt.execute();
-            return true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al registrar detalle contrato: " + e.getMessage());
-            return false;
-        }
-    }
-    
     public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {//si
         String mensaje = "";
 
@@ -654,24 +426,6 @@ public class ContratoDAO {
         }
     }
     
-    public boolean eliminarDetalleContrato(int idDetalleContrato) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_EliminarDetalleContrato(?)}");
-
-            stmt.setInt(1, idDetalleContrato);
-
-            stmt.execute();
-            return true;
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar lógicamente el detalle del contrato: " + e.getMessage());
-            return false;
-        }
-    }
-    
     public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) { //si
         double salario = -1;
         CConexion objetoConexion = new CConexion();
@@ -695,7 +449,7 @@ public class ContratoDAO {
         return salario;
     }
     
-    public Contrato obtenerContratoPorId(int idContrato) {
+    public Contrato obtenerContratoPorId(int idContrato) { //si, de contratoperiododao
         Contrato contrato = null;
         try (Connection conn = new CConexion().establecerConexion()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Contrato WHERE IdContrato = ?");

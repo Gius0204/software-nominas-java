@@ -17,45 +17,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class TrabajadorDAO {
-    public void listarTrabajadores(JTable paramTablaTrabajadores){
-        
-        CConexion objetoConexion = new CConexion();
-        
-        Connection conn = objetoConexion.establecerConexion();
-                
-        DefaultTableModel modelo = new DefaultTableModel();
-        
-        paramTablaTrabajadores.setModel(modelo);
-        
-        try{
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadores}");
-
-            boolean tieneResultados = stmt.execute();
-
-            if (tieneResultados) {
-                try (ResultSet rs = stmt.getResultSet()) {
-
-                    ResultSetMetaData metaData = rs.getMetaData();
-                    int columnas = metaData.getColumnCount();
-
-                    for (int i = 1; i <= columnas; i++) {
-                        modelo.addColumn(metaData.getColumnLabel(i));
-                    }
-
-                    while (rs.next()) {
-                        Object[] fila = new Object[columnas];
-                        for (int i = 0; i < columnas; i++) {
-                            fila[i] = rs.getObject(i + 1);
-                        }
-                        modelo.addRow(fila);
-                    }
-                }
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener trabajadores:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
     public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {//este si
         CConexion objetoConexion = new CConexion();
@@ -154,28 +115,6 @@ public class TrabajadorDAO {
         }
     }
 
-    public void cargarEspecialidades(JComboBox<Especialidad> comboBoxEspecialidad) {
-        comboBoxEspecialidad.removeAllItems();
-        comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-        try {
-             CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidades}");
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("IdEspecialidad");
-                int idArea = rs.getInt("IdArea");
-                String nombre = rs.getString("Nombre");
-                comboBoxEspecialidad.addItem(new Especialidad(id, idArea, nombre));
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error cargando especialidades.");
-        }
-    }
-    
     public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {//este si
         comboBoxEspecialidad.removeAllItems();
         comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));

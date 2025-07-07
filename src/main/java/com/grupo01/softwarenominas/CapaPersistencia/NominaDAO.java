@@ -17,120 +17,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class NominaDAO {
 
-    public boolean registrarNomina(Nomina2 n) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_CrearNomina(?, ?, ?, ?, ?, ?)}");
-
-            stmt.setInt(1, n.getIdContrato());
-            stmt.setInt(2, n.getIdPeriodo());
-            stmt.setDouble(3, n.getSueldoNeto());
-            stmt.setString(4, n.getEstadoPago());
-            stmt.setString(5, n.getMetodoPago());
-            stmt.setString(6, n.getDescripcion());
-
-            stmt.execute();
-            return true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al registrar nómina: " + e.getMessage());
-            return false;
-        }
-    }
-    
-    public boolean registrarDetalleNomina(DetalleNomina2 d) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleNomina(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-
-            stmt.setInt(1, d.getIdNomina());
-            stmt.setDouble(2, d.getGratificacionLegal());
-            stmt.setDouble(3, d.getAsignacionFamiliar());
-            stmt.setDouble(4, d.getCts());
-            stmt.setDouble(5, d.getDescuentoSeguroSalud());
-            stmt.setDouble(6, d.getDescuentoSeguroVida());
-            stmt.setDouble(7, d.getDescuentoSeguroAccidentes());
-            stmt.setDouble(8, d.getDescuentoAFP());
-            stmt.setDouble(9, d.getDescuentoRenta());
-            stmt.setDouble(10, d.getTotalIngresos());
-            stmt.setDouble(11, d.getTotalDescuentos());
-
-            stmt.execute();
-            return true;
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al registrar detalle de nómina: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public void listarNominas(JTable tabla) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerNominas()}");
-            ResultSet rs = stmt.executeQuery();
-
-            ResultSetMetaData meta = rs.getMetaData();
-            int columnas = meta.getColumnCount();
-
-            for (int i = 1; i <= columnas; i++) {
-                modelo.addColumn(meta.getColumnLabel(i));
-            }
-
-            while (rs.next()) {
-                Object[] fila = new Object[columnas];
-                for (int i = 0; i < columnas; i++) {
-                    fila[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(fila);
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al listar nóminas: " + e.getMessage());
-        }
-    }
-
-    public DetalleNomina2 obtenerDetalleNominaPorId(int idNomina) {
-        DetalleNomina2 d = null;
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerDetalleNomina(?)}");
-            stmt.setInt(1, idNomina);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                d = new DetalleNomina2();
-                d.setIdDetalle(rs.getInt("IdDetalle"));
-                d.setIdNomina(rs.getInt("IdNomina"));
-                d.setGratificacionLegal(rs.getDouble("GratificacionLegal"));
-                d.setAsignacionFamiliar(rs.getDouble("AsignacionFamiliar"));
-                d.setCts(rs.getDouble("CTS"));
-                d.setDescuentoSeguroSalud(rs.getDouble("DescuentoSeguroSalud"));
-                d.setDescuentoSeguroVida(rs.getDouble("DescuentoSeguroVida"));
-                d.setDescuentoSeguroAccidentes(rs.getDouble("DescuentoSeguroAccidentes"));
-                d.setDescuentoAFP(rs.getDouble("DescuentoAFP"));
-                d.setDescuentoRenta(rs.getDouble("DescuentoRenta"));
-                d.setTotalIngresos(rs.getDouble("TotalIngresos"));
-                d.setTotalDescuentos(rs.getDouble("TotalDescuentos"));
-                d.setFechaRegistro(rs.getString("FechaRegistro"));
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener detalle de nómina: " + e.getMessage());
-        }
-
-        return d;
-    }    
-    
     public void cargarPeriodosPago(JComboBox<PeriodoPago> comboBoxPeriodo) {//si
         comboBoxPeriodo.removeAllItems();
         comboBoxPeriodo.addItem(new PeriodoPago(0, null, null, "-- Periodo de Pago --", "", true, null));
@@ -166,39 +52,6 @@ public class NominaDAO {
         }
     }
     
-    
-    public int insertarNomina(Nomina1 nomina) {
-    int idNomina = -1;
-    try (Connection conn = new CConexion().establecerConexion()) {
-        CallableStatement stmt = conn.prepareCall("{call sp_InsertarNominaCompleta(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-        stmt.setInt(1, nomina.getContrato().getIdContrato());
-        stmt.setInt(2, nomina.getPeriodo().getIdPeriodoPago());
-        stmt.setDouble(3, nomina.getSueldoNeto());
-        stmt.setString(4, nomina.getMetodoPago());
-        stmt.setString(5, nomina.getDescripcion());
-
-        DetalleNomina1 d = nomina.getDetalle();
-        stmt.setDouble(6, d.getGratificacionLegal());
-        stmt.setDouble(7, d.getAsignacionFamiliar());
-        stmt.setDouble(8, d.getCts());
-        stmt.setDouble(9, d.getDescuentoSeguroSalud());
-        stmt.setDouble(10, d.getDescuentoSeguroVida());
-        stmt.setDouble(11, d.getDescuentoSeguroAccidentes());
-        stmt.setDouble(12, d.getDescuentoAFP());
-        stmt.setDouble(13, d.getDescuentoRenta());
-        stmt.setDouble(14, d.getTotalIngresos());
-        stmt.setDouble(15, d.getTotalDescuentos());
-
-        stmt.registerOutParameter(16, Types.INTEGER);
-        stmt.execute();
-
-        idNomina = stmt.getInt(16);
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error al insertar la nómina.");
-    }
-    return idNomina;
-    }
     
     public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {//si
         
@@ -267,36 +120,6 @@ public class NominaDAO {
         return tipoContrato;
     }
 
-    public void listarNominas1(JTable tabla) {
-        CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarNominas()}");
-            ResultSet rs = stmt.executeQuery();
-            ResultSetMetaData meta = rs.getMetaData();
-            int columnas = meta.getColumnCount();
-
-            for (int i = 1; i <= columnas; i++) {
-                modelo.addColumn(meta.getColumnLabel(i));
-            }
-
-            while (rs.next()) {
-                Object[] fila = new Object[columnas];
-                for (int i = 0; i < columnas; i++) {
-                    fila[i] = rs.getObject(i + 1);
-                }
-                modelo.addRow(fila);
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error al listar nóminas: " + e.getMessage());
-        }
-    }
-   
     public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {//si
         ResultadoOperacion resultado = new ResultadoOperacion(false, -1, "");
 

@@ -13,10 +13,6 @@ public class TrabajadorNegocioVarios {
     
     private final TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
 
-    public void listarTrabajadores(JTable tabla) {
-        trabajadorDAO.listarTrabajadores(tabla);
-    }
-
     public int listarTrabajadoresFiltrado(JTable tabla) {
         return trabajadorDAO.listarTrabajadoresFiltrado(tabla);
     }

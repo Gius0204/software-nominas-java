@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class PeriodoPagoDAO {
-    public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {
+    public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {//si de contratoperiododao
     PeriodoPago p = null;
     try (Connection conn = new CConexion().establecerConexion()) {
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM PeriodoPago WHERE IdPeriodo = ?");

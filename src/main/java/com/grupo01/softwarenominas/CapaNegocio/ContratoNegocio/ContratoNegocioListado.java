@@ -12,14 +12,6 @@ public class ContratoNegocioListado {
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
      
-    public void listarContratosFiltrado(JTable tabla) {
-        try{
-            contratoDAO.listarContratosFiltrado(tabla);
-        }
-        catch (Exception ex) {
-            System.out.println(ex.toString());
-        }
-    }
 
     public record Resultado(Trabajador trabajador, String texto) {}
     
