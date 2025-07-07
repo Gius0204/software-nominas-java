@@ -131,7 +131,7 @@ public class NominaDAO {
         return d;
     }    
     
-    public void cargarPeriodosPago(JComboBox<PeriodoPago> comboBoxPeriodo) {
+    public void cargarPeriodosPago(JComboBox<PeriodoPago> comboBoxPeriodo) {//si
         comboBoxPeriodo.removeAllItems();
         comboBoxPeriodo.addItem(new PeriodoPago(0, null, null, "-- Periodo de Pago --", "", true, null));
 
@@ -200,7 +200,7 @@ public class NominaDAO {
     return idNomina;
     }
     
-    public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {
+    public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {//si
         
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
@@ -221,7 +221,7 @@ public class NominaDAO {
         }
     }
     
-    public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {
+    public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         String sql = "{call sp_ExistePeriodoAnteriorPendiente(?, ?)}";
@@ -240,7 +240,7 @@ public class NominaDAO {
         }
     }
  
-    public TipoContrato obtenerTipoContratoPorId(int idTipoContrato) {
+    public TipoContrato obtenerTipoContratoPorId(int idTipoContrato) {//si
         TipoContrato tipoContrato = null;
 
         CConexion objetoConexion = new CConexion();
@@ -297,7 +297,7 @@ public class NominaDAO {
         }
     }
    
-    public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {
+    public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {//si
         ResultadoOperacion resultado = new ResultadoOperacion(false, -1, "");
 
         String sql = "{call sp_InsertarNominaCompleta(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
@@ -344,7 +344,7 @@ public class NominaDAO {
         return resultado;
     }
   
-    public int listarNominasPorPeriodo(JTable tabla, int idPeriodo) {
+    public int listarNominasPorPeriodo(JTable tabla, int idPeriodo) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 

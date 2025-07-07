@@ -3,10 +3,7 @@ package com.grupo01.softwarenominas.CapaPresentacion;
 import com.grupo01.softwarenominas.CapaEntidad.*;
 import com.grupo01.softwarenominas.CapaNegocio.*;
 import com.grupo01.softwarenominas.CapaPersistencia.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
 

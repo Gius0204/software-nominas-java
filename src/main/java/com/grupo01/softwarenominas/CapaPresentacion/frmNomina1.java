@@ -1,7 +1,6 @@
 package com.grupo01.softwarenominas.CapaPresentacion;
 
 import com.grupo01.softwarenominas.CapaEntidad.*;
-import com.grupo01.softwarenominas.CapaNegocio.*;
 import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
 import com.grupo01.softwarenominas.CapaNegocio.NominaNegocio.NominaNegocioRegistro;
 import com.grupo01.softwarenominas.CapaPersistencia.*;
@@ -12,16 +11,9 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class frmNomina1 extends javax.swing.JFrame {
-    private final NominaNegocioVarios negocio = new NominaNegocioVarios();
     private final ContratoDAO contratoDAO = new ContratoDAO();
-    private Nomina2 nominaActual;
-    private DetalleNomina2 detalleActual;
-    private Contrato contratoActual;
     
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
-    private Trabajador trabajadorActual;
-    private DetalleContrato detalleContratoActual;
-    private TipoContrato tipoContratoActual;
     
     private NominaDAO nominas = new NominaDAO();
 
@@ -76,9 +68,6 @@ public class frmNomina1 extends javax.swing.JFrame {
     
     private void limpiarFormulario() {
         cmbMetodoPago.setSelectedIndex(0);
-        nominaActual = null;
-        detalleActual = null;
-        contratoActual = null;
     }
     
     public void listarContratosTabla(JTable tabla){

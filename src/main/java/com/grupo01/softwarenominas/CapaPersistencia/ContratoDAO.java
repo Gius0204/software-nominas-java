@@ -49,7 +49,7 @@ public class ContratoDAO {
         return idGenerado;
     }
     
-    public ResultadoOperacion registrarContrato(Contrato c) {
+    public ResultadoOperacion registrarContrato(Contrato c) {//si
         int idGenerado = -1;
         String mensaje = "";
 
@@ -88,7 +88,7 @@ public class ContratoDAO {
     }
 
 
-    public boolean actualizarContrato(Contrato c) {
+    public boolean actualizarContrato(Contrato c) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -286,7 +286,7 @@ public class ContratoDAO {
         }
     }
     
-    public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {
+    public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -334,7 +334,7 @@ public class ContratoDAO {
         }
     }
     
-    public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {
+    public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -362,7 +362,7 @@ public class ContratoDAO {
         }
     }
     
-    public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {
+    public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -426,7 +426,7 @@ public class ContratoDAO {
         return totalResultados;
     }
     
-    public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {
+    public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -466,7 +466,7 @@ public class ContratoDAO {
         return totalResultados;
     }
 
-    public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
+    public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {//este si
         comboBox.removeAllItems();
         comboBox.addItem(new TipoContrato(0, "-- Tipo de Contrato --", "", true, new Date()));
 
@@ -490,7 +490,7 @@ public class ContratoDAO {
         }
     }
 
-    public void cargarCargos(JComboBox<Cargo> comboBox) {
+    public void cargarCargos(JComboBox<Cargo> comboBox) {//si
         comboBox.removeAllItems();
         comboBox.addItem(new Cargo(0, "-- Cargo --", "", true, new Date()));
 
@@ -536,7 +536,7 @@ public class ContratoDAO {
         }
     }
     
-    public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {
+    public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {//si
         String mensaje = "";
 
         try (Connection conn = new CConexion().establecerConexion()) {
@@ -560,7 +560,7 @@ public class ContratoDAO {
         }
     }
 
-    public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {
+    public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {//si
         Contrato contrato = null;
 
         CConexion objetoConexion = new CConexion();
@@ -600,7 +600,7 @@ public class ContratoDAO {
         return contrato;
     }
     
-    public DetalleContrato obtenerDetalleContratoPorDocumentoIdentidad(String documentoIdentidad) {
+    public DetalleContrato obtenerDetalleContratoPorDocumentoIdentidad(String documentoIdentidad) {//si
         DetalleContrato detalle = null;
 
         CConexion objetoConexion = new CConexion();
@@ -631,7 +631,7 @@ public class ContratoDAO {
         return detalle;
     }
     
-    public boolean actualizarDetalleContrato(DetalleContrato detalle) {
+    public boolean actualizarDetalleContrato(DetalleContrato detalle) {//si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -672,7 +672,7 @@ public class ContratoDAO {
         }
     }
     
-    public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
+    public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) { //si
         double salario = -1;
         CConexion objetoConexion = new CConexion();
 

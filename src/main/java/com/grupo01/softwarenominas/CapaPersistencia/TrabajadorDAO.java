@@ -57,7 +57,7 @@ public class TrabajadorDAO {
         }
     }
 
-    public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {
+    public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {//este si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -95,7 +95,7 @@ public class TrabajadorDAO {
         return totalResultados;
     }
     
-    public int listarTrabajadoresFiltradoPorFecha(JTable tabla, Date fechaInicio, Date fechaFin) {
+    public int listarTrabajadoresFiltradoPorFecha(JTable tabla, Date fechaInicio, Date fechaFin) { //este si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -133,7 +133,7 @@ public class TrabajadorDAO {
         return totalResultados;
     }
 
-    public void cargarAreas(JComboBox<Area> comboBoxArea) {
+    public void cargarAreas(JComboBox<Area> comboBoxArea) {//este si
         comboBoxArea.removeAllItems();
         comboBoxArea.addItem(new Area(0, "-- Area --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
@@ -176,7 +176,7 @@ public class TrabajadorDAO {
         }
     }
     
-    public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
+    public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {//este si
         comboBoxEspecialidad.removeAllItems();
         comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
@@ -198,7 +198,7 @@ public class TrabajadorDAO {
         }
     }
     
-    public boolean registrarTrabajador(Trabajador t) {
+    public boolean registrarTrabajador(Trabajador t) {//este si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -226,7 +226,7 @@ public class TrabajadorDAO {
         }
     }
 
-    public Trabajador buscarPorDNI(String dni) {
+    public Trabajador buscarPorDNI(String dni) {//este si
         Trabajador trabajador = null;
         CConexion conn = new CConexion();
         Connection cn = conn.establecerConexion();
@@ -251,7 +251,7 @@ public class TrabajadorDAO {
         return trabajador;
     }
     
-    public Trabajador buscarPorDocumentoIdentidad(String documentoIdentidad){
+    public Trabajador buscarPorDocumentoIdentidad(String documentoIdentidad){//este si
         Trabajador trabajador = null;
         
         CConexion objetoConexion = new CConexion();
@@ -288,7 +288,7 @@ public class TrabajadorDAO {
         return trabajador;
     }
     
-    public boolean actualizarTrabajador(Trabajador t) {
+    public boolean actualizarTrabajador(Trabajador t) {//este si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 
@@ -317,7 +317,7 @@ public class TrabajadorDAO {
         }
     }
     
-    public boolean eliminarTrabajador(int idTrabajador) {
+    public boolean eliminarTrabajador(int idTrabajador) {//este si
         CConexion objetoConexion = new CConexion();
         Connection conn = objetoConexion.establecerConexion();
 

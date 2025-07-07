@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 public class ContratoPeriodoDAO {
 
-    public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {
+    public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {//si
         ContratoPeriodo cp = null;
 
         try (Connection conn = new CConexion().establecerConexion()) {
