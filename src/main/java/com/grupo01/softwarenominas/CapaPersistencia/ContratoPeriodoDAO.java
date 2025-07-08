@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaPersistencia;
+package com.grupo01.softwarenominas.capapersistencia;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,10 +7,10 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.ContratoPeriodo;
-import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
+import com.grupo01.softwarenominas.capaconexion.CConexion;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.ContratoPeriodo;
+import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 
 public class ContratoPeriodoDAO {
 

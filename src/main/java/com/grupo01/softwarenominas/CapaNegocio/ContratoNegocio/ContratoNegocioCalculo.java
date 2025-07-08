@@ -1,11 +1,11 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
+package com.grupo01.softwarenominas.capanegocio.contratonegocio;
 
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Cargo;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
-import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
-import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
+import com.grupo01.softwarenominas.capaentidad.Area;
+import com.grupo01.softwarenominas.capaentidad.Cargo;
+import com.grupo01.softwarenominas.capaentidad.Especialidad;
+import com.grupo01.softwarenominas.capaentidad.TipoContrato;
+import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 import java.util.Calendar;
 import java.util.Date;
 

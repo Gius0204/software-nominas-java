@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaPresentacion.Utilities;
+package com.grupo01.softwarenominas.capapresentacion.utils;
 
 import java.awt.Component;
 import java.awt.Dimension;

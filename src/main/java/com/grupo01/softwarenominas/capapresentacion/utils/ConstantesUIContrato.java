@@ -1,6 +1,10 @@
-package com.grupo01.softwarenominas.CapaPresentacion.Utilities;
+package com.grupo01.softwarenominas.capapresentacion.utils;
 
 public class ConstantesUIContrato {
+    private ConstantesUIContrato() {
+        // Constructor privado para evitar instanciación
+    }
+    
     public static final String COLOR_PANEL_BACKGROUND = "Panel.background";
     public static final String FUENTE_SEGOE_UI = "Segoe UI";
 

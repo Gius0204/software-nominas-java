@@ -1,5 +1,6 @@
-package com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones;
+package com.grupo01.softwarenominas.capapresentacion.validacionespresentacion;
 
+import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
@@ -18,7 +19,9 @@ public class FiltroHoras extends DocumentFilter {
                 if (valor >= 80 && valor <= 200) {
                     super.replace(fb, offset, length, text, attrs);
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+              JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido entre 80 y 200.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaPersistencia;
+package com.grupo01.softwarenominas.capapersistencia;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -14,32 +14,32 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Cargo;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
-import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
-import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.APELLIDO_MATERNO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.APELLIDO_PATERNO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.AREA_NOMBRE;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.CARGO_NOMBRE;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.DESCRIPCION;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.DOCUMENTO_IDENTIDAD;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ESPECIALIDAD;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ESTADO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.FECHA_FIN;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.FECHA_INICIO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.FECHA_REGISTRO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.HORAS_TOTALES;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_CARGO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_CONTRATO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_ESPECIALIDAD;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_TIPO_CONTRATO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.NOMBRES;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.TIPO_CONTRATO_NOMBRE;
+import com.grupo01.softwarenominas.capaconexion.CConexion;
+import com.grupo01.softwarenominas.capaentidad.Area;
+import com.grupo01.softwarenominas.capaentidad.Cargo;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
+import com.grupo01.softwarenominas.capaentidad.Especialidad;
+import com.grupo01.softwarenominas.capaentidad.TipoContrato;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.APELLIDO_MATERNO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.APELLIDO_PATERNO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.AREA_NOMBRE;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.CARGO_NOMBRE;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.DESCRIPCION;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.DOCUMENTO_IDENTIDAD;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ESPECIALIDAD;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ESTADO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.FECHA_FIN;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.FECHA_INICIO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.FECHA_REGISTRO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.HORAS_TOTALES;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_CARGO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_CONTRATO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_ESPECIALIDAD;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_TIPO_CONTRATO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.NOMBRES;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.TIPO_CONTRATO_NOMBRE;
 
 public class ContratoDAO {
     public ResultadoOperacion registrarContrato(Contrato c) {
@@ -162,7 +162,7 @@ public class ContratoDAO {
             tabla.getColumnModel().getColumn(0).setWidth(0);
 
         } catch (SQLException e) {
-            System.err.println("Error al listar ContratoPeriodos: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al listar Contrato Periodos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -197,7 +197,6 @@ public class ContratoDAO {
             JOptionPane.showMessageDialog(null, "Horas actualizadas correctamente.");
 
         } catch (SQLException e) {
-            System.err.println("Error al guardar horas trabajadas: " + e.getMessage());
             JOptionPane.showMessageDialog(null, "Error al guardar horas trabajadas.");
         }
     }
@@ -337,7 +336,7 @@ public class ContratoDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al cargar tipos de contrato: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -364,7 +363,7 @@ public class ContratoDAO {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error al cargar cargos: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al cargar cargos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     

@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.NominaNegocio;
+package com.grupo01.softwarenominas.capanegocio.nominanegocio;
 
 public class NominaNegocioLlenado {
     

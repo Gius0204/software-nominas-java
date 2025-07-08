@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaNegocio;
+package com.grupo01.softwarenominas.capanegocio;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 
 import javax.swing.JTable;
 
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capaentidad.Trabajador;
+import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
 
 public class TrabajadorNegocioVarios {
@@ -105,55 +105,51 @@ public class TrabajadorNegocioVarios {
     
     private static void validarNombres(String nombres) throws Exception {
         if (nombres == null || nombres.trim().isEmpty()) {
-            throw new Exception("El campo Nombres es obligatorio.");
+            throw new IllegalArgumentException("El campo Nombres es obligatorio.");
         }
         if (!nombres.matches("^[A-Za-zÁÉÍÓÚÑáéíóúñ\\s]+$")) {
-            throw new Exception("El campo Nombres solo debe contener caracteres alfabéticos.");
+            throw new IllegalArgumentException("El campo Nombres solo debe contener caracteres alfabéticos.");
         }
     }
 
     private static void validarApellido(String campo, String apellido) throws Exception {
         if (apellido == null || apellido.trim().isEmpty()) {
-            throw new Exception("El campo " + campo + " es obligatorio.");
+            throw new IllegalArgumentException("El campo " + campo + " es obligatorio.");
         }
         if (!apellido.matches("^[A-Za-zÁÉÍÓÚÑáéíóúñ\\s]+$")) {
-            throw new Exception("El campo " + campo + " solo debe contener caracteres alfabéticos.");
+            throw new IllegalArgumentException("El campo " + campo + " solo debe contener caracteres alfabéticos.");
         }
     }
 
     private static void validarTipoYDocumentoIdentidad(String tipoDoc, String doc) throws Exception {
         if (tipoDoc == null || tipoDoc.trim().isEmpty()) {
-            throw new Exception("El tipo de documento es obligatorio.");
+            throw new IllegalArgumentException("El tipo de documento es obligatorio.");
         }
         if (doc == null || doc.trim().isEmpty()) {
-            throw new Exception("El documento de identidad es obligatorio.");
+            throw new IllegalArgumentException("El documento de identidad es obligatorio.");
         }
 
         if (!"DNI".equalsIgnoreCase(tipoDoc) && !"CE".equalsIgnoreCase(tipoDoc)) {
-            throw new Exception("El tipo de documento debe ser DNI o CE.");
+            throw new IllegalArgumentException("El tipo de documento debe ser DNI o CE.");
         }
 
-        if ("DNI".equalsIgnoreCase(tipoDoc)) {
-            if (!doc.matches("\\d{8}")) {
-                throw new Exception("El DNI debe tener 8 dígitos numéricos.");
-            }
+        if ("DNI".equalsIgnoreCase(tipoDoc) && !doc.matches("\\d{8}")) {
+            throw new IllegalArgumentException("El DNI debe tener 8 dígitos numéricos.");
         }
 
-        if ("CE".equalsIgnoreCase(tipoDoc)) {
-            if (!doc.matches("\\d{9}")) {
-                throw new Exception("El Carnet de Extranjería debe tener 9 dígitos numéricos.");
-            }
+        if ("CE".equalsIgnoreCase(tipoDoc) && !doc.matches("\\d{9}")) {
+            throw new IllegalArgumentException("El Carnet de Extranjería debe tener 9 dígitos numéricos.");
         }
     }
 
     private static void validarFechaNacimiento(Date fecha) throws Exception {
         if (fecha == null) {
-            throw new Exception("La fecha de nacimiento es obligatoria.");
+            throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
         }
 
         Date hoy = new Date();
         if (fecha.after(hoy)) {
-            throw new Exception("La fecha de nacimiento no puede ser futura.");
+            throw new IllegalArgumentException("La fecha de nacimiento no puede ser futura.");
         }
 
         Calendar cal = Calendar.getInstance();
@@ -161,48 +157,48 @@ public class TrabajadorNegocioVarios {
         Date edadMinima = cal.getTime();
 
         if (fecha.after(edadMinima)) {
-            throw new Exception("El trabajador debe ser mayor de 18 años.");
+            throw new IllegalArgumentException("El trabajador debe ser mayor de 18 años.");
         }
     }
 
     private static void validarTelefono(String telefono) throws Exception {
         if (telefono == null || telefono.trim().isEmpty()) {
-            throw new Exception("El teléfono es obligatorio.");
+            throw new IllegalArgumentException("El teléfono es obligatorio.");
         }
         if (!telefono.matches("9\\d{8}")) {
-            throw new Exception("Número no válido. Debe tener 9 dígitos y empezar con 9.");
+            throw new IllegalArgumentException("Número no válido. Debe tener 9 dígitos y empezar con 9.");
         }
     }
 
     private static void validarCorreo(String correo) throws Exception {
         if (correo == null || correo.trim().isEmpty()) {
-            throw new Exception("El correo electrónico es obligatorio.");
+            throw new IllegalArgumentException("El correo electrónico es obligatorio.");
         }
 
         Matcher matcher = CORREO_PATTERN.matcher(correo);
         if (!matcher.matches()) {
-            throw new Exception("El correo electrónico no tiene un formato válido.");
+            throw new IllegalArgumentException("El correo electrónico no tiene un formato válido.");
         }
     }
 
     private static void validarSexo(String sexo) throws Exception {
         if (sexo == null || sexo.trim().isEmpty()) {
-            throw new Exception("El campo sexo es obligatorio.");
+            throw new IllegalArgumentException("El campo sexo es obligatorio.");
         }
         if (!"M".equalsIgnoreCase(sexo) && !"F".equalsIgnoreCase(sexo)) {
-            throw new Exception("Debe seleccionar sexo Masculino (M) o Femenino (F).");
+            throw new IllegalArgumentException("Debe seleccionar sexo Masculino (M) o Femenino (F).");
         }
     }
 
     private static void validarDireccion(String direccion) throws Exception {
         if (direccion.length() > 150) {
-            throw new Exception("La dirección no debe exceder los 150 caracteres.");
+            throw new IllegalArgumentException("La dirección no debe exceder los 150 caracteres.");
         }
     }
 
     private static void validarDescripcion(String descripcion) throws Exception {
         if (descripcion.length() > 200) {
-            throw new Exception("La descripción no debe exceder los 200 caracteres.");
+            throw new IllegalArgumentException("La descripción no debe exceder los 200 caracteres.");
         }
     }
 }

@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaPersistencia;
+package com.grupo01.softwarenominas.capapersistencia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
+import com.grupo01.softwarenominas.capaconexion.CConexion;
+import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 
 public class PeriodoPagoDAO {
     public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {

@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaEntidad;
+package com.grupo01.softwarenominas.capaentidad;
 
 import java.util.Date;
 
@@ -19,17 +19,46 @@ public class DetalleContrato {
     public DetalleContrato() {
     }
 
-    public DetalleContrato(int idDetalleContrato, int idContrato, String tipoSeguroSalud, boolean tieneSeguroDeVida, boolean tieneSeguroDeAccidentes, boolean tieneAsignacionFamiliar, String descripcion, boolean estado, Date fechaRegistro, Contrato contrato) {
-        this.idDetalleContrato = idDetalleContrato;
-        this.idContrato = idContrato;
-        this.tipoSeguroSalud = tipoSeguroSalud;
-        this.tieneSeguroDeVida = tieneSeguroDeVida;
-        this.tieneSeguroDeAccidentes = tieneSeguroDeAccidentes;
-        this.tieneAsignacionFamiliar = tieneAsignacionFamiliar;
-        this.descripcion = descripcion;
-        this.estado = estado;
-        this.fechaRegistro = fechaRegistro;
-        this.contrato = contrato;
+    private DetalleContrato(Builder builder) {
+        this.idDetalleContrato = builder.idDetalleContrato;
+        this.idContrato = builder.idContrato;
+        this.tipoSeguroSalud = builder.tipoSeguroSalud;
+        this.tieneSeguroDeVida = builder.tieneSeguroDeVida;
+        this.tieneSeguroDeAccidentes = builder.tieneSeguroDeAccidentes;
+        this.tieneAsignacionFamiliar = builder.tieneAsignacionFamiliar;
+        this.descripcion = builder.descripcion;
+        this.estado = builder.estado;
+        this.fechaRegistro = builder.fechaRegistro;
+        this.contrato = builder.contrato;
+    }
+
+    public static class Builder {
+        private int idDetalleContrato;
+        private int idContrato;
+        private String tipoSeguroSalud;
+        private boolean tieneSeguroDeVida;
+        private boolean tieneSeguroDeAccidentes;
+        private boolean tieneAsignacionFamiliar;
+        private String descripcion;
+        private boolean estado;
+        private Date fechaRegistro;
+
+        private Contrato contrato;
+
+        public Builder idDetalleContrato(int idDetalleContrato) { this.idDetalleContrato = idDetalleContrato; return this; }
+        public Builder idContrato(int idContrato) { this.idContrato = idContrato; return this; }
+        public Builder tipoSeguroSalud(String tipoSeguroSalud) { this.tipoSeguroSalud = tipoSeguroSalud; return this; }
+        public Builder tieneSeguroDeVida(boolean tieneSeguroDeVida) { this.tieneSeguroDeVida = tieneSeguroDeVida; return this; }
+        public Builder tieneSeguroDeAccidentes(boolean tieneSeguroDeAccidentes) { this.tieneSeguroDeAccidentes = tieneSeguroDeAccidentes; return this; }
+        public Builder tieneAsignacionFamiliar(boolean tieneAsignacionFamiliar) { this.tieneAsignacionFamiliar = tieneAsignacionFamiliar; return this; }
+        public Builder descripcion(String descripcion) { this.descripcion = descripcion; return this; }
+        public Builder estado(boolean estado) { this.estado = estado; return this; }
+        public Builder fechaRegistro(Date fechaRegistro) { this.fechaRegistro = fechaRegistro; return this; }
+        public Builder contrato(Contrato contrato) { this.contrato = contrato; return this; }
+
+        public DetalleContrato build() {
+            return new DetalleContrato(this);
+        }
     }
 
     public int getIdDetalleContrato() {

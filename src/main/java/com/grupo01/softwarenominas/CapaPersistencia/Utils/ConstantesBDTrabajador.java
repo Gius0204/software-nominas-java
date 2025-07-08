@@ -1,7 +1,10 @@
-package com.grupo01.softwarenominas.CapaPersistencia.Utils;
+package com.grupo01.softwarenominas.capapersistencia.utils;
 
 public class ConstantesBDTrabajador {
-public static final String NOMBRES = "Nombres";
+    private ConstantesBDTrabajador() {
+        // Constructor privado para evitar instanciación
+    }
+    public static final String NOMBRES = "Nombres";
     public static final String APELLIDO_PATERNO = "ApellidoPaterno";
     public static final String APELLIDO_MATERNO = "ApellidoMaterno";
     public static final String TIPO_DOCUMENTO = "TipoDocumento";

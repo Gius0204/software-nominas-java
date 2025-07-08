@@ -1,10 +1,10 @@
-package com.grupo01.softwarenominas.CapaNegocio;
+package com.grupo01.softwarenominas.capanegocio;
 import java.util.Date;
 
 import javax.swing.JTable;
 
-import com.grupo01.softwarenominas.CapaPersistencia.NominaDAO;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capapersistencia.NominaDAO;
+import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
 
 public class NominaNegocioVarios {

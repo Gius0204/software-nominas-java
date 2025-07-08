@@ -1,16 +1,16 @@
 
-package com.grupo01.softwarenominas.CapaPresentacion;
+package com.grupo01.softwarenominas.capapresentacion;
 
-import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
+import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
 
-public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
+public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
 
     transient ContratoDAO contratoDao = new ContratoDAO();
 
 
-    public frmDialogHorasTrabajadas(java.awt.Frame parent, boolean modal) {
+    public FrmDialogHorasTrabajadas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
@@ -52,11 +52,6 @@ public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jtbTablaHorasTrabajadas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtbTablaHorasTrabajadasMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(jtbTablaHorasTrabajadas);
 
         btnGuardarCambios.setText("Guardar Cambios");
@@ -71,11 +66,6 @@ public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
 
         txtHorasTotales.setEditable(false);
         txtHorasTotales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtHorasTotales.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtHorasTotalesActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,18 +103,10 @@ public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jtbTablaHorasTrabajadasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbTablaHorasTrabajadasMouseClicked
-        
-    }//GEN-LAST:event_jtbTablaHorasTrabajadasMouseClicked
-
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
         contratoDao.guardarHorasTrabajadasDesdeTabla(jtbTablaHorasTrabajadas);
         this.dispose();
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
-
-    private void txtHorasTotalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorasTotalesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtHorasTotalesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -143,20 +125,27 @@ public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                frmDialogHorasTrabajadas dialog = new frmDialogHorasTrabajadas(new javax.swing.JFrame(), true);
+                FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

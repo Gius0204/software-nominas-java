@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaPersistencia;
+package com.grupo01.softwarenominas.capapersistencia;
 
 
 import java.sql.CallableStatement;
@@ -13,17 +13,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.APELLIDO_MATERNO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.APELLIDO_PATERNO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.CORREO_ELECTRONICO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.DOCUMENTO_IDENTIDAD;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.NOMBRES;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.TELEFONO;
-import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.TIPO_DOCUMENTO;
+import com.grupo01.softwarenominas.capaconexion.CConexion;
+import com.grupo01.softwarenominas.capaentidad.Area;
+import com.grupo01.softwarenominas.capaentidad.Especialidad;
+import com.grupo01.softwarenominas.capaentidad.Trabajador;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.APELLIDO_MATERNO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.APELLIDO_PATERNO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.CORREO_ELECTRONICO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.DOCUMENTO_IDENTIDAD;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.NOMBRES;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.TELEFONO;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.TIPO_DOCUMENTO;
 
 public class TrabajadorDAO {
 

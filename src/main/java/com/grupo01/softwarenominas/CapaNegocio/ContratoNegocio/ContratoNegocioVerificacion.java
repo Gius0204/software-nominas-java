@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
+package com.grupo01.softwarenominas.capanegocio.contratonegocio;
 
 public class ContratoNegocioVerificacion {
     //Falta metodo para verificar si ya hay un contrato vigente

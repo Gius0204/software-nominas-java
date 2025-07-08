@@ -1,11 +1,11 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
+package com.grupo01.softwarenominas.capanegocio.contratonegocio;
 
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
-import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
+import com.grupo01.softwarenominas.capaentidad.Trabajador;
+import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
+import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
 public class ContratoNegocioListado {
     ContratoDAO contratoDAO = new ContratoDAO();

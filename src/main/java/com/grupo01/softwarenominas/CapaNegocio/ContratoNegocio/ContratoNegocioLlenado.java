@@ -1,14 +1,15 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
+package com.grupo01.softwarenominas.capanegocio.contratonegocio;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Cargo;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
-import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
-import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capaentidad.Area;
+import com.grupo01.softwarenominas.capaentidad.Cargo;
+import com.grupo01.softwarenominas.capaentidad.Especialidad;
+import com.grupo01.softwarenominas.capaentidad.TipoContrato;
+import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
+import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
 public class ContratoNegocioLlenado {
     ContratoDAO contratoDAO = new ContratoDAO();
@@ -19,6 +20,7 @@ public class ContratoNegocioLlenado {
             trabajadorDAO.cargarAreas(comboBoxArea);
         }
         catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar las areas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -27,6 +29,7 @@ public class ContratoNegocioLlenado {
             trabajadorDAO.cargarEspecialidadesPorArea(comboBoxEspecialidad, idArea);
         }
         catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar las especialidades: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -35,6 +38,7 @@ public class ContratoNegocioLlenado {
             contratoDAO.cargarTiposContrato(comboBox);
         }
         catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -43,6 +47,7 @@ public class ContratoNegocioLlenado {
             contratoDAO.cargarCargos(comboBox);
         }
         catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al cargar los cargos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

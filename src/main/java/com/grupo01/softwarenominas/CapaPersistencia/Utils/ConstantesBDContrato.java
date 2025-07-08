@@ -1,6 +1,9 @@
-package com.grupo01.softwarenominas.CapaPersistencia.Utils;
+package com.grupo01.softwarenominas.capapersistencia.utils;
 
 public class ConstantesBDContrato {
+    private ConstantesBDContrato() {
+        // Constructor privado para evitar instanciación
+    }
     public static final String FECHA_INICIO = "FechaInicio";
     public static final String FECHA_FIN = "FechaFin";
     public static final String HORAS_TOTALES = "HorasTotales";

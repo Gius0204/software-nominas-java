@@ -1,13 +1,15 @@
 
-package com.grupo01.softwarenominas.CapaPresentacion;
+package com.grupo01.softwarenominas.capapresentacion;
 
-import com.grupo01.softwarenominas.CapaPresentacion.Utilities.ConstantesUIContrato;
+import javax.swing.UnsupportedLookAndFeelException;
 
-public class frmMenu extends javax.swing.JFrame {
+import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
+
+public class FrmMenu extends javax.swing.JFrame {
     
     int xmouse,ymouse;
     
-    public frmMenu() {
+    public FrmMenu() {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -52,7 +54,7 @@ public class frmMenu extends javax.swing.JFrame {
         getContentPane().add(PanelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 50));
 
         btnRegistrarContrato.setBackground(new java.awt.Color(0, 0, 0));
-        btnRegistrarContrato.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegistrarContrato.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegistrarContrato.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarContrato.setText("REGISTRAR CONTRATO");
         btnRegistrarContrato.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -64,7 +66,7 @@ public class frmMenu extends javax.swing.JFrame {
         getContentPane().add(btnRegistrarContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 330, 210, 50));
 
         btnRegistrarNomina.setBackground(new java.awt.Color(0, 0, 0));
-        btnRegistrarNomina.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegistrarNomina.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegistrarNomina.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarNomina.setText("REGISTRAR NOMINA");
         btnRegistrarNomina.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -76,7 +78,7 @@ public class frmMenu extends javax.swing.JFrame {
         getContentPane().add(btnRegistrarNomina, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 530, 210, 50));
 
         btnRegistrarTrabajador.setBackground(new java.awt.Color(0, 0, 0));
-        btnRegistrarTrabajador.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegistrarTrabajador.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegistrarTrabajador.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarTrabajador.setText("REGISTRAR TRABAJADOR");
         btnRegistrarTrabajador.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -88,7 +90,7 @@ public class frmMenu extends javax.swing.JFrame {
         getContentPane().add(btnRegistrarTrabajador, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 130, 210, 50));
 
         btnRegistrarTrabajador1.setBackground(new java.awt.Color(0, 0, 0));
-        btnRegistrarTrabajador1.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegistrarTrabajador1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegistrarTrabajador1.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarTrabajador1.setText("SALIR");
         btnRegistrarTrabajador1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -99,19 +101,19 @@ public class frmMenu extends javax.swing.JFrame {
         });
         getContentPane().add(btnRegistrarTrabajador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 110, 50));
 
-        jlbNomina.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 2, 12)); // NOI18N
+        jlbNomina.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         jlbNomina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Nomina.png"))); // NOI18N
         getContentPane().add(jlbNomina, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 460, -1, -1));
 
-        jlbContrato.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 2, 12)); // NOI18N
+        jlbContrato.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         jlbContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/contrato.png"))); // NOI18N
         getContentPane().add(jlbContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 260, -1, -1));
 
-        jlbTrabajador.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 2, 12)); // NOI18N
+        jlbTrabajador.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         jlbTrabajador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Trabajador.png"))); // NOI18N
         getContentPane().add(jlbTrabajador, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 60, -1, -1));
 
-        jlbNominas.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 48)); // NOI18N
+        jlbNominas.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         jlbNominas.setForeground(new java.awt.Color(255, 255, 255));
         jlbNominas.setText("NOMINAS");
         getContentPane().add(jlbNominas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, -1, -1));
@@ -126,19 +128,19 @@ public class frmMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarNominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarNominaActionPerformed
-        frmNomina1 nomina = new frmNomina1();
+        FrmNomina nomina = new FrmNomina();
         nomina.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarNominaActionPerformed
 
     private void btnRegistrarContratoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarContratoActionPerformed
-        frmContrato contrato = new frmContrato();
+        FrmContrato contrato = new FrmContrato();
         contrato.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarContratoActionPerformed
 
     private void btnRegistrarTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarTrabajadorActionPerformed
-        frmTrabajador trabajador = new frmTrabajador();
+        FrmTrabajador trabajador = new FrmTrabajador();
         trabajador.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarTrabajadorActionPerformed
@@ -175,21 +177,16 @@ public class frmMenu extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmNomina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmMenu().setVisible(true);
+                new FrmMenu().setVisible(true);
             }
         });
     }

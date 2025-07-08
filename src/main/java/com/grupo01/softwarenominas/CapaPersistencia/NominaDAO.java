@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaPersistencia;
+package com.grupo01.softwarenominas.capapersistencia;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -12,11 +12,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.grupo01.softwarenominas.CapaConexion.CConexion;
-import com.grupo01.softwarenominas.CapaEntidad.Nomina;
-import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
-import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
-import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capaconexion.CConexion;
+import com.grupo01.softwarenominas.capaentidad.Nomina;
+import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
+import com.grupo01.softwarenominas.capaentidad.TipoContrato;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
 
 public class NominaDAO {
 
@@ -51,7 +51,7 @@ public class NominaDAO {
     }
     
     
-    public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {
+    public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws SQLException {
         
         CConexion objetoConexion = new CConexion();
         
@@ -76,7 +76,7 @@ public class NominaDAO {
         }
     }
     
-    public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {
+    public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws SQLException {
         CConexion objetoConexion = new CConexion();
         
         String sql = "{call sp_ExistePeriodoAnteriorPendiente(?, ?)}";

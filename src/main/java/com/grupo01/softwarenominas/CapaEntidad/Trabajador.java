@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaEntidad;
+package com.grupo01.softwarenominas.capaentidad;
 
 import java.util.Date;
 
@@ -26,21 +26,57 @@ public class Trabajador {
     public Trabajador() {
     }
 
-    public Trabajador(int idTrabajador, String nombres, String apellidoPaterno, String apellidoMaterno, String documentoIdentidad, String tipoDocumento, String telefono, String correo, String sexo, Date fechaNacimiento, String direccion, String descripcion, boolean estado, Date fechaRegistro) {
-        this.idTrabajador = idTrabajador;
-        this.nombres = nombres;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.documentoIdentidad = documentoIdentidad;
-        this.tipoDocumento = tipoDocumento;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.sexo = sexo;
-        this.fechaNacimiento = fechaNacimiento;
-        this.direccion = direccion;
-        this.descripcion = descripcion;
-        this.estado = estado;
-        this.fechaRegistro = fechaRegistro;
+    private Trabajador(Builder builder) {
+        this.idTrabajador = builder.idTrabajador;
+        this.nombres = builder.nombres;
+        this.apellidoPaterno = builder.apellidoPaterno;
+        this.apellidoMaterno = builder.apellidoMaterno;
+        this.documentoIdentidad = builder.documentoIdentidad;
+        this.tipoDocumento = builder.tipoDocumento;
+        this.telefono = builder.telefono;
+        this.correo = builder.correo;
+        this.sexo = builder.sexo;
+        this.fechaNacimiento = builder.fechaNacimiento;
+        this.direccion = builder.direccion;
+        this.descripcion = builder.descripcion;
+        this.estado = builder.estado;
+        this.fechaRegistro = builder.fechaRegistro;
+    }
+
+    public static class Builder {
+        private int idTrabajador;
+        private String nombres;
+        private String apellidoPaterno;
+        private String apellidoMaterno;
+        private String documentoIdentidad;
+        private String tipoDocumento;
+        private String telefono;
+        private String correo;
+        private String sexo;
+        private Date fechaNacimiento;
+        private String direccion;
+        private String descripcion;
+        private boolean estado;
+        private Date fechaRegistro;
+
+        public Builder idTrabajador(int idTrabajador) { this.idTrabajador = idTrabajador; return this; }
+        public Builder nombres(String nombres) { this.nombres = nombres; return this; }
+        public Builder apellidoPaterno(String apellidoPaterno) { this.apellidoPaterno = apellidoPaterno; return this; }
+        public Builder apellidoMaterno(String apellidoMaterno) { this.apellidoMaterno = apellidoMaterno; return this; }
+        public Builder documentoIdentidad(String documentoIdentidad) { this.documentoIdentidad = documentoIdentidad; return this; }
+        public Builder tipoDocumento(String tipoDocumento) { this.tipoDocumento = tipoDocumento; return this; }
+        public Builder telefono(String telefono) { this.telefono = telefono; return this; }
+        public Builder correo(String correo) { this.correo = correo; return this; }
+        public Builder sexo(String sexo) { this.sexo = sexo; return this; }
+        public Builder fechaNacimiento(Date fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; return this; }
+        public Builder direccion(String direccion) { this.direccion = direccion; return this; }
+        public Builder descripcion(String descripcion) { this.descripcion = descripcion; return this; }
+        public Builder estado(boolean estado) { this.estado = estado; return this; }
+        public Builder fechaRegistro(Date fechaRegistro) { this.fechaRegistro = fechaRegistro; return this; }
+
+        public Trabajador build() {
+            return new Trabajador(this);
+        }
     }
 
     public int getIdTrabajador() {

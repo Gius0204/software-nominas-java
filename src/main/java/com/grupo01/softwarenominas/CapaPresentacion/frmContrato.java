@@ -1,18 +1,18 @@
-package com.grupo01.softwarenominas.CapaPresentacion;
+package com.grupo01.softwarenominas.capapresentacion;
 
-import com.grupo01.softwarenominas.CapaEntidad.Area;
-import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
-import com.grupo01.softwarenominas.CapaEntidad.Cargo;
-import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
-import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
-import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
-import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroDescripcion;
-import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroNumerico;
-import com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones.FiltroSalario;
+import com.grupo01.softwarenominas.capaentidad.Area;
+import com.grupo01.softwarenominas.capaentidad.Especialidad;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
+import com.grupo01.softwarenominas.capaentidad.Cargo;
+import com.grupo01.softwarenominas.capaentidad.TipoContrato;
+import com.grupo01.softwarenominas.capaentidad.Trabajador;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
+import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroDescripcion;
+import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroNumerico;
+import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroSalario;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,26 +24,26 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
 
-import com.grupo01.softwarenominas.CapaPresentacion.Utilities.Utilidades;
-import com.grupo01.softwarenominas.CapaPresentacion.Utilities.ConstantesUIContrato;
+import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
+import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
 
 import javax.swing.table.DefaultTableModel;
 
 import javax.swing.text.AbstractDocument;
 
-public class frmContrato extends javax.swing.JFrame {   
+public class FrmContrato extends javax.swing.JFrame {   
 
     private static final long serialVersionUID = 1L;
     transient Utilidades utilidades = new Utilidades();    
     transient ContratoDAO contratoDAO = new ContratoDAO();
     transient TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
-    transient private Trabajador trabajadorActual;
-    transient private Contrato contratoActual;
-    transient private DetalleContrato detalleContratoActual;
+    private transient Trabajador trabajadorActual;
+    private transient Contrato contratoActual;
+    private transient DetalleContrato detalleContratoActual;
     
     private boolean modoEdicionContrato = false;    
     
-    public frmContrato() {
+    public FrmContrato() {
         initComponents();
         inicializarFormulario();
         inicializarTrueOrFalseComponents();
@@ -66,15 +66,13 @@ public class frmContrato extends javax.swing.JFrame {
             Date fechaInicio = jdcFechaInicial.getDate();
             Date fechaFin = jdcFechaFinal.getDate();
 
-            if (fechaInicio != null && fechaFin != null) {
-                if (fechaFin.before(fechaInicio)) {
-                    jdcFechaFinal.setDate(null);
-                    lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
-                }
+            if (fechaInicio != null && fechaFin != null && fechaFin.before(fechaInicio)) {
+                jdcFechaFinal.setDate(null);
+                lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
             }
         });
     }
-     
+    
     private void inicializarTrueOrFalseComponents(){
         txtSalario.setEditable(false);
         jdcFechaFin.setDate(null);
@@ -208,7 +206,6 @@ public class frmContrato extends javax.swing.JFrame {
                     } catch (NumberFormatException ex) {
                         lblMensaje.setText("Ingrese un número válido para salario.");
                     }
-                } else {
                 }
             }
         });
@@ -354,7 +351,16 @@ public class frmContrato extends javax.swing.JFrame {
             return;
         }
 
-        int meses = rtn3meses.isSelected() ? 3 : rtn6meses.isSelected() ? 6 : rtn1anio.isSelected() ? 12 : 0;
+        int meses;
+        if (rtn3meses.isSelected()) {
+            meses = 3;
+        } else if (rtn6meses.isSelected()) {
+            meses = 6;
+        } else if (rtn1anio.isSelected()) {
+            meses = 12;
+        } else {
+            meses = 0;
+        }
 
         if (meses > 0) {
             Calendar cal = Calendar.getInstance();
@@ -657,18 +663,13 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel1.add(txtNombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, 250, 30));
 
         txtDNI.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtDNI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDNIActionPerformed(evt);
-            }
-        });
         jPanel1.add(txtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 210, 30));
 
-        jLabel5.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Area");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
 
-        jLabel6.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Duracion");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 270, -1, -1));
 
@@ -683,7 +684,7 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 430, 280, 110));
 
         btnRegresar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegresar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/saliir.png"))); // NOI18N
         btnRegresar.setText("CERRAR");
         btnRegresar.setBorder(null);
@@ -697,7 +698,7 @@ public class frmContrato extends javax.swing.JFrame {
         });
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 620, 110, 100));
 
-        jLabel14.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setText("Trabajador");
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 80, -1));
 
@@ -711,7 +712,7 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel1.add(cmbArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 220, 30));
 
         btnLimpiar.setBackground(new java.awt.Color(255, 254, 255));
-        btnLimpiar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/borrar.png"))); // NOI18N
         btnLimpiar.setText("LIMPIAR");
         btnLimpiar.setBorder(null);
@@ -728,11 +729,11 @@ public class frmContrato extends javax.swing.JFrame {
         cmbCargo.setBorder(null);
         jPanel1.add(cmbCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, 220, 30));
 
-        jLabel11.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setText("Cargo");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 220, -1, -1));
 
-        jLabel26.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel26.setText("Tipo de Contrato");
         jPanel1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
@@ -740,28 +741,28 @@ public class frmContrato extends javax.swing.JFrame {
         cmbTipoContrato.setBorder(null);
         jPanel1.add(cmbTipoContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 220, 30));
 
-        jLabel27.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel27.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel27.setText("# Horas");
         jPanel1.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
 
         txtHorasTotales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.add(txtHorasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 320, 80, 30));
 
-        jLabel28.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel28.setText("Fecha Inicio");
         jPanel1.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, -1, -1));
 
         jdcFechaFin.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jdcFechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 360, 170, 30));
 
-        jLabel29.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel29.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel29.setText("Fecha Fin");
         jPanel1.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, -1, -1));
 
         jdcFechaInicio.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jdcFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, 170, 30));
 
-        jLabel30.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel30.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel30.setText("Salario");
         jPanel1.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, -1, -1));
 
@@ -770,17 +771,17 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jcbAsignacion.setBackground(new java.awt.Color(255, 255, 255));
-        jcbAsignacion.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jcbAsignacion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jcbAsignacion.setText("Asignación Familiar");
         jPanel7.add(jcbAsignacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 160, -1));
 
         jcbSeguroVida.setBackground(new java.awt.Color(255, 255, 255));
-        jcbSeguroVida.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jcbSeguroVida.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jcbSeguroVida.setText("Seguro de Vida");
         jPanel7.add(jcbSeguroVida, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 160, -1));
 
         jcbSeguroAccidentes.setBackground(new java.awt.Color(255, 255, 255));
-        jcbSeguroAccidentes.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jcbSeguroAccidentes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jcbSeguroAccidentes.setText("Seguro Accidentes");
         jPanel7.add(jcbSeguroAccidentes, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 160, -1));
 
@@ -791,10 +792,10 @@ public class frmContrato extends javax.swing.JFrame {
 
         rtnESSALUD.setBackground(new java.awt.Color(255, 255, 255));
         bgTipoSeguroSalud.add(rtnESSALUD);
-        rtnESSALUD.setText(ConstantesUIContrato.TEXTO_ESSALUD);
+        rtnESSALUD.setText("ESSALUD");
         jPanel7.add(rtnESSALUD, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Tipo Seguro Salud");
         jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, -1));
 
@@ -804,11 +805,11 @@ public class frmContrato extends javax.swing.JFrame {
 
         jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 180, 170));
 
-        jLabel4.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Documento Identidad (DNI/CE)");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
-        ModuloContrato.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 24)); // NOI18N
+        ModuloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         ModuloContrato.setText("MODULO CONTRATO");
         jPanel1.add(ModuloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
@@ -818,7 +819,7 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel25.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(255, 255, 255));
         jLabel25.setText("Busqueda de Contratos");
         jPanel4.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
@@ -842,7 +843,7 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel3.add(jdcFechaInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 40, 150, 30));
 
         btnBuscar.setBackground(new java.awt.Color(255, 254, 255));
-        btnBuscar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/buscar.png"))); // NOI18N
         btnBuscar.setText("BUSCAR");
         btnBuscar.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -857,41 +858,26 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel3.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 50, 100, 40));
 
         txtDocumentoBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtDocumentoBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDocumentoBuscarActionPerformed(evt);
-            }
-        });
         jPanel3.add(txtDocumentoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 210, 30));
 
-        jLabel16.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel16.setText("Por Fechas :");
         jPanel3.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, -1));
 
         txtNombresBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        txtNombresBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNombresBuscarActionPerformed(evt);
-            }
-        });
         jPanel3.add(txtNombresBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 210, 30));
 
-        jLabel19.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel19.setText("Por Nombres del Trabajador :");
         jPanel3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
 
-        jLabel21.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel21.setText("Por Documento :");
         jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jhcHabilitarFechas.setBackground(new java.awt.Color(255, 255, 255));
         jhcHabilitarFechas.setText("Habilitar Fechas");
         jhcHabilitarFechas.setBorder(null);
-        jhcHabilitarFechas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jhcHabilitarFechasActionPerformed(evt);
-            }
-        });
         jPanel3.add(jhcHabilitarFechas, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 10, 110, 20));
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 120, 620, 130));
@@ -902,7 +888,7 @@ public class frmContrato extends javax.swing.JFrame {
 
         jPanel12.setBackground(new java.awt.Color(0, 0, 0));
 
-        lblMensajeBuscar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
+        lblMensajeBuscar.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblMensajeBuscar.setForeground(new java.awt.Color(255, 255, 255));
         lblMensajeBuscar.setText("Mensaje: ");
         jPanel12.add(lblMensajeBuscar);
@@ -911,7 +897,7 @@ public class frmContrato extends javax.swing.JFrame {
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 640, 620, 40));
 
-        jLabel8.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Especialidad");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, -1, -1));
 
@@ -925,33 +911,33 @@ public class frmContrato extends javax.swing.JFrame {
 
         rtn6meses.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn6meses);
-        rtn6meses.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
+        rtn6meses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         rtn6meses.setText("6 meses");
         jPanel10.add(rtn6meses, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 80, -1));
 
         rtn3meses.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn3meses);
-        rtn3meses.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
+        rtn3meses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         rtn3meses.setText("3 meses");
         jPanel10.add(rtn3meses, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, -1));
 
         rtn1anio.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn1anio);
-        rtn1anio.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
+        rtn1anio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         rtn1anio.setText("1 año");
         jPanel10.add(rtn1anio, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 80, -1));
 
         jPanel1.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 290, 100, 110));
 
-        jLabel9.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Descripcion");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 410, -1, -1));
 
-        jLabel10.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Detalle");
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, -1, -1));
 
-        lblMensaje.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
+        lblMensaje.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblMensaje.setText("Mensaje: ");
         jpanelContenedor.add(lblMensaje);
 
@@ -966,7 +952,7 @@ public class frmContrato extends javax.swing.JFrame {
         jPanel1.add(btnEditarHorasTrabajadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 550, 280, -1));
 
         btnRegistrar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegistrar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegistrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/log-out.png"))); // NOI18N
         btnRegistrar.setText("REGISTRAR");
         btnRegistrar.setBorder(null);
@@ -1007,7 +993,7 @@ public class frmContrato extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
    
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        frmMenu menu = new frmMenu();
+        FrmMenu menu = new FrmMenu();
         menu.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
@@ -1030,13 +1016,9 @@ public class frmContrato extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_cmbAreaActionPerformed
 
-    private void txtDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNIActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDNIActionPerformed
-
     private void btnEditarHorasTrabajadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarHorasTrabajadasActionPerformed
         //int idContratoSeleccionado = contratoActual.getIdContrato(); // Tu método para extraer ID seleccionado
-        frmDialogHorasTrabajadas dialog = new frmDialogHorasTrabajadas(this, true); // modal
+        FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(this, true); // modal
         dialog.inicializarConContrato(contratoActual);
         dialog.setVisible(true);
 
@@ -1208,14 +1190,12 @@ public class frmContrato extends javax.swing.JFrame {
                         btnRegistrar.setEnabled(false);
                         
                         limpiar();
-                    } else {
                     }
 
-                } else {
                 }
 
             } catch (Exception e) {
-                
+                JOptionPane.showMessageDialog(this, "Error al registrar contrato: " + e.getMessage());
             }
         }
         
@@ -1223,14 +1203,6 @@ public class frmContrato extends javax.swing.JFrame {
         
         listarContratosTabla(jtbTabla, null, null, "", "");
     }//GEN-LAST:event_btnRegistrarActionPerformed
-
-    private void txtDocumentoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocumentoBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDocumentoBuscarActionPerformed
-
-    private void txtNombresBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombresBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombresBuscarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
@@ -1250,12 +1222,10 @@ public class frmContrato extends javax.swing.JFrame {
                 fechaFin = jdcFechaFinal.getDate();
             }
             
-            if (fechaInicio != null && fechaFin != null) {
-                if (fechaFin.before(fechaInicio)) {
-                    jdcFechaFinal.setDate(null);
-                    lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
-                    return;
-                }
+            if (fechaInicio != null && fechaFin != null && fechaFin.before(fechaInicio)) {
+                jdcFechaFinal.setDate(null);
+                lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
+                return;
             }
             
         }
@@ -1263,10 +1233,6 @@ public class frmContrato extends javax.swing.JFrame {
         listarContratosTabla(jtbTabla, fechaInicio, fechaFin, documento, nombres);
         
     }//GEN-LAST:event_btnBuscarActionPerformed
-
-    private void jhcHabilitarFechasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jhcHabilitarFechasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jhcHabilitarFechasActionPerformed
 
     private void jtbTablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbTablaMouseClicked
         // TODO add your handling code here:
@@ -1328,22 +1294,18 @@ public class frmContrato extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmContrato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmContrato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmContrato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmContrato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmNomina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmContrato().setVisible(true);
+                new FrmContrato().setVisible(true);
             }
         });
     }

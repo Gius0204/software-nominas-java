@@ -88,9 +88,6 @@
               </Table>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtbTablaHorasTrabajadasMouseClicked"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -119,9 +116,6 @@
           </Border>
         </Property>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtHorasTotalesActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

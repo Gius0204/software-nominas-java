@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.TrabajadorNegocio;
+package com.grupo01.softwarenominas.capanegocio.trabajadornegocio;
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaEntidad;
+package com.grupo01.softwarenominas.capaentidad;
 
 import java.util.Date;
 
@@ -23,35 +23,57 @@ public class DetalleNomina {
     public DetalleNomina() {
     }
 
-    public DetalleNomina(double pagoHorasExtras, double gratificacionLegal, double asignacionFamiliar, double cts, double descuentoHorasNoCompletadas, double descuentoSeguroSalud, double descuentoSeguroVida, double descuentoSeguroAccidentes, double descuentoAFP, double descuentoRenta, double totalIngresos, double totalDescuentos) {
-        this.pagoHorasExtras = pagoHorasExtras;
-        this.gratificacionLegal = gratificacionLegal;
-        this.asignacionFamiliar = asignacionFamiliar;
-        this.cts = cts;
-        this.descuentoHorasNoCompletadas = descuentoHorasNoCompletadas;
-        this.descuentoSeguroSalud = descuentoSeguroSalud;
-        this.descuentoSeguroVida = descuentoSeguroVida;
-        this.descuentoSeguroAccidentes = descuentoSeguroAccidentes;
-        this.descuentoAFP = descuentoAFP;
-        this.descuentoRenta = descuentoRenta;
-        this.totalIngresos = totalIngresos;
-        this.totalDescuentos = totalDescuentos;
+    private DetalleNomina(Builder builder) {
+        this.pagoHorasExtras = builder.pagoHorasExtras;
+        this.gratificacionLegal = builder.gratificacionLegal;
+        this.asignacionFamiliar = builder.asignacionFamiliar;
+        this.cts = builder.cts;
+        this.descuentoHorasNoCompletadas = builder.descuentoHorasNoCompletadas;
+        this.descuentoSeguroSalud = builder.descuentoSeguroSalud;
+        this.descuentoSeguroVida = builder.descuentoSeguroVida;
+        this.descuentoSeguroAccidentes = builder.descuentoSeguroAccidentes;
+        this.descuentoAFP = builder.descuentoAFP;
+        this.descuentoRenta = builder.descuentoRenta;
+        this.totalIngresos = builder.totalIngresos;
+        this.totalDescuentos = builder.totalDescuentos;
+        this.fechaRegistro = builder.fechaRegistro;
     }
 
-    public DetalleNomina(double pagoHorasExtras, double gratificacionLegal, double asignacionFamiliar, double cts, double descuentoHorasNoCompletadas, double descuentoSeguroSalud, double descuentoSeguroVida, double descuentoSeguroAccidentes, double descuentoAFP, double descuentoRenta, double totalIngresos, double totalDescuentos, Date fechaRegistro) {
-        this.pagoHorasExtras = pagoHorasExtras;
-        this.gratificacionLegal = gratificacionLegal;
-        this.asignacionFamiliar = asignacionFamiliar;
-        this.cts = cts;
-        this.descuentoHorasNoCompletadas = descuentoHorasNoCompletadas;
-        this.descuentoSeguroSalud = descuentoSeguroSalud;
-        this.descuentoSeguroVida = descuentoSeguroVida;
-        this.descuentoSeguroAccidentes = descuentoSeguroAccidentes;
-        this.descuentoAFP = descuentoAFP;
-        this.descuentoRenta = descuentoRenta;
-        this.totalIngresos = totalIngresos;
-        this.totalDescuentos = totalDescuentos;
-        this.fechaRegistro = fechaRegistro;
+    public static class Builder {
+        private double pagoHorasExtras;
+        private double gratificacionLegal;
+        private double asignacionFamiliar;
+        private double cts;
+
+        private double descuentoHorasNoCompletadas;
+        private double descuentoSeguroSalud;
+        private double descuentoSeguroVida;
+        private double descuentoSeguroAccidentes;
+        private double descuentoAFP;
+        private double descuentoRenta;
+
+        private double totalIngresos;
+        private double totalDescuentos;
+
+        private java.util.Date fechaRegistro;
+
+        public Builder pagoHorasExtras(double pagoHorasExtras) { this.pagoHorasExtras = pagoHorasExtras; return this; }
+        public Builder gratificacionLegal(double gratificacionLegal) { this.gratificacionLegal = gratificacionLegal; return this; }
+        public Builder asignacionFamiliar(double asignacionFamiliar) { this.asignacionFamiliar = asignacionFamiliar; return this; }
+        public Builder cts(double cts) { this.cts = cts; return this; }
+        public Builder descuentoHorasNoCompletadas(double descuentoHorasNoCompletadas) { this.descuentoHorasNoCompletadas = descuentoHorasNoCompletadas; return this; }
+        public Builder descuentoSeguroSalud(double descuentoSeguroSalud) { this.descuentoSeguroSalud = descuentoSeguroSalud; return this; }
+        public Builder descuentoSeguroVida(double descuentoSeguroVida) { this.descuentoSeguroVida = descuentoSeguroVida; return this; }
+        public Builder descuentoSeguroAccidentes(double descuentoSeguroAccidentes) { this.descuentoSeguroAccidentes = descuentoSeguroAccidentes; return this; }
+        public Builder descuentoAFP(double descuentoAFP) { this.descuentoAFP = descuentoAFP; return this; }
+        public Builder descuentoRenta(double descuentoRenta) { this.descuentoRenta = descuentoRenta; return this; }
+        public Builder totalIngresos(double totalIngresos) { this.totalIngresos = totalIngresos; return this; }
+        public Builder totalDescuentos(double totalDescuentos) { this.totalDescuentos = totalDescuentos; return this; }
+        public Builder fechaRegistro(java.util.Date fechaRegistro) { this.fechaRegistro = fechaRegistro; return this; }
+
+        public DetalleNomina build() {
+            return new DetalleNomina(this);
+        }
     }
 
     public double getPagoHorasExtras() {

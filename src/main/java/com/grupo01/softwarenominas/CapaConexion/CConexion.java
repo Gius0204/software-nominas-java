@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.CapaConexion;
+package com.grupo01.softwarenominas.capaconexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,8 +21,7 @@ public class CConexion {
                     +"password="+contrasenia+";"
                     +"encrypt=true;trustServerCertificate=true;";
         try{         
-            Connection conectar = DriverManager.getConnection(conexionUrl);
-            return conectar;
+            return DriverManager.getConnection(conexionUrl);
         }catch (Exception e){
             JOptionPane.showMessageDialog(null,"Error al conectar la base de datos. Error: "+e.toString());
             return null;

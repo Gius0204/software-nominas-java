@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaEntidad;
+package com.grupo01.softwarenominas.capaentidad;
 
 import java.util.Date;
 

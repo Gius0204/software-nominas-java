@@ -1,4 +1,4 @@
-package com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones;
+package com.grupo01.softwarenominas.capapresentacion.validacionespresentacion;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

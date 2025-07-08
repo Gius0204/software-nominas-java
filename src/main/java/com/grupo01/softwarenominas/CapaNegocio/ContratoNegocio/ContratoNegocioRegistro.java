@@ -1,9 +1,9 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
-import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
+package com.grupo01.softwarenominas.capanegocio.contratonegocio;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
+import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
+import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
 public class ContratoNegocioRegistro {
     
@@ -12,7 +12,7 @@ public class ContratoNegocioRegistro {
       
     
     
-    public String ActualizarContrato(Contrato c){
+    public String actualizarContrato(Contrato c){
         String mensaje = "";
         try{
             boolean actualizado = contratoDAO.actualizarContrato(c);
@@ -29,7 +29,7 @@ public class ContratoNegocioRegistro {
         return mensaje;
     }
     
-    public String ActualizarDetalleContrato(DetalleContrato dc){
+    public String actualizarDetalleContrato(DetalleContrato dc){
         String mensaje = "";
         try{
             boolean detalleactualizado = contratoDAO.actualizarDetalleContrato(dc);

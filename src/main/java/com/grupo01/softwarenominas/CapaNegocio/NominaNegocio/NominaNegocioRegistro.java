@@ -1,16 +1,15 @@
 
-package com.grupo01.softwarenominas.CapaNegocio.NominaNegocio;
+package com.grupo01.softwarenominas.capanegocio.nominanegocio;
 
 
-import com.grupo01.softwarenominas.CapaEntidad.Nomina;
-import com.grupo01.softwarenominas.CapaEntidad.ContratoPeriodo;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
-import com.grupo01.softwarenominas.CapaEntidad.Contrato;
-import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina;
+import com.grupo01.softwarenominas.capaentidad.Nomina;
+import com.grupo01.softwarenominas.capaentidad.ContratoPeriodo;
+import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
+import com.grupo01.softwarenominas.capaentidad.DetalleNomina;
 
 public class NominaNegocioRegistro {  
-    NominaNegocioCalculo NominaProcesador = new NominaNegocioCalculo();
     
     public Nomina procesarNominaCompleta(ContratoPeriodo cp, DetalleContrato detalleContrato, String metodoPago, String tipoSeguro) {
         Contrato contrato = cp.getContrato();
@@ -26,24 +25,24 @@ public class NominaNegocioRegistro {
         boolean tieneAsignacionFamiliar = detalleContrato.isTieneAsignacionFamiliar();
         boolean esExterno = contrato.getTipoContrato().getNombre().equalsIgnoreCase("SERVICIO EXTERNO");
 
-        int horasExtras = NominaProcesador.calcularHorasExtras(cp.getHorasTrabajadas(), contrato.getHorasTotales());
-        int horasNoCompletadas = NominaProcesador.calcularHorasNoCompletadas(cp.getHorasTrabajadas(), contrato.getHorasTotales());
+        int horasExtras = NominaNegocioCalculo.calcularHorasExtras(cp.getHorasTrabajadas(), contrato.getHorasTotales());
+        int horasNoCompletadas = NominaNegocioCalculo.calcularHorasNoCompletadas(cp.getHorasTrabajadas(), contrato.getHorasTotales());
 
-        double pagoHorasExtras = NominaProcesador.calcularPagoHorasExtras(sueldoBase, horasExtras, contrato.getHorasTotales());
-        double gratificacion = NominaProcesador.calcularGratificacionLegal(sueldoBase, contrato.getFechaInicio(), periodo.getFechaFin(), tipoSeguro);
-        double asignacion = NominaProcesador.calcularAsignacionFamiliar(tieneAsignacionFamiliar);
-        double cts = NominaProcesador.calcularCTS(sueldoBase, asignacion, gratificacion);
+        double pagoHorasExtras = NominaNegocioCalculo.calcularPagoHorasExtras(sueldoBase, horasExtras, contrato.getHorasTotales());
+        double gratificacion = NominaNegocioCalculo.calcularGratificacionLegal(sueldoBase, contrato.getFechaInicio(), periodo.getFechaFin(), tipoSeguro);
+        double asignacion = NominaNegocioCalculo.calcularAsignacionFamiliar(tieneAsignacionFamiliar);
+        double cts = NominaNegocioCalculo.calcularCTS(sueldoBase, asignacion, gratificacion);
 
-        double dHorasNo = NominaProcesador.calcularDescuentoHorasNoCompletadas(sueldoBase, horasNoCompletadas, contrato.getHorasTotales());
-        double dSalud = NominaProcesador.calcularSeguroSalud(sueldoBase, detalleContrato.getTipoSeguroSalud());
-        double dVida = NominaProcesador.calcularSeguroVida(sueldoBase, detalleContrato.isTieneSeguroDeVida());
-        double dAccidentes = NominaProcesador.calcularSeguroAccidentes(sueldoBase, detalleContrato.isTieneSeguroDeAccidentes());
-        double afp = NominaProcesador.calcularDescuentoAFP(sueldoBase);
-        double renta = NominaProcesador.calcularRenta(sueldoBase, esExterno);
+        double dHorasNo = NominaNegocioCalculo.calcularDescuentoHorasNoCompletadas(sueldoBase, horasNoCompletadas, contrato.getHorasTotales());
+        double dSalud = NominaNegocioCalculo.calcularSeguroSalud(sueldoBase, detalleContrato.getTipoSeguroSalud());
+        double dVida = NominaNegocioCalculo.calcularSeguroVida(sueldoBase, detalleContrato.isTieneSeguroDeVida());
+        double dAccidentes = NominaNegocioCalculo.calcularSeguroAccidentes(sueldoBase, detalleContrato.isTieneSeguroDeAccidentes());
+        double afp = NominaNegocioCalculo.calcularDescuentoAFP(sueldoBase);
+        double renta = NominaNegocioCalculo.calcularRenta(sueldoBase, esExterno);
 
-        double totalIngresos = NominaProcesador.calcularTotalIngresos(sueldoBase, pagoHorasExtras, gratificacion, asignacion, cts);
-        double totalDescuentos = NominaProcesador.calcularTotalDescuentos(dHorasNo, dSalud, dVida, dAccidentes, afp, renta);
-        double sueldoNeto = NominaProcesador.calcularSueldoNeto(totalIngresos, totalDescuentos);
+        double totalIngresos = NominaNegocioCalculo.calcularTotalIngresos(sueldoBase, pagoHorasExtras, gratificacion, asignacion, cts);
+        double totalDescuentos = NominaNegocioCalculo.calcularTotalDescuentos(dHorasNo, dSalud, dVida, dAccidentes, afp, renta);
+        double sueldoNeto = NominaNegocioCalculo.calcularSueldoNeto(totalIngresos, totalDescuentos);
 
         detalle.setPagoHorasExtras(pagoHorasExtras);
         detalle.setGratificacionLegal(gratificacion);
