@@ -28,8 +28,11 @@ public class ContratoDAO {
         int idGenerado;
         String mensaje;
 
-        try (Connection conn = new CConexion().establecerConexion()) {
+        try (
+            Connection conn = new CConexion().establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_CrearContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        ) {
+            
 
             stmt.setInt(1, c.getIdTrabajador());
             stmt.setInt(2, c.getIdTipoContrato());
@@ -64,10 +67,14 @@ public class ContratoDAO {
 
     public boolean actualizarContrato(Contrato c) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ActualizarContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+        )
+        {
+            
 
             stmt.setInt(1, c.getIdContrato());
             stmt.setInt(2, c.getIdTipoContrato());
@@ -91,7 +98,7 @@ public class ContratoDAO {
 
     public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
@@ -103,7 +110,8 @@ public class ContratoDAO {
 
         tabla.setModel(modelo);
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             PreparedStatement stmt = conn.prepareStatement(
                 "SELECT cp.IdContratoPeriodo, p.Nombre AS Periodo, p.FechaInicio, p.FechaFin, " +
                 "cp.HorasTrabajadas, cp.EstadoPago " +
@@ -111,6 +119,9 @@ public class ContratoDAO {
                 "INNER JOIN PeriodoPago p ON cp.IdPeriodo = p.IdPeriodo " +
                 "WHERE cp.IdContrato = ? ORDER BY p.FechaInicio"
             );
+        )
+        {
+            
             stmt.setInt(1, idContrato);
             ResultSet rs = stmt.executeQuery();
             ResultSetMetaData meta = rs.getMetaData();
@@ -139,9 +150,12 @@ public class ContratoDAO {
     
     public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
+        )
+        {
             for (int i = 0; i < tabla.getRowCount(); i++) {
                 String estado = tabla.getValueAt(i, 5).toString();
                 if (estado.equalsIgnoreCase("PAGADO") || estado.equalsIgnoreCase("CANCELADO")) {
@@ -151,10 +165,15 @@ public class ContratoDAO {
                 int idContratoPeriodo = Integer.parseInt(tabla.getValueAt(i, 0).toString());
                 int horasTrabajadas = Integer.parseInt(tabla.getValueAt(i, 4).toString());
 
-                CallableStatement stmt = conn.prepareCall("{call sp_ActualizarHorasContratoPeriodo(?, ?)}");
-                stmt.setInt(1, idContratoPeriodo);
-                stmt.setInt(2, horasTrabajadas);
-                stmt.execute();
+                try (
+                    CallableStatement stmt = conn.prepareCall("{call sp_ActualizarHorasContratoPeriodo(?, ?)}");
+                )
+                {
+                    stmt.setInt(1, idContratoPeriodo);
+                    stmt.setInt(2, horasTrabajadas);
+                    stmt.execute();
+                }
+
             }
 
             JOptionPane.showMessageDialog(null, "Horas actualizadas correctamente.");
@@ -167,7 +186,7 @@ public class ContratoDAO {
     
     public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
@@ -184,8 +203,12 @@ public class ContratoDAO {
 
         int totalResultados = 0;
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosFiltrados(?, ?, ?, ?)}");
+        )
+        {
+            
 
             if (fechaInicio != null) {
                 stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
@@ -231,7 +254,7 @@ public class ContratoDAO {
     
     public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
@@ -248,8 +271,11 @@ public class ContratoDAO {
         
         int totalResultados = 0;
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosPorPeriodo(?)}");
+        )
+        {
             stmt.setInt(1, idPeriodo);
 
             ResultSet rs = stmt.executeQuery();
@@ -274,10 +300,14 @@ public class ContratoDAO {
         comboBox.addItem(new TipoContrato(0, "-- Tipo de Contrato --", "", true, new Date()));
 
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarTiposContrato}");
+        )
+        {
+            
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -298,10 +328,13 @@ public class ContratoDAO {
         comboBox.addItem(new Cargo(0, "-- Cargo --", "", true, new Date()));
 
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarCargos}");
+        )
+        {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -320,8 +353,10 @@ public class ContratoDAO {
     public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {
         String mensaje;
 
-        try (Connection conn = new CConexion().establecerConexion()) {
+        try (Connection conn = new CConexion().establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleContrato(?, ?, ?, ?, ?, ?)}");
+        ) {
+            
 
             stmt.setInt(1, detalle.getIdContrato());
             stmt.setString(2, detalle.getTipoSeguroSalud());
@@ -345,10 +380,14 @@ public class ContratoDAO {
         Contrato contrato = null;
 
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPorDocumentoIdentidad(?)}");
+        )
+        {
+            
             stmt.setString(1, documentoIdentidad);
 
             ResultSet rs = stmt.executeQuery();
@@ -385,10 +424,13 @@ public class ContratoDAO {
         DetalleContrato detalle = null;
 
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
+        
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerDetalleContratoPorDocumentoIdentidad(?)}");
+        )
+        {
+            
             stmt.setString(1, documentoIdentidad);
 
             ResultSet rs = stmt.executeQuery();
@@ -414,11 +456,13 @@ public class ContratoDAO {
     
     public boolean actualizarDetalleContrato(DetalleContrato detalle) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ActualizarDetalleContrato(?, ?, ?, ?, ?, ?)}");
-
+        )
+        {
             stmt.setInt(1, detalle.getIdDetalleContrato());
             stmt.setString(2, detalle.getTipoSeguroSalud());
             stmt.setBoolean(3, detalle.isTieneSeguroDeVida());
@@ -439,8 +483,10 @@ public class ContratoDAO {
         double salario = -1;
         CConexion objetoConexion = new CConexion();
 
-        try (Connection conn = objetoConexion.establecerConexion()) {
+        try (Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerSalarioBase(?, ?, ?, ?)}");
+        ) {
+            
             stmt.setInt(1, idArea);
             stmt.setInt(2, idEspecialidad);
             stmt.setInt(3, idCargo);
@@ -460,8 +506,11 @@ public class ContratoDAO {
     
     public Contrato obtenerContratoPorId(int idContrato) {
         Contrato contrato = null;
-        try (Connection conn = new CConexion().establecerConexion()) {
+        try (
+            Connection conn = new CConexion().establecerConexion();
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Contrato WHERE IdContrato = ?");
+        ) {
+            
             stmt.setInt(1, idContrato);
 
             ResultSet rs = stmt.executeQuery();

@@ -21,7 +21,7 @@ public class TrabajadorDAO {
 
     public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
         DefaultTableModel modelo = new DefaultTableModel();
         paramTablaTrabajadores.setModel(modelo);
 
@@ -34,8 +34,9 @@ public class TrabajadorDAO {
             modelo.addColumn(col);
         }
         int totalResultados = 0;
-        try {
+        try (Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadores}");
+        ) {
             boolean tieneResultados = stmt.execute();
 
             if (tieneResultados) {
@@ -59,7 +60,7 @@ public class TrabajadorDAO {
     
     public int listarTrabajadoresFiltradoPorFecha(JTable tabla, Date fechaInicio, Date fechaFin) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
 
@@ -73,8 +74,10 @@ public class TrabajadorDAO {
         }
         int totalResultados = 0;
 
-        try {
+        try (Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadoresPorFechasRegistro(?, ?)}");
+        ){
+            
             stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
             stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
 
@@ -99,10 +102,10 @@ public class TrabajadorDAO {
         comboBoxArea.removeAllItems();
         comboBoxArea.addItem(new Area(0, "-- Area --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-        try {
+        
+        try (Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarAreas}");
-
+        ) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("IdArea");
@@ -119,9 +122,11 @@ public class TrabajadorDAO {
         comboBoxEspecialidad.removeAllItems();
         comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-        try {
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}");
+        
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}");)
+        {
+            
             stmt.setInt(1, idArea);
 
             ResultSet rs = stmt.executeQuery();
@@ -138,11 +143,11 @@ public class TrabajadorDAO {
     
     public boolean registrarTrabajador(Trabajador t) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try(Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_CrearTrabajador(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-
+        ) {
             stmt.setString(1, t.getNombres());
             stmt.setString(2, t.getApellidoPaterno());
             stmt.setString(3, t.getApellidoMaterno());
@@ -167,11 +172,13 @@ public class TrabajadorDAO {
     public Trabajador buscarPorDNI(String dni) {
         Trabajador trabajador = null;
         CConexion conn = new CConexion();
-        Connection cn = conn.establecerConexion();
+        
+        String sql = "SELECT * FROM Trabajador WHERE DocumentoIdentidad = ?";
 
-        try {
-            String sql = "SELECT * FROM Trabajador WHERE DocumentoIdentidad = ?";
+        try (Connection cn = conn.establecerConexion();
             PreparedStatement ps = cn.prepareStatement(sql);
+        ) {
+            
             ps.setString(1, dni);
             ResultSet rs = ps.executeQuery();
 
@@ -193,11 +200,11 @@ public class TrabajadorDAO {
         Trabajador trabajador = null;
         
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
         
-        
-        try{
+        try (Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadoresPorDocumentoIdentidad(?)}");
+        )
+        {
             stmt.setString(1, documentoIdentidad);
 
             ResultSet rs = stmt.executeQuery();
@@ -228,11 +235,13 @@ public class TrabajadorDAO {
     
     public boolean actualizarTrabajador(Trabajador t) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ActualizarTrabajador(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-
+        )
+        {
             stmt.setInt(1, t.getIdTrabajador());
             stmt.setString(2, t.getNombres());
             stmt.setString(3, t.getApellidoPaterno());
@@ -257,10 +266,12 @@ public class TrabajadorDAO {
     
     public boolean eliminarTrabajador(int idTrabajador) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
-
-        try {
+        
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_EliminarTrabajador(?)}");
+        ){
+            
             stmt.setInt(1, idTrabajador);
 
             stmt.execute();

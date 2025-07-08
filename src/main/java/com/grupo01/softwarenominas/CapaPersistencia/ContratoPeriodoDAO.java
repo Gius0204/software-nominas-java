@@ -17,8 +17,10 @@ public class ContratoPeriodoDAO {
     public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {
         ContratoPeriodo cp = null;
 
-        try (Connection conn = new CConexion().establecerConexion()) {
+        try (
+            Connection conn = new CConexion().establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPeriodo(?, ?)}");
+        ) {
             stmt.setInt(1, idContrato);
             stmt.setInt(2, idPeriodo);
 

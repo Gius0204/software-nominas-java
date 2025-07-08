@@ -1,17 +1,21 @@
 
 package com.grupo01.softwarenominas.CapaNegocio;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JTable;
+
 import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
-import java.util.regex.Pattern;
-import java.util.Calendar;
-import javax.swing.JTable;
-import java.util.Date;
 
 
 public class TrabajadorNegocioVarios {
     
     private final TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
+    private static final Pattern CORREO_PATTERN = Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
 
     public int listarTrabajadoresFiltrado(JTable tabla) {
         return trabajadorDAO.listarTrabajadoresFiltrado(tabla);
@@ -174,8 +178,9 @@ public class TrabajadorNegocioVarios {
         if (correo == null || correo.trim().isEmpty()) {
             throw new Exception("El correo electrónico es obligatorio.");
         }
-        String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-        if (!Pattern.matches(regex, correo)) {
+
+        Matcher matcher = CORREO_PATTERN.matcher(correo);
+        if (!matcher.matches()) {
             throw new Exception("El correo electrónico no tiene un formato válido.");
         }
     }

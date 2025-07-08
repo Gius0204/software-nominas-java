@@ -25,11 +25,13 @@ public class NominaDAO {
         comboBoxPeriodo.addItem(new PeriodoPago(0, null, null, "-- Periodo de Pago --", "", true, null));
 
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerPeriodosPago()}");
-
+        )
+        {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("IdPeriodoPago");
@@ -45,12 +47,6 @@ public class NominaDAO {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error cargando periodos de pago.");
-        } finally {
-            try {
-                if (conn != null) conn.close();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex);
-            }
         }
     }
     
@@ -58,12 +54,16 @@ public class NominaDAO {
     public boolean existePeriodoAnteriorPendientePorContrato(int idContrato, int idPeriodoActual) throws Exception {
         
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
         
         String sql = "{call sp_ExistePeriodoAnteriorPendientePorContrato(?, ?, ?)}";
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement cs = conn.prepareCall(sql);
+        )
+        {
+            
             cs.setInt(1, idContrato);
             cs.setInt(2, idPeriodoActual);
             cs.registerOutParameter(3, Types.BIT);
@@ -78,12 +78,14 @@ public class NominaDAO {
     
     public boolean existePeriodoAnteriorPendiente(int idPeriodo) throws Exception {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
         String sql = "{call sp_ExistePeriodoAnteriorPendiente(?, ?)}";
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement cs = conn.prepareCall(sql);
-
+        )
+        {
             cs.setInt(1, idPeriodo);
             cs.registerOutParameter(2, Types.BIT);
 
@@ -99,10 +101,13 @@ public class NominaDAO {
         TipoContrato tipoContrato = null;
 
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTipoContratoPorId(?)}");
+        )
+        {
             stmt.setInt(1, idTipoContrato);
 
             ResultSet rs = stmt.executeQuery();
@@ -171,7 +176,7 @@ public class NominaDAO {
   
     public int listarNominasPorPeriodo(JTable tabla, int idPeriodo) {
         CConexion objetoConexion = new CConexion();
-        Connection conn = objetoConexion.establecerConexion();
+        
 
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
@@ -190,8 +195,11 @@ public class NominaDAO {
            
         int totalResultados = 0;
 
-        try {
+        try (
+            Connection conn = objetoConexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarNominasPorPeriodo(?)}");
+        )
+        {
             stmt.setInt(1, idPeriodo);
 
             ResultSet rs = stmt.executeQuery();

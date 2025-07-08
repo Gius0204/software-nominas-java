@@ -13,8 +13,11 @@ import com.grupo01.softwarenominas.CapaEntidad.PeriodoPago;
 public class PeriodoPagoDAO {
     public PeriodoPago obtenerPeriodoPorId(int idPeriodo) {
     PeriodoPago p = null;
-    try (Connection conn = new CConexion().establecerConexion()) {
+    try (
+        Connection conn = new CConexion().establecerConexion();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM PeriodoPago WHERE IdPeriodo = ?");
+    ) {
+        
         stmt.setInt(1, idPeriodo);
         ResultSet rs = stmt.executeQuery();
 
