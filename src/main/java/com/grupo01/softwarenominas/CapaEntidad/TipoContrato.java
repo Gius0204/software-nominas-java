@@ -78,7 +78,6 @@ public class TipoContrato {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         TipoContrato other = (TipoContrato) obj;
-        System.out.println("Comparando " + this.idTipoContrato + " con " + other.idTipoContrato);
         return idTipoContrato == other.idTipoContrato;
     }
     

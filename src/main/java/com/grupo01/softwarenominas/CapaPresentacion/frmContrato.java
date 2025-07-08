@@ -504,16 +504,6 @@ public class frmContrato extends javax.swing.JFrame {
             cmbTipoContrato.setSelectedItem(contratoActual.getTipoContrato());
             cmbCargo.setSelectedItem(contratoActual.getCargo());
             
-            System.out.println("Id de Area " + contratoActual.getArea().getNombre());
-            System.out.println("Id de Especialidad " + contratoActual.getEspecialidad().getNombre());
-            System.out.println("Id de Cargo " + contratoActual.getCargo().getNombre());
-            System.out.println("Id de TipoContrato " + contratoActual.getTipoContrato().getNombre());
-
-            System.out.println("Id de Area" + contratoActual.getArea().getIdArea());
-            System.out.println("Id de Especialidad" + contratoActual.getEspecialidad().getIdEspecialidad());
-            System.out.println("Id de Cargo" + contratoActual.getCargo().getIdCargo());
-            System.out.println("Id de TipoContrato" + String.valueOf(contratoActual.getTipoContrato().getIdTipoContrato()));
-
             long diff = contratoActual.getFechaFin().getTime() - contratoActual.getFechaInicio().getTime();
             int meses = (int) (diff / (1000L * 60 * 60 * 24 * 30)); 
             

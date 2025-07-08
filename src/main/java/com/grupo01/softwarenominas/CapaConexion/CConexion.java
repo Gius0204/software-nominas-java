@@ -3,6 +3,7 @@ package com.grupo01.softwarenominas.CapaConexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+
 import javax.swing.JOptionPane;
 
 public class CConexion {
@@ -21,7 +22,6 @@ public class CConexion {
                     +"encrypt=true;trustServerCertificate=true;";
         try{         
             Connection conectar = DriverManager.getConnection(conexionUrl);
-            System.out.println("Se conectó correctamente a la base de datos");
             return conectar;
         }catch (Exception e){
             JOptionPane.showMessageDialog(null,"Error al conectar la base de datos. Error: "+e.toString());

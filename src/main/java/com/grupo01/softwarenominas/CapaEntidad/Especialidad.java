@@ -112,7 +112,6 @@ public class Especialidad {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Especialidad other = (Especialidad) obj;
-        System.out.println("Comparando " + this.idEspecialidad + " con " + other.idEspecialidad);
         return idEspecialidad == other.idEspecialidad;
     }
     

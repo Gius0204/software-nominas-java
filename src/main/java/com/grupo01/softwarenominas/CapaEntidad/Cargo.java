@@ -76,7 +76,6 @@ public class Cargo {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Cargo other = (Cargo) obj;
-        System.out.println("Comparando " + this.idCargo + " con " + other.idCargo);
         return idCargo == other.idCargo;
     }
 

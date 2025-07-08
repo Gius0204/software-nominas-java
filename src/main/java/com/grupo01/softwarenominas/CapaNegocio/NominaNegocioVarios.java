@@ -1,11 +1,10 @@
 package com.grupo01.softwarenominas.CapaNegocio;
-
-import com.grupo01.softwarenominas.CapaEntidad.Nomina2;
-import com.grupo01.softwarenominas.CapaEntidad.DetalleNomina2;
-import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
-import com.grupo01.softwarenominas.CapaPersistencia.NominaDAO;
 import java.util.Date;
+
 import javax.swing.JTable;
+
+import com.grupo01.softwarenominas.CapaPersistencia.NominaDAO;
+import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
 
 
 public class NominaNegocioVarios {
@@ -21,25 +20,4 @@ public class NominaNegocioVarios {
     }
     
 
-    public String validarNomina(Nomina2 nomina, DetalleNomina2 detalle) {
-
-        if (nomina.getIdContrato() <= 0) {
-            return "Debe seleccionar un contrato válido.";
-        }
-        if (nomina.getIdPeriodo()
-                <= 0) {
-            return "Debe seleccionar un periodo de pago.";
-        }
-        if (detalle
-                == null) {
-            return "Debe ingresar el detalle de la nómina.";
-        }
-
-        if (detalle.getGratificacionLegal()
-                < 0 || detalle.getCts() < 0) {
-            return "Los valores no pueden ser negativos.";
-        }
-
-        return null;
-    }
 }

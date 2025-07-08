@@ -77,7 +77,6 @@ public class Area {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Area other = (Area) obj;
-        System.out.println("Comparando " + this.idArea + " con " + other.idArea);
         return idArea == other.idArea;
     }
     

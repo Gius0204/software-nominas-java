@@ -1,12 +1,11 @@
 
 package com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio;
 
-import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import com.grupo01.softwarenominas.CapaEntidad.Contrato;
 import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
+import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
 import com.grupo01.softwarenominas.CapaPersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.CapaPersistencia.TrabajadorDAO;
-import javax.swing.JTable;
 
 public class ContratoNegocioListado {
     ContratoDAO contratoDAO = new ContratoDAO();
@@ -37,7 +36,6 @@ public class ContratoNegocioListado {
             return trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
         }
         catch (Exception ex) {
-            System.out.println(ex.toString());
             return null;
         }
     }
@@ -47,7 +45,6 @@ public class ContratoNegocioListado {
             return contratoDAO.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
         }
         catch (Exception ex) {
-            System.out.println(ex.toString());
             return null;
         }
     }
@@ -57,7 +54,6 @@ public class ContratoNegocioListado {
             return contratoDAO.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
         }
         catch (Exception ex) {
-            System.out.println(ex.toString());
             return null;
         }
     }  
