@@ -23,35 +23,38 @@ public class FrmMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        PanelMov = new javax.swing.JPanel();
-        btnRegistrarContrato = new javax.swing.JButton();
-        btnRegistrarNomina = new javax.swing.JButton();
-        btnRegistrarTrabajador = new javax.swing.JButton();
-        btnRegistrarTrabajador1 = new javax.swing.JButton();
-        jlbNomina = new javax.swing.JLabel();
-        jlbContrato = new javax.swing.JLabel();
-        jlbTrabajador = new javax.swing.JLabel();
-        jlbNominas = new javax.swing.JLabel();
-        jlbFondo = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        javax.swing.JPanel panelMov = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+
+        javax.swing.JButton btnRegistrarContrato = new javax.swing.JButton();
+        javax.swing.JButton btnRegistrarNomina = new javax.swing.JButton();
+        javax.swing.JButton btnRegistrarTrabajador = new javax.swing.JButton();
+        javax.swing.JButton btnRegistrarTrabajador1 = new javax.swing.JButton();
+
+        javax.swing.JLabel jlbContrato = new javax.swing.JLabel();
+        javax.swing.JLabel jlbFondo = new javax.swing.JLabel();
+        javax.swing.JLabel jlbNomina = new javax.swing.JLabel();
+        javax.swing.JLabel jlbNominas = new javax.swing.JLabel();
+        javax.swing.JLabel jlbTrabajador = new javax.swing.JLabel();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelMov.setOpaque(false);
-        PanelMov.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        panelMov.setOpaque(false);
+        panelMov.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
-                PanelMovMouseDragged(evt);
+                panelMovMouseDragged(evt);
             }
         });
-        PanelMov.addMouseListener(new java.awt.event.MouseAdapter() {
+        panelMov.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                PanelMovMousePressed(evt);
+                panelMovMousePressed(evt);
             }
         });
-        getContentPane().add(PanelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 50));
+        getContentPane().add(panelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 50));
 
         btnRegistrarContrato.setBackground(new java.awt.Color(0, 0, 0));
         btnRegistrarContrato.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -149,17 +152,17 @@ public class FrmMenu extends javax.swing.JFrame {
         System.exit(WIDTH);
     }//GEN-LAST:event_btnRegistrarTrabajador1ActionPerformed
 
-    private void PanelMovMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelMovMouseDragged
+    private void panelMovMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMovMouseDragged
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
 
         this.setLocation(x - xmouse,y - ymouse);
-    }//GEN-LAST:event_PanelMovMouseDragged
+    }//GEN-LAST:event_panelMovMouseDragged
 
-    private void PanelMovMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PanelMovMousePressed
+    private void panelMovMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMovMousePressed
         xmouse = evt.getX();
         ymouse = evt.getY();
-    }//GEN-LAST:event_PanelMovMousePressed
+    }//GEN-LAST:event_panelMovMousePressed
 
     /**
      * @param args the command line arguments
@@ -192,16 +195,6 @@ public class FrmMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel PanelMov;
-    private javax.swing.JButton btnRegistrarContrato;
-    private javax.swing.JButton btnRegistrarNomina;
-    private javax.swing.JButton btnRegistrarTrabajador;
-    private javax.swing.JButton btnRegistrarTrabajador1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel jlbContrato;
-    private javax.swing.JLabel jlbFondo;
-    private javax.swing.JLabel jlbNomina;
-    private javax.swing.JLabel jlbNominas;
-    private javax.swing.JLabel jlbTrabajador;
+    
     // End of variables declaration//GEN-END:variables
 }

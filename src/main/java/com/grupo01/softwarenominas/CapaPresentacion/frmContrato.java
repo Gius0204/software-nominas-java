@@ -575,9 +575,50 @@ public class FrmContrato extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        javax.swing.ButtonGroup bgDuracion;
+        javax.swing.ButtonGroup bgTipoSeguroSalud;
+
+        javax.swing.JPanel panelMov;
+        javax.swing.JLabel moduloContrato;
+        javax.swing.JButton btnBuscar ;
+
+        javax.swing.JLabel jLabel1 ;
+        javax.swing.JLabel jLabel4 ;
+        javax.swing.JLabel jLabel10 ;
+        javax.swing.JLabel jLabel11 ;
+        javax.swing.JLabel jLabel13 ;
+        javax.swing.JLabel jLabel14 ;
+        javax.swing.JLabel jLabel16 ;
+        javax.swing.JLabel jLabel19 ;
+        javax.swing.JLabel jLabel21 ;
+        javax.swing.JLabel jLabel25 ;
+        javax.swing.JLabel jLabel26 ;
+        javax.swing.JLabel jLabel27 ;
+        javax.swing.JLabel jLabel28 ;
+        javax.swing.JLabel jLabel29 ;
+        javax.swing.JLabel jLabel30 ;
+        javax.swing.JLabel jLabel5 ;
+        javax.swing.JLabel jLabel6 ;
+        javax.swing.JLabel jLabel7 ;
+        javax.swing.JLabel jLabel8 ;
+        javax.swing.JLabel jLabel9 ;
+
+        javax.swing.JPanel jPanel1 ;
+        javax.swing.JPanel jPanel3 ;
+        javax.swing.JPanel jPanel4 ;
+        javax.swing.JPanel jPanel5 ;
+        javax.swing.JPanel jPanel7 ;
+        javax.swing.JPanel jPanel10 ;
+        javax.swing.JPanel jPanel12 ;
+
+        javax.swing.JScrollPane jScrollPane1;
+        javax.swing.JScrollPane jScrollPane5;
+
+        javax.swing.JSeparator jSeparator2;
+        
         bgDuracion = new javax.swing.ButtonGroup();
         bgTipoSeguroSalud = new javax.swing.ButtonGroup();
-        PanelMov = new javax.swing.JPanel();
+        panelMov = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         txtNombres = new javax.swing.JTextField();
         txtDNI = new javax.swing.JTextField();
@@ -610,7 +651,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jhcSeguroSalud = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
-        ModuloContrato = new javax.swing.JLabel();
+        moduloContrato = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jPanel4 = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
@@ -649,8 +690,8 @@ public class FrmContrato extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelMov.setOpaque(false);
-        getContentPane().add(PanelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 40));
+        panelMov.setOpaque(false);
+        getContentPane().add(panelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 40));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setMaximumSize(new java.awt.Dimension(470, 520));
@@ -809,9 +850,9 @@ public class FrmContrato extends javax.swing.JFrame {
         jLabel4.setText("Documento Identidad (DNI/CE)");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
-        ModuloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        ModuloContrato.setText("MODULO CONTRATO");
-        jPanel1.add(ModuloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
+        moduloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        moduloContrato.setText("MODULO CONTRATO");
+        jPanel1.add(moduloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 830, 10));
@@ -1311,73 +1352,38 @@ public class FrmContrato extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel ModuloContrato;
-    private javax.swing.JPanel PanelMov;
-    private javax.swing.ButtonGroup bgDuracion;
-    private javax.swing.ButtonGroup bgTipoSeguroSalud;
-    private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnEditarHorasTrabajadas;
-    private javax.swing.JButton btnLimpiar;
-    private javax.swing.JButton btnRegistrar;
-    private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<Area> cmbArea;
     private javax.swing.JComboBox<Cargo> cmbCargo;
     private javax.swing.JComboBox<Especialidad> cmbEspecialidad;
     private javax.swing.JComboBox<TipoContrato> cmbTipoContrato;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JCheckBox jcbAsignacion;
-    private javax.swing.JCheckBox jcbSeguroAccidentes;
-    private javax.swing.JCheckBox jcbSeguroVida;
-    private com.toedter.calendar.JDateChooser jdcFechaFin;
-    private com.toedter.calendar.JDateChooser jdcFechaFinal;
-    private com.toedter.calendar.JDateChooser jdcFechaInicial;
-    private com.toedter.calendar.JDateChooser jdcFechaInicio;
-    private javax.swing.JCheckBox jhcHabilitarFechas;
-    private javax.swing.JCheckBox jhcSeguroSalud;
-    private javax.swing.JPanel jpanelContenedor;
-    private javax.swing.JTable jtbTabla;
-    private javax.swing.JTextArea jtxDescripcion;
-    private javax.swing.JLabel lblMensaje;
-    private javax.swing.JLabel lblMensajeBuscar;
-    private javax.swing.JRadioButton rtn1anio;
-    private javax.swing.JRadioButton rtn3meses;
-    private javax.swing.JRadioButton rtn6meses;
-    private javax.swing.JRadioButton rtnEPS;
-    private javax.swing.JRadioButton rtnESSALUD;
+    private javax.swing.JButton btnEditarHorasTrabajadas;
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtDocumentoBuscar;
     private javax.swing.JTextField txtHorasTotales;
     private javax.swing.JTextField txtNombres;
     private javax.swing.JTextField txtNombresBuscar;
     private javax.swing.JTextField txtSalario;
+    private javax.swing.JCheckBox jcbAsignacion;
+    private javax.swing.JCheckBox jcbSeguroAccidentes;
+    private javax.swing.JCheckBox jcbSeguroVida;
+    private javax.swing.JCheckBox jhcHabilitarFechas;
+    private javax.swing.JCheckBox jhcSeguroSalud;
+    private javax.swing.JRadioButton rtn1anio;
+    private javax.swing.JRadioButton rtn3meses;
+    private javax.swing.JRadioButton rtn6meses;
+    private javax.swing.JRadioButton rtnEPS;
+    private javax.swing.JRadioButton rtnESSALUD;
+    private javax.swing.JLabel lblMensaje;
+    private javax.swing.JLabel lblMensajeBuscar;
+    private javax.swing.JPanel jpanelContenedor;
+    private javax.swing.JTable jtbTabla;
+    private javax.swing.JTextArea jtxDescripcion;
+    private com.toedter.calendar.JDateChooser jdcFechaFin;
+    private com.toedter.calendar.JDateChooser jdcFechaFinal;
+    private com.toedter.calendar.JDateChooser jdcFechaInicial;
+    private com.toedter.calendar.JDateChooser jdcFechaInicio;
     // End of variables declaration//GEN-END:variables
 }

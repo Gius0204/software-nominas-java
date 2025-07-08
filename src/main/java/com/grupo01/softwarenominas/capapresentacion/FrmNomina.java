@@ -19,9 +19,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 
-import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
-
-
 public class FrmNomina extends javax.swing.JFrame {
     private transient final ContratoDAO contratoDAO = new ContratoDAO();
     
@@ -160,20 +157,45 @@ public class FrmNomina extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        bgDocumentoIdentidad = new javax.swing.ButtonGroup();
-        bgSexo = new javax.swing.ButtonGroup();
-        PanelMov = new javax.swing.JPanel();
+      javax.swing.JLabel labelMetodoPago ;
+      javax.swing.JLabel labelMetodoPago1 ;
+      javax.swing.JLabel labelMetodoPago2 ;
+      javax.swing.JLabel moduloNomina ;
+      javax.swing.JLabel jLabel25 ;
+      javax.swing.JLabel jLabel26 ;
+
+
+      javax.swing.JPanel panelMov ;
+      javax.swing.JPanel jPanel1 ;
+      javax.swing.JPanel jPanel3 ;
+      javax.swing.JPanel jPanel4 ;
+      javax.swing.JPanel jPanel5 ;
+      javax.swing.JPanel jPanel7 ;
+      javax.swing.JPanel jPanel10 ;
+      javax.swing.JPanel jPanel11 ;
+      javax.swing.JPanel jPanel15 ;
+
+      javax.swing.JScrollPane jScrollPane2;
+      javax.swing.JScrollPane jScrollPane3;
+
+      javax.swing.JSeparator jSeparator1;
+      javax.swing.JSeparator jSeparator2;
+
+      javax.swing.JButton btnProcesar ;
+      javax.swing.JButton btnRegresar ;
+
+        panelMov = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        ModuloNomina = new javax.swing.JLabel();
+        moduloNomina = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        LabelMetodoPago = new javax.swing.JLabel();
+        labelMetodoPago = new javax.swing.JLabel();
         cmbMetodoPago = new javax.swing.JComboBox<>();
         btnProcesar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        LabelMetodoPago1 = new javax.swing.JLabel();
+        labelMetodoPago1 = new javax.swing.JLabel();
         cmbPeriodoPago2 = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -189,7 +211,7 @@ public class FrmNomina extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tableNominas = new javax.swing.JTable();
         jPanel10 = new javax.swing.JPanel();
-        LabelMetodoPago2 = new javax.swing.JLabel();
+        labelMetodoPago2 = new javax.swing.JLabel();
         cmbPeriodoPago1 = new javax.swing.JComboBox<>();
         lblProcesados = new javax.swing.JLabel();
 
@@ -198,8 +220,8 @@ public class FrmNomina extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelMov.setOpaque(false);
-        getContentPane().add(PanelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 40));
+        panelMov.setOpaque(false);
+        getContentPane().add(panelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 40));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setMaximumSize(new java.awt.Dimension(470, 520));
@@ -207,16 +229,16 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(470, 520));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        ModuloNomina.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        ModuloNomina.setText("MODULO NOMINA");
-        jPanel1.add(ModuloNomina, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        moduloNomina.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        moduloNomina.setText("MODULO NOMINA");
+        jPanel1.add(moduloNomina, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 50, 830, 10));
 
-        LabelMetodoPago.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        LabelMetodoPago.setText("Metodo de Pago");
-        jPanel1.add(LabelMetodoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 660, 130, -1));
+        labelMetodoPago.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelMetodoPago.setText("Metodo de Pago");
+        jPanel1.add(labelMetodoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 660, 130, -1));
 
         jPanel1.add(cmbMetodoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 660, 140, -1));
 
@@ -260,9 +282,9 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        LabelMetodoPago1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        LabelMetodoPago1.setText("Periodo de PAGO");
-        jPanel3.add(LabelMetodoPago1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 130, -1));
+        labelMetodoPago1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelMetodoPago1.setText("Periodo de PAGO");
+        jPanel3.add(labelMetodoPago1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 130, -1));
 
         jPanel3.add(cmbPeriodoPago2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 240, 30));
 
@@ -354,9 +376,9 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        LabelMetodoPago2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        LabelMetodoPago2.setText("Periodo de PAGO");
-        jPanel10.add(LabelMetodoPago2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 130, -1));
+        labelMetodoPago2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelMetodoPago2.setText("Periodo de PAGO");
+        jPanel10.add(labelMetodoPago2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 130, -1));
 
         jPanel10.add(cmbPeriodoPago1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, 240, 30));
 
@@ -512,32 +534,11 @@ public class FrmNomina extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel LabelMetodoPago;
-    private javax.swing.JLabel LabelMetodoPago1;
-    private javax.swing.JLabel LabelMetodoPago2;
-    private javax.swing.JLabel ModuloNomina;
-    private javax.swing.JPanel PanelMov;
-    private javax.swing.ButtonGroup bgDocumentoIdentidad;
-    private javax.swing.ButtonGroup bgSexo;
-    private javax.swing.JButton btnProcesar;
-    private javax.swing.JButton btnRegresar;
+
     private javax.swing.JComboBox<String> cmbMetodoPago;
     private javax.swing.JComboBox<PeriodoPago> cmbPeriodoPago1;
     private javax.swing.JComboBox<PeriodoPago> cmbPeriodoPago2;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    
     private javax.swing.JLabel lblContratos;
     private javax.swing.JLabel lblNominas;
     private javax.swing.JLabel lblProcesados;

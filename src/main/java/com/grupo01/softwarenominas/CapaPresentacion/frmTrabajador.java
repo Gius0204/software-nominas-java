@@ -103,10 +103,39 @@ public class FrmTrabajador extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        javax.swing.ButtonGroup bgDocumentoIdentidad;
+        javax.swing.ButtonGroup bgSexo;
+        javax.swing.JPanel panelMov;
+        javax.swing.JPanel jPanel1 ;
+        javax.swing.JPanel jPanel3;
+        javax.swing.JPanel jPanel4 ;
+        javax.swing.JPanel jPanel10 ;
+        javax.swing.JPanel jPanel11 ;
+        javax.swing.JPanel jPanel12 ;
 
+        javax.swing.JLabel moduloContrato;
+        javax.swing.JLabel jLabel1 ;
+        javax.swing.JLabel jLabel4 ;
+        javax.swing.JLabel jLabel5 ;
+        javax.swing.JLabel jLabel6 ;
+        javax.swing.JLabel jLabel9 ;
+        javax.swing.JLabel jLabel13 ;
+        javax.swing.JLabel jLabel14 ;
+        javax.swing.JLabel jLabel19 ;
+        javax.swing.JLabel jLabel24 ;
+        javax.swing.JLabel jLabel25;
+        javax.swing.JLabel jLabel26 ;
+        javax.swing.JLabel jLabel27 ;
+        javax.swing.JLabel jLabel28 ;
+        javax.swing.JLabel jLabel29 ;
+
+        javax.swing.JScrollPane jScrollPane1;
+        javax.swing.JScrollPane jScrollPane2;
+        javax.swing.JSeparator jSeparator2;
+        
         bgDocumentoIdentidad = new javax.swing.ButtonGroup();
         bgSexo = new javax.swing.ButtonGroup();
-        PanelMov = new javax.swing.JPanel();
+        panelMov = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         txtNombres = new javax.swing.JTextField();
         txtDocumentoIdentidad = new javax.swing.JTextField();
@@ -119,7 +148,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         dcFechaNacimiento = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
-        ModuloContrato = new javax.swing.JLabel();
+        moduloContrato = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jPanel4 = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
@@ -158,8 +187,8 @@ public class FrmTrabajador extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelMov.setOpaque(false);
-        getContentPane().add(PanelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 40));
+        panelMov.setOpaque(false);
+        getContentPane().add(panelMov, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 40));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setMaximumSize(new java.awt.Dimension(470, 520));
@@ -238,9 +267,9 @@ public class FrmTrabajador extends javax.swing.JFrame {
         jLabel4.setText("Tipo Documento");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 90, -1, -1));
 
-        ModuloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        ModuloContrato.setText("MODULO TRABAJADOR");
-        jPanel1.add(ModuloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
+        moduloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        moduloContrato.setText("MODULO TRABAJADOR");
+        jPanel1.add(moduloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 830, 10));
@@ -647,37 +676,10 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel ModuloContrato;
-    private javax.swing.JPanel PanelMov;
-    private javax.swing.ButtonGroup bgDocumentoIdentidad;
-    private javax.swing.ButtonGroup bgSexo;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnRegistra;
     private javax.swing.JButton btnRegresar;
     private com.toedter.calendar.JDateChooser dcFechaNacimiento;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator2;
     private com.toedter.calendar.JDateChooser jdcFechaFinal;
     private com.toedter.calendar.JDateChooser jdcFechaInicial;
     private javax.swing.JCheckBox jhcHabilitarFechas;
