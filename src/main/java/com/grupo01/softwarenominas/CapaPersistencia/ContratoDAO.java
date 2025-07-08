@@ -22,6 +22,24 @@ import com.grupo01.softwarenominas.CapaEntidad.DetalleContrato;
 import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
 import com.grupo01.softwarenominas.CapaEntidad.TipoContrato;
 import com.grupo01.softwarenominas.CapaNegocio.ContratoNegocio.ResultadoOperacion;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.APELLIDO_MATERNO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.APELLIDO_PATERNO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.AREA_NOMBRE;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.CARGO_NOMBRE;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.DESCRIPCION;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.DOCUMENTO_IDENTIDAD;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ESPECIALIDAD;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ESTADO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.FECHA_FIN;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.FECHA_INICIO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.FECHA_REGISTRO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.HORAS_TOTALES;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_CARGO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_CONTRATO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_ESPECIALIDAD;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.ID_TIPO_CONTRATO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.NOMBRES;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDContrato.TIPO_CONTRATO_NOMBRE;
 
 public class ContratoDAO {
     public ResultadoOperacion registrarContrato(Contrato c) {
@@ -192,9 +210,9 @@ public class ContratoDAO {
         tabla.setModel(modelo);
 
         String[] columnasDeseadas = {
-            "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
-            "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
-            "TipoContratoNombre", "CargoNombre"
+            FECHA_INICIO, FECHA_FIN , HORAS_TOTALES, DOCUMENTO_IDENTIDAD, NOMBRES, 
+            APELLIDO_PATERNO, APELLIDO_MATERNO, AREA_NOMBRE, ESPECIALIDAD,
+            TIPO_CONTRATO_NOMBRE, CARGO_NOMBRE
         };
 
         for (String col : columnasDeseadas) {
@@ -260,9 +278,9 @@ public class ContratoDAO {
         tabla.setModel(modelo);
 
         String[] columnasDeseadas = {
-            "FechaInicio", "FechaFin", "HorasTotales", "HorasTrabajadas", "EstadoPago", "DocumentoIdentidad", "Nombres",
-            "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
-            "TipoContratoNombre", "CargoNombre"
+            FECHA_INICIO, FECHA_FIN , HORAS_TOTALES, "HorasTrabajadas", "EstadoPago", DOCUMENTO_IDENTIDAD, NOMBRES,
+            APELLIDO_PATERNO, APELLIDO_MATERNO, AREA_NOMBRE, ESPECIALIDAD,
+            TIPO_CONTRATO_NOMBRE, CARGO_NOMBRE
         };
 
         for (String col : columnasDeseadas) {
@@ -312,7 +330,7 @@ public class ContratoDAO {
 
             while (rs.next()) {
                 comboBox.addItem(new TipoContrato(
-                        rs.getInt("IdTipoContrato"),
+                        rs.getInt(ID_TIPO_CONTRATO),
                         rs.getString("Nombre"),
                         "", true, new Date()
                 ));
@@ -339,7 +357,7 @@ public class ContratoDAO {
 
             while (rs.next()) {
                 comboBox.addItem(new Cargo(
-                        rs.getInt("IdCargo"),
+                        rs.getInt(ID_CARGO),
                         rs.getString("Nombre"),
                         "", true, new Date()
                 ));
@@ -393,24 +411,24 @@ public class ContratoDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 contrato = new Contrato();
-                contrato.setIdContrato(rs.getInt("IdContrato"));
+                contrato.setIdContrato(rs.getInt(ID_CONTRATO));
                 contrato.setIdTrabajador(rs.getInt("IdTrabajador"));
-                contrato.setIdTipoContrato(rs.getInt("IdTipoContrato"));
-                contrato.setIdCargo(rs.getInt("IdCargo"));
-                contrato.setFechaInicio(rs.getDate("FechaInicio"));
-                contrato.setFechaFin(rs.getDate("FechaFin"));
+                contrato.setIdTipoContrato(rs.getInt(ID_TIPO_CONTRATO));
+                contrato.setIdCargo(rs.getInt(ID_CARGO));
+                contrato.setFechaInicio(rs.getDate(FECHA_INICIO));
+                contrato.setFechaFin(rs.getDate(FECHA_FIN ));
                 contrato.setSalarioBase(rs.getDouble("SalarioBase"));
-                contrato.setHorasTotales(rs.getInt("HorasTotales"));
-                contrato.setDescripcion(rs.getString("Descripcion"));
+                contrato.setHorasTotales(rs.getInt(HORAS_TOTALES));
+                contrato.setDescripcion(rs.getString(DESCRIPCION));
                 contrato.setIdArea(rs.getInt("IdArea"));
-                contrato.setIdEspecialidad(rs.getInt("IdEspecialidad"));
-                contrato.setEstado(rs.getBoolean("Estado"));
-                contrato.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
+                contrato.setIdEspecialidad(rs.getInt(ID_ESPECIALIDAD));
+                contrato.setEstado(rs.getBoolean(ESTADO));
+                contrato.setFechaRegistro(rs.getTimestamp(FECHA_REGISTRO));
                 
-                contrato.setTipoContrato(new TipoContrato(rs.getInt("IdTipoContrato"), rs.getString("NombreTipoContrato")));
-                contrato.setCargo(new Cargo(rs.getInt("IdCargo"), rs.getString("NombreCargo")));
+                contrato.setTipoContrato(new TipoContrato(rs.getInt(ID_TIPO_CONTRATO), rs.getString("NombreTipoContrato")));
+                contrato.setCargo(new Cargo(rs.getInt(ID_CARGO), rs.getString("NombreCargo")));
                 contrato.setArea(new Area(rs.getInt("IdArea"), rs.getString("NombreArea")));
-                contrato.setEspecialidad(new Especialidad(rs.getInt("IdEspecialidad"), rs.getString("NombreEspecialidad")));
+                contrato.setEspecialidad(new Especialidad(rs.getInt(ID_ESPECIALIDAD), rs.getString("NombreEspecialidad")));
 
             }
 
@@ -437,14 +455,14 @@ public class ContratoDAO {
             if (rs.next()) {
                 detalle = new DetalleContrato();
                 detalle.setIdDetalleContrato(rs.getInt("IdDetalleContrato"));
-                detalle.setIdContrato(rs.getInt("IdContrato"));
+                detalle.setIdContrato(rs.getInt(ID_CONTRATO));
                 detalle.setTipoSeguroSalud(rs.getString("TipoSeguroSalud"));
                 detalle.setTieneSeguroDeVida(rs.getBoolean("TieneSeguroDeVida"));
                 detalle.setTieneSeguroDeAccidentes(rs.getBoolean("TieneSeguroDeAccidentes"));
                 detalle.setTieneAsignacionFamiliar(rs.getBoolean("TieneAsignacionFamiliar"));
-                detalle.setDescripcion(rs.getString("Descripcion"));
-                detalle.setEstado(rs.getBoolean("Estado"));
-                detalle.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
+                detalle.setDescripcion(rs.getString(DESCRIPCION));
+                detalle.setEstado(rs.getBoolean(ESTADO));
+                detalle.setFechaRegistro(rs.getTimestamp(FECHA_REGISTRO));
             }
 
         } catch (SQLException e) {
@@ -516,20 +534,20 @@ public class ContratoDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 contrato = new Contrato();
-                contrato.setIdContrato(rs.getInt("IdContrato"));
+                contrato.setIdContrato(rs.getInt(ID_CONTRATO));
                 contrato.setIdTrabajador(rs.getInt("IdTrabajador"));
-                contrato.setFechaInicio(rs.getDate("FechaInicio"));
-                contrato.setFechaFin(rs.getDate("FechaFin"));
+                contrato.setFechaInicio(rs.getDate(FECHA_INICIO));
+                contrato.setFechaFin(rs.getDate(FECHA_FIN ));
                 contrato.setSalarioBase(rs.getDouble("SalarioBase"));
-                contrato.setHorasTotales(rs.getInt("HorasTotales"));
-                contrato.setDescripcion(rs.getString("Descripcion"));
+                contrato.setHorasTotales(rs.getInt(HORAS_TOTALES));
+                contrato.setDescripcion(rs.getString(DESCRIPCION));
                 contrato.setIdArea(rs.getInt("IdArea"));
-                contrato.setIdEspecialidad(rs.getInt("IdEspecialidad"));
-                contrato.setIdTipoContrato(rs.getInt("IdTipoContrato"));
-                contrato.setIdCargo(rs.getInt("IdCargo"));
+                contrato.setIdEspecialidad(rs.getInt(ID_ESPECIALIDAD));
+                contrato.setIdTipoContrato(rs.getInt(ID_TIPO_CONTRATO));
+                contrato.setIdCargo(rs.getInt(ID_CARGO));
                 contrato.setEstadoContrato(rs.getString("EstadoContrato"));
-                contrato.setEstado(rs.getBoolean("Estado"));
-                contrato.setFechaRegistro(rs.getTimestamp("FechaRegistro"));
+                contrato.setEstado(rs.getBoolean(ESTADO));
+                contrato.setFechaRegistro(rs.getTimestamp(FECHA_REGISTRO));
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al obtener contrato por ID: " + e.getMessage());

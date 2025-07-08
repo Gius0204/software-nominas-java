@@ -7,7 +7,7 @@ import com.grupo01.softwarenominas.CapaEntidad.Contrato;
 
 public class frmDialogHorasTrabajadas extends javax.swing.JDialog {
 
-    ContratoDAO contratoDao = new ContratoDAO();
+    transient ContratoDAO contratoDao = new ContratoDAO();
 
 
     public frmDialogHorasTrabajadas(java.awt.Frame parent, boolean modal) {

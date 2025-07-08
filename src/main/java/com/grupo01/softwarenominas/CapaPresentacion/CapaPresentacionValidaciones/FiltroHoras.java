@@ -1,12 +1,11 @@
 package com.grupo01.softwarenominas.CapaPresentacion.CapaPresentacionValidaciones;
 
-import javax.swing.text.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class FiltroHoras extends DocumentFilter {
     
-    public FiltroHoras(){
-        
-    }
 
     @Override
     public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)

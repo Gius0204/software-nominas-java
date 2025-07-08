@@ -1,5 +1,6 @@
 package com.grupo01.softwarenominas.CapaPersistencia;
 
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,13 @@ import com.grupo01.softwarenominas.CapaConexion.CConexion;
 import com.grupo01.softwarenominas.CapaEntidad.Area;
 import com.grupo01.softwarenominas.CapaEntidad.Especialidad;
 import com.grupo01.softwarenominas.CapaEntidad.Trabajador;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.APELLIDO_MATERNO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.APELLIDO_PATERNO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.CORREO_ELECTRONICO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.DOCUMENTO_IDENTIDAD;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.NOMBRES;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.TELEFONO;
+import static com.grupo01.softwarenominas.CapaPersistencia.Utils.ConstantesBDTrabajador.TIPO_DOCUMENTO;
 
 public class TrabajadorDAO {
 
@@ -26,8 +34,8 @@ public class TrabajadorDAO {
         paramTablaTrabajadores.setModel(modelo);
 
         String[] columnasDeseadas = {
-            "Nombres", "ApellidoPaterno", "ApellidoMaterno", 
-            "TipoDocumento", "DocumentoIdentidad", "Telefono", "CorreoElectronico"
+            NOMBRES, APELLIDO_PATERNO, APELLIDO_MATERNO, 
+            TIPO_DOCUMENTO, DOCUMENTO_IDENTIDAD, TELEFONO, CORREO_ELECTRONICO 
         };
 
         for (String col : columnasDeseadas) {
@@ -65,8 +73,8 @@ public class TrabajadorDAO {
         tabla.setModel(modelo);
 
         String[] columnasDeseadas = {
-            "Nombres", "ApellidoPaterno", "ApellidoMaterno", 
-            "TipoDocumento", "DocumentoIdentidad", "Telefono", "CorreoElectronico"
+            NOMBRES, APELLIDO_PATERNO, APELLIDO_MATERNO, 
+            TIPO_DOCUMENTO, DOCUMENTO_IDENTIDAD, TELEFONO, CORREO_ELECTRONICO 
         };
 
         for (String col : columnasDeseadas) {
@@ -185,9 +193,9 @@ public class TrabajadorDAO {
             if (rs.next()) {
                 trabajador = new Trabajador();
                 trabajador.setIdTrabajador(rs.getInt("IdTrabajador"));
-                trabajador.setNombres(rs.getString("Nombres"));
-                trabajador.setApellidoPaterno(rs.getString("ApellidoPaterno"));
-                trabajador.setApellidoMaterno(rs.getString("ApellidoMaterno"));
+                trabajador.setNombres(rs.getString(NOMBRES));
+                trabajador.setApellidoPaterno(rs.getString(APELLIDO_PATERNO));
+                trabajador.setApellidoMaterno(rs.getString(APELLIDO_MATERNO));
             }
 
         } catch (SQLException e) {
@@ -211,14 +219,14 @@ public class TrabajadorDAO {
             if (rs.next()) {
                 trabajador = new Trabajador();
                 trabajador.setIdTrabajador(rs.getInt("IdTrabajador"));
-                trabajador.setNombres(rs.getString("Nombres"));
-                trabajador.setApellidoPaterno(rs.getString("ApellidoPaterno"));
-                trabajador.setApellidoMaterno(rs.getString("ApellidoMaterno"));
-                trabajador.setDocumentoIdentidad(rs.getString("DocumentoIdentidad"));
-                trabajador.setTipoDocumento(rs.getString("TipoDocumento"));
+                trabajador.setNombres(rs.getString(NOMBRES));
+                trabajador.setApellidoPaterno(rs.getString(APELLIDO_PATERNO));
+                trabajador.setApellidoMaterno(rs.getString(APELLIDO_MATERNO));
+                trabajador.setDocumentoIdentidad(rs.getString(DOCUMENTO_IDENTIDAD));
+                trabajador.setTipoDocumento(rs.getString(TIPO_DOCUMENTO));
                 
-                trabajador.setTelefono(rs.getString("Telefono"));
-                trabajador.setCorreo(rs.getString("CorreoElectronico"));
+                trabajador.setTelefono(rs.getString(TELEFONO));
+                trabajador.setCorreo(rs.getString(CORREO_ELECTRONICO ));
                 trabajador.setSexo(rs.getString("Sexo"));
                 trabajador.setFechaNacimiento(rs.getDate("FechaNacimiento"));
                 trabajador.setDireccion(rs.getString("Direccion"));
