@@ -40,6 +40,8 @@ import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDCon
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_TIPO_CONTRATO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.NOMBRES;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.TIPO_CONTRATO_NOMBRE;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ERROR;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_AREA;
 
 public class ContratoDAO {
     public ResultadoOperacion registrarContrato(Contrato c) {
@@ -162,7 +164,7 @@ public class ContratoDAO {
             tabla.getColumnModel().getColumn(0).setWidth(0);
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al listar Contrato Periodos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al listar Contrato Periodos: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -263,7 +265,7 @@ public class ContratoDAO {
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al filtrar contratos:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al filtrar contratos:\n" + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
 
         return totalResultados;
@@ -306,7 +308,7 @@ public class ContratoDAO {
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al listar contratos por periodo:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al listar contratos por periodo:\n" + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
         
         return totalResultados;
@@ -336,7 +338,7 @@ public class ContratoDAO {
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -363,7 +365,7 @@ public class ContratoDAO {
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar cargos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al cargar cargos: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -419,14 +421,14 @@ public class ContratoDAO {
                 contrato.setSalarioBase(rs.getDouble("SalarioBase"));
                 contrato.setHorasTotales(rs.getInt(HORAS_TOTALES));
                 contrato.setDescripcion(rs.getString(DESCRIPCION));
-                contrato.setIdArea(rs.getInt("IdArea"));
+                contrato.setIdArea(rs.getInt(ID_AREA));
                 contrato.setIdEspecialidad(rs.getInt(ID_ESPECIALIDAD));
                 contrato.setEstado(rs.getBoolean(ESTADO));
                 contrato.setFechaRegistro(rs.getTimestamp(FECHA_REGISTRO));
                 
                 contrato.setTipoContrato(new TipoContrato(rs.getInt(ID_TIPO_CONTRATO), rs.getString("NombreTipoContrato")));
                 contrato.setCargo(new Cargo(rs.getInt(ID_CARGO), rs.getString("NombreCargo")));
-                contrato.setArea(new Area(rs.getInt("IdArea"), rs.getString("NombreArea")));
+                contrato.setArea(new Area(rs.getInt(ID_AREA), rs.getString("NombreArea")));
                 contrato.setEspecialidad(new Especialidad(rs.getInt(ID_ESPECIALIDAD), rs.getString("NombreEspecialidad")));
 
             }
@@ -540,7 +542,7 @@ public class ContratoDAO {
                 contrato.setSalarioBase(rs.getDouble("SalarioBase"));
                 contrato.setHorasTotales(rs.getInt(HORAS_TOTALES));
                 contrato.setDescripcion(rs.getString(DESCRIPCION));
-                contrato.setIdArea(rs.getInt("IdArea"));
+                contrato.setIdArea(rs.getInt(ID_AREA));
                 contrato.setIdEspecialidad(rs.getInt(ID_ESPECIALIDAD));
                 contrato.setIdTipoContrato(rs.getInt(ID_TIPO_CONTRATO));
                 contrato.setIdCargo(rs.getInt(ID_CARGO));

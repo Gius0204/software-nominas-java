@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUINomina;
+
 
 public class FrmNomina extends javax.swing.JFrame {
     private final transient ContratoDAO contratoDAO = new ContratoDAO();
@@ -226,41 +228,41 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(470, 520));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        moduloNomina.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        moduloNomina.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 24)); // NOI18N
         moduloNomina.setText("MODULO NOMINA");
         jPanel1.add(moduloNomina, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 50, 830, 10));
 
-        labelMetodoPago.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelMetodoPago.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         labelMetodoPago.setText("Metodo de Pago");
         jPanel1.add(labelMetodoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 660, 130, -1));
 
         jPanel1.add(cmbMetodoPago, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 660, 140, -1));
 
         btnProcesar.setBackground(new java.awt.Color(204, 255, 204));
-        btnProcesar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnProcesar.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         btnProcesar.setForeground(new java.awt.Color(255, 0, 0));
         btnProcesar.setText("Procesar");
-        btnProcesar.addActionListener(evt -> btnProcesarActionPerformed(evt));
+        btnProcesar.addActionListener(this::btnProcesarActionPerformed);
         jPanel1.add(btnProcesar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 660, 200, 30));
 
         btnRegresar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnRegresar.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/regresar.png"))); // NOI18N
         btnRegresar.setText("REGRESAR");
         btnRegresar.setBorder(null);
         btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRegresar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRegresar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegresar.addActionListener(evt -> btnRegresarActionPerformed(evt));
+        btnRegresar.addActionListener(this::btnRegresarActionPerformed);
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 700, 110, 100));
 
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel25.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(255, 255, 255));
         jLabel25.setText("CONTRATOS A PROCESAR");
         jPanel4.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
@@ -271,7 +273,7 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labelMetodoPago1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelMetodoPago1.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         labelMetodoPago1.setText("Periodo de PAGO");
         jPanel3.add(labelMetodoPago1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 130, -1));
 
@@ -295,7 +297,7 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel15.setBackground(new java.awt.Color(0, 0, 0));
         jPanel15.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblContratos.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblContratos.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
         lblContratos.setForeground(new java.awt.Color(255, 255, 255));
         lblContratos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblContratos.setText("Mensaje: ");
@@ -326,7 +328,7 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        lblNominas.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblNominas.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
         lblNominas.setForeground(new java.awt.Color(255, 255, 255));
         lblNominas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNominas.setText("Mensaje: ");
@@ -337,7 +339,7 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel7.setBackground(new java.awt.Color(0, 0, 0));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel26.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(255, 255, 255));
         jLabel26.setText("NOMINAS PROCESADAS");
         jPanel7.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
@@ -365,7 +367,7 @@ public class FrmNomina extends javax.swing.JFrame {
         jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labelMetodoPago2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelMetodoPago2.setFont(new java.awt.Font(ConstantesUINomina.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         labelMetodoPago2.setText("Periodo de PAGO");
         jPanel10.add(labelMetodoPago2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 130, -1));
 
@@ -492,7 +494,7 @@ public class FrmNomina extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnProcesarActionPerformed
       
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

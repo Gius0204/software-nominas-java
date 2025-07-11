@@ -11,6 +11,8 @@ import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ConstantesUIContratoNegocio;
+
 public class ContratoNegocioLlenado {
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
@@ -20,7 +22,7 @@ public class ContratoNegocioLlenado {
             trabajadorDAO.cargarAreas(comboBoxArea);
         }
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar las areas: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al cargar las areas: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -29,7 +31,7 @@ public class ContratoNegocioLlenado {
             trabajadorDAO.cargarEspecialidadesPorArea(comboBoxEspecialidad, idArea);
         }
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar las especialidades: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al cargar las especialidades: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -38,7 +40,7 @@ public class ContratoNegocioLlenado {
             contratoDAO.cargarTiposContrato(comboBox);
         }
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -47,7 +49,7 @@ public class ContratoNegocioLlenado {
             contratoDAO.cargarCargos(comboBox);
         }
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar los cargos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al cargar los cargos: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
 }

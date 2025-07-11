@@ -25,4 +25,6 @@ public class ConstantesBDContrato {
     public static final String ESTADO = "Estado";
     public static final String FECHA_REGISTRO = "FechaRegistro";
 
+    public static final String ERROR = "Error";
+
     }

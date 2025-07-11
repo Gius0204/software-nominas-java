@@ -6,6 +6,7 @@ public class ConstantesUIContrato {
     }
     
     public static final String COLOR_PANEL_BACKGROUND = "Panel.background";
+    public static final String COLOR_LABEL_FOREGROUND = "Label.foreground";
     public static final String FUENTE_SEGOE_UI = "Segoe UI";
 
     public static final String TEXTO_SERVICIO_EXTERNO = "SERVICIO EXTERNO";
