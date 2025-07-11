@@ -13,14 +13,21 @@ public class FiltroNumerico extends DocumentFilter {
 
     @Override
     public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-        if (string.matches("\\d+") && fb.getDocument().getLength() + string.length() <= max) {
+        String nuevoTexto = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()))
+                .insert(offset, string)
+                .toString();
+        if (nuevoTexto.isEmpty() || (nuevoTexto.matches("\\d+") && nuevoTexto.length() <= max)) {
             super.insertString(fb, offset, string, attr);
         }
     }
 
     @Override
     public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-        if (text.matches("\\d+") && fb.getDocument().getLength() - length + text.length() <= max) {
+        StringBuilder builder = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+        builder.replace(offset, offset + length, text);
+        String nuevoTexto = builder.toString();
+
+        if (nuevoTexto.isEmpty() || (nuevoTexto.matches("\\d+") && nuevoTexto.length() <= max)) {
             super.replace(fb, offset, length, text, attrs);
         }
     }

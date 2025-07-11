@@ -173,6 +173,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
         trabajadorActual = null;
         modoEdicion = false;
+        tableTrabajador.clearSelection();
         btnRegistra.setText("REGISTRAR");
         btnRegresar.setText("CERRAR");
     }
