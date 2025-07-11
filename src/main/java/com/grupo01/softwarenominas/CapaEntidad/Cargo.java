@@ -3,7 +3,6 @@ package com.grupo01.softwarenominas.capaentidad;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -17,7 +16,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "idCargo")
-@ToString(of = "nombre")
 @Builder
 public class Cargo {
     private int idCargo;
@@ -29,6 +27,11 @@ public class Cargo {
     public Cargo(int idCargo, String nombre) {
         this.idCargo = idCargo;
         this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 
 }

@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.Builder;
 
 import java.util.Date;
@@ -17,7 +16,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "idArea")
-@ToString(of = "nombre")
 @Builder
 public class Area {
     private int idArea;
@@ -29,6 +27,11 @@ public class Area {
     public Area(int idArea, String nombre) {
         this.idArea = idArea;
         this.nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
     
 }
