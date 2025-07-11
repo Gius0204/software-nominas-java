@@ -3,11 +3,10 @@ package com.grupo01.softwarenominas.capapresentacion;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
-
 public class FrmMenu extends javax.swing.JFrame {
     
-    int xmouse,ymouse;
+    int xmouse;
+    int ymouse;
     
     public FrmMenu() {
         initComponents();
@@ -45,11 +44,13 @@ public class FrmMenu extends javax.swing.JFrame {
 
         panelMov.setOpaque(false);
         panelMov.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 panelMovMouseDragged(evt);
             }
         });
         panelMov.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 panelMovMousePressed(evt);
             }
@@ -61,11 +62,7 @@ public class FrmMenu extends javax.swing.JFrame {
         btnRegistrarContrato.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarContrato.setText("REGISTRAR CONTRATO");
         btnRegistrarContrato.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnRegistrarContrato.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarContratoActionPerformed(evt);
-            }
-        });
+        btnRegistrarContrato.addActionListener(this::btnRegistrarContratoActionPerformed);
         getContentPane().add(btnRegistrarContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 330, 210, 50));
 
         btnRegistrarNomina.setBackground(new java.awt.Color(0, 0, 0));
@@ -73,11 +70,7 @@ public class FrmMenu extends javax.swing.JFrame {
         btnRegistrarNomina.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarNomina.setText("REGISTRAR NOMINA");
         btnRegistrarNomina.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnRegistrarNomina.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarNominaActionPerformed(evt);
-            }
-        });
+        btnRegistrarNomina.addActionListener(this::btnRegistrarNominaActionPerformed);
         getContentPane().add(btnRegistrarNomina, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 530, 210, 50));
 
         btnRegistrarTrabajador.setBackground(new java.awt.Color(0, 0, 0));
@@ -85,11 +78,7 @@ public class FrmMenu extends javax.swing.JFrame {
         btnRegistrarTrabajador.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarTrabajador.setText("REGISTRAR TRABAJADOR");
         btnRegistrarTrabajador.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnRegistrarTrabajador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarTrabajadorActionPerformed(evt);
-            }
-        });
+        btnRegistrarTrabajador.addActionListener(this::btnRegistrarTrabajadorActionPerformed);
         getContentPane().add(btnRegistrarTrabajador, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 130, 210, 50));
 
         btnRegistrarTrabajador1.setBackground(new java.awt.Color(0, 0, 0));
@@ -97,11 +86,7 @@ public class FrmMenu extends javax.swing.JFrame {
         btnRegistrarTrabajador1.setForeground(new java.awt.Color(255, 255, 255));
         btnRegistrarTrabajador1.setText("SALIR");
         btnRegistrarTrabajador1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnRegistrarTrabajador1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarTrabajador1ActionPerformed(evt);
-            }
-        });
+        btnRegistrarTrabajador1.addActionListener(this::btnRegistrarTrabajador1ActionPerformed);
         getContentPane().add(btnRegistrarTrabajador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 120, 110, 50));
 
         jlbNomina.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
@@ -130,25 +115,25 @@ public class FrmMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnRegistrarNominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarNominaActionPerformed
+    private void btnRegistrarNominaActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarNominaActionPerformed
         FrmNomina nomina = new FrmNomina();
         nomina.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarNominaActionPerformed
 
-    private void btnRegistrarContratoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarContratoActionPerformed
+    private void btnRegistrarContratoActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarContratoActionPerformed
         FrmContrato contrato = new FrmContrato();
         contrato.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarContratoActionPerformed
 
-    private void btnRegistrarTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarTrabajadorActionPerformed
+    private void btnRegistrarTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarTrabajadorActionPerformed
         FrmTrabajador trabajador = new FrmTrabajador();
         trabajador.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarTrabajadorActionPerformed
 
-    private void btnRegistrarTrabajador1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarTrabajador1ActionPerformed
+    private void btnRegistrarTrabajador1ActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarTrabajador1ActionPerformed
         System.exit(WIDTH);
     }//GEN-LAST:event_btnRegistrarTrabajador1ActionPerformed
 
@@ -167,7 +152,7 @@ public class FrmMenu extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -187,11 +172,7 @@ public class FrmMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmMenu().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new FrmMenu().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

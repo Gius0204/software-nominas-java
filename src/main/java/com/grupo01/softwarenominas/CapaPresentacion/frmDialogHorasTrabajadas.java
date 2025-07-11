@@ -3,6 +3,8 @@ package com.grupo01.softwarenominas.capapresentacion;
 
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 
+import javax.swing.UnsupportedLookAndFeelException;
+
 import com.grupo01.softwarenominas.capaentidad.Contrato;
 
 public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
@@ -30,6 +32,9 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        javax.swing.JButton btnGuardarCambios;
+        javax.swing.JLabel jLabel27;
+        javax.swing.JScrollPane jScrollPane2;
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jtbTablaHorasTrabajadas = new javax.swing.JTable();
@@ -55,11 +60,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
         jScrollPane2.setViewportView(jtbTablaHorasTrabajadas);
 
         btnGuardarCambios.setText("Guardar Cambios");
-        btnGuardarCambios.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarCambiosActionPerformed(evt);
-            }
-        });
+        btnGuardarCambios.addActionListener(this::btnGuardarCambiosActionPerformed);
 
         jLabel27.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel27.setText("# Horas Totales");
@@ -103,7 +104,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
+    private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnGuardarCambiosActionPerformed
         contratoDao.guardarHorasTrabajadasDesdeTabla(jtbTablaHorasTrabajadas);
         this.dispose();
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
@@ -111,7 +112,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -124,14 +125,8 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmDialogHorasTrabajadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FrmNomina.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -143,24 +138,20 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardarCambios;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JScrollPane jScrollPane2;
+    
     private javax.swing.JTable jtbTablaHorasTrabajadas;
     private javax.swing.JTextField txtHorasTotales;
     // End of variables declaration//GEN-END:variables

@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class FrmNomina extends javax.swing.JFrame {
-    private transient final ContratoDAO contratoDAO = new ContratoDAO();
+    private final transient ContratoDAO contratoDAO = new ContratoDAO();
     
     transient TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
     
@@ -65,13 +65,9 @@ public class FrmNomina extends javax.swing.JFrame {
             lblSeleccionados.setText("Seleccionados: " + seleccionados + " contratos");
         });
         
-        cmbPeriodoPago2.addActionListener(e -> {
-            listarContratosTabla(tableContrato);
-        });
+        cmbPeriodoPago2.addActionListener(e -> listarContratosTabla(tableContrato));
         
-        cmbPeriodoPago1.addActionListener(e -> {
-            listarNominasTabla(tableNominas);
-        });
+        cmbPeriodoPago1.addActionListener(e -> listarNominasTabla(tableNominas));
 
     }
     
@@ -82,13 +78,13 @@ public class FrmNomina extends javax.swing.JFrame {
 
             utilidades.ajustarTabla(tabla);
 
-            if (resultados == 0) {
-                lblContratos.setText("No se encontraron contratos en la base de datos.");
-            } else if (resultados == 1) {
-                lblContratos.setText("Se encontró " + resultados + " contrato.");
-            } else {
-                lblContratos.setText("Se encontraron " + resultados + " contratos.");
-            }
+            lblContratos.setText(
+                switch (resultados) {
+                    case 0 -> "No se encontraron contratos en la base de datos.";
+                    case 1 -> "Se encontró 1 contrato.";
+                    default -> "Se encontraron " + resultados + " contratos.";
+                }
+            );
         } else {
             inicializarTablaContrato(tableContrato);
         }
@@ -119,13 +115,14 @@ public class FrmNomina extends javax.swing.JFrame {
 
             utilidades.ajustarTabla(tabla);
 
-            if (resultados == 0) {
-                lblNominas.setText("No se encontraron nóminas en la base de datos.");
-            } else if (resultados == 1) {
-                lblNominas.setText("Se encontró " + resultados + " nómina.");
-            } else {
-                lblNominas.setText("Se encontraron " + resultados + " nóminas.");
-            }
+            lblNominas.setText(
+                switch (resultados) {
+                    case 0 -> "No se encontraron nóminas en la base de datos.";
+                    case 1 -> "Se encontró 1 nómina.";
+                    default -> "Se encontraron " + resultados + " nóminas.";
+                }
+            );
+
         } else {
             inicializarTablaNominas(tableNominas);
         }
@@ -246,11 +243,7 @@ public class FrmNomina extends javax.swing.JFrame {
         btnProcesar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnProcesar.setForeground(new java.awt.Color(255, 0, 0));
         btnProcesar.setText("Procesar");
-        btnProcesar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProcesarActionPerformed(evt);
-            }
-        });
+        btnProcesar.addActionListener(evt -> btnProcesarActionPerformed(evt));
         jPanel1.add(btnProcesar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 660, 200, 30));
 
         btnRegresar.setBackground(new java.awt.Color(255, 254, 255));
@@ -261,11 +254,7 @@ public class FrmNomina extends javax.swing.JFrame {
         btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRegresar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRegresar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
-            }
-        });
+        btnRegresar.addActionListener(evt -> btnRegresarActionPerformed(evt));
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 700, 110, 100));
 
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
@@ -392,13 +381,13 @@ public class FrmNomina extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegresarActionPerformed
         FrmMenu menu = new FrmMenu();
         menu.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void btnProcesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcesarActionPerformed
+    private void btnProcesarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnProcesarActionPerformed
         try {
             int[] filasSeleccionadas = tableContrato.getSelectedRows();
             if (filasSeleccionadas.length == 0) {
@@ -526,11 +515,7 @@ public class FrmNomina extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmNomina().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new FrmNomina().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

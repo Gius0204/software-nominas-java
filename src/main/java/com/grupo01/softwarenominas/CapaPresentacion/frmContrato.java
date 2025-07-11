@@ -562,13 +562,14 @@ public class FrmContrato extends javax.swing.JFrame {
         
         utilidades.ajustarTabla(tabla);
 
-        if (resultados == 0) {
-            lblMensajeBuscar.setText("No se encontraron contratos en la base de datos.");
-        } else if (resultados == 1) {
-            lblMensajeBuscar.setText("Se encontró " + resultados + " contrato.");
-        } else {
-            lblMensajeBuscar.setText("Se encontraron " + resultados + " contratos.");
-        }
+        lblMensajeBuscar.setText(
+            switch (resultados) {
+                case 0 -> "No se encontraron contratos en la base de datos.";
+                case 1 -> "Se encontró 1 contrato.";
+                default -> "Se encontraron " + resultados + " contratos.";
+            }
+        );
+
     }
 
     @SuppressWarnings("unchecked")
@@ -732,11 +733,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRegresar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRegresar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
-            }
-        });
+        btnRegresar.addActionListener(this::btnRegresarActionPerformed);
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 620, 110, 100));
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -745,11 +742,7 @@ public class FrmContrato extends javax.swing.JFrame {
 
         cmbArea.setBackground(new java.awt.Color(254, 255, 255));
         cmbArea.setBorder(null);
-        cmbArea.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbAreaActionPerformed(evt);
-            }
-        });
+        cmbArea.addActionListener(this::cmbAreaActionPerformed);
         jPanel1.add(cmbArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 220, 30));
 
         btnLimpiar.setBackground(new java.awt.Color(255, 254, 255));
@@ -759,11 +752,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnLimpiar.setBorder(null);
         btnLimpiar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnLimpiar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
-            }
-        });
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
         jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 620, 100, 100));
 
         cmbCargo.setBackground(new java.awt.Color(255, 254, 255));
@@ -891,11 +880,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBuscar.setHideActionText(true);
         btnBuscar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
         jPanel3.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 50, 100, 40));
 
         txtDocumentoBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -985,11 +970,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel1.add(jpanelContenedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 580, 470, 40));
 
         btnEditarHorasTrabajadas.setText("Editar Horas Trabajadas");
-        btnEditarHorasTrabajadas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarHorasTrabajadasActionPerformed(evt);
-            }
-        });
+        btnEditarHorasTrabajadas.addActionListener(this::btnEditarHorasTrabajadasActionPerformed);
         jPanel1.add(btnEditarHorasTrabajadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 550, 280, -1));
 
         btnRegistrar.setBackground(new java.awt.Color(255, 254, 255));
@@ -999,11 +980,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnRegistrar.setBorder(null);
         btnRegistrar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRegistrar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarActionPerformed(evt);
-            }
-        });
+        btnRegistrar.addActionListener(this::btnRegistrarActionPerformed);
         jPanel1.add(btnRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 620, 110, 100));
 
         jScrollPane5.setAutoscrolls(true);
@@ -1020,6 +997,7 @@ public class FrmContrato extends javax.swing.JFrame {
             }
         ));
         jtbTabla.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtbTablaMouseClicked(evt);
             }
@@ -1033,18 +1011,18 @@ public class FrmContrato extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
    
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegresarActionPerformed
         FrmMenu menu = new FrmMenu();
         menu.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
         salirModoEditar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    private void cmbAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAreaActionPerformed
+    private void cmbAreaActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_cmbAreaActionPerformed
         cmbArea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1057,7 +1035,7 @@ public class FrmContrato extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_cmbAreaActionPerformed
 
-    private void btnEditarHorasTrabajadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarHorasTrabajadasActionPerformed
+    private void btnEditarHorasTrabajadasActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnEditarHorasTrabajadasActionPerformed
         //int idContratoSeleccionado = contratoActual.getIdContrato(); // Tu método para extraer ID seleccionado
         FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(this, true); // modal
         dialog.inicializarConContrato(contratoActual);
@@ -1065,7 +1043,7 @@ public class FrmContrato extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEditarHorasTrabajadasActionPerformed
 
-    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarActionPerformed
         
         if(modoEdicionContrato){
             try {
@@ -1245,8 +1223,8 @@ public class FrmContrato extends javax.swing.JFrame {
         listarContratosTabla(jtbTabla, null, null, "", "");
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnBuscarActionPerformed
+        
         
         String documento = txtDocumentoBuscar.getText().trim();
         String nombres = txtNombresBuscar.getText().trim();
@@ -1275,8 +1253,8 @@ public class FrmContrato extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void jtbTablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbTablaMouseClicked
-        // TODO add your handling code here:
+    private void jtbTablaMouseClicked(java.awt.event.MouseEvent evt) {//NOSONAR //GEN-FIRST:event_jtbTablaMouseClicked
+        
         jtbTabla.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -1322,7 +1300,7 @@ public class FrmContrato extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1344,11 +1322,7 @@ public class FrmContrato extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmContrato().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new FrmContrato().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

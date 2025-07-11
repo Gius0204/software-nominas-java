@@ -48,7 +48,7 @@ public class TrabajadorNegocioVarios {
     public String validarTrabajador(Trabajador t) {
         try {
             if (t == null) {
-                throw new Exception("El trabajador no puede ser nulo.");
+                throw new IllegalArgumentException("El trabajador no puede ser nulo.");
             }
             
             String mensajeObligatorios = verificarCamposObligatorios(t);
@@ -103,7 +103,7 @@ public class TrabajadorNegocioVarios {
         return null;
     }
     
-    private static void validarNombres(String nombres) throws Exception {
+    private static void validarNombres(String nombres){
         if (nombres == null || nombres.trim().isEmpty()) {
             throw new IllegalArgumentException("El campo Nombres es obligatorio.");
         }
@@ -112,7 +112,7 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarApellido(String campo, String apellido) throws Exception {
+    private static void validarApellido(String campo, String apellido){
         if (apellido == null || apellido.trim().isEmpty()) {
             throw new IllegalArgumentException("El campo " + campo + " es obligatorio.");
         }
@@ -121,7 +121,7 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarTipoYDocumentoIdentidad(String tipoDoc, String doc) throws Exception {
+    private static void validarTipoYDocumentoIdentidad(String tipoDoc, String doc){
         if (tipoDoc == null || tipoDoc.trim().isEmpty()) {
             throw new IllegalArgumentException("El tipo de documento es obligatorio.");
         }
@@ -142,7 +142,7 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarFechaNacimiento(Date fecha) throws Exception {
+    private static void validarFechaNacimiento(Date fecha){
         if (fecha == null) {
             throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
         }
@@ -161,7 +161,7 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarTelefono(String telefono) throws Exception {
+    private static void validarTelefono(String telefono){
         if (telefono == null || telefono.trim().isEmpty()) {
             throw new IllegalArgumentException("El teléfono es obligatorio.");
         }
@@ -170,7 +170,7 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarCorreo(String correo) throws Exception {
+    private static void validarCorreo(String correo){
         if (correo == null || correo.trim().isEmpty()) {
             throw new IllegalArgumentException("El correo electrónico es obligatorio.");
         }
@@ -181,7 +181,7 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarSexo(String sexo) throws Exception {
+    private static void validarSexo(String sexo){
         if (sexo == null || sexo.trim().isEmpty()) {
             throw new IllegalArgumentException("El campo sexo es obligatorio.");
         }
@@ -190,13 +190,13 @@ public class TrabajadorNegocioVarios {
         }
     }
 
-    private static void validarDireccion(String direccion) throws Exception {
+    private static void validarDireccion(String direccion){
         if (direccion.length() > 150) {
             throw new IllegalArgumentException("La dirección no debe exceder los 150 caracteres.");
         }
     }
 
-    private static void validarDescripcion(String descripcion) throws Exception {
+    private static void validarDescripcion(String descripcion){
         if (descripcion.length() > 200) {
             throw new IllegalArgumentException("La descripción no debe exceder los 200 caracteres.");
         }

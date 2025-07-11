@@ -73,13 +73,13 @@ public class FrmTrabajador extends javax.swing.JFrame {
         
         utilidades.ajustarTabla(tableTrabajador);
 
-        if (resultados == 0) {
-            lblMensajeBuscar.setText("No se encontraron trabajadores en la base de datos.");
-        } else if (resultados == 1) {
-            lblMensajeBuscar.setText("Se encontró " + resultados + " trabajador.");
-        } else {
-            lblMensajeBuscar.setText("Se encontraron " + resultados + " trabajadores.");
-        }
+        lblMensajeBuscar.setText(
+            switch (resultados) {
+                case 0 -> "No se encontraron trabajadores en la base de datos.";
+                case 1 -> "Se encontró 1 trabajador.";
+                default -> "Se encontraron " + resultados + " trabajadores.";
+            }
+        );
     }
 
     private void configurarListeners() {
@@ -216,11 +216,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnRegistra.setBorder(null);
         btnRegistra.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRegistra.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegistra.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistraActionPerformed(evt);
-            }
-        });
+        btnRegistra.addActionListener(evt -> btnRegistraActionPerformed(evt));
         jPanel1.add(btnRegistra, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 590, 110, 100));
 
         btnRegresar.setBackground(new java.awt.Color(255, 254, 255));
@@ -231,11 +227,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRegresar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRegresar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
-            }
-        });
+        btnRegresar.addActionListener(evt -> btnRegresarActionPerformed(evt));
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 590, 110, 100));
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -249,11 +241,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnLimpiar.setBorder(null);
         btnLimpiar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnLimpiar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
-            }
-        });
+        btnLimpiar.addActionListener(evt -> btnLimpiarActionPerformed(evt));
         jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 590, 100, 100));
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -322,6 +310,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
             }
         ));
         tableTrabajador.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableTrabajadorMouseClicked(evt);
             }
@@ -448,7 +437,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         rbMasculino.setSelected(true);
     }
 
-    private void btnRegistraActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnRegistraActionPerformed(java.awt.event.ActionEvent evt) { //NOSONAR
         if (modoEdicion) {
             if(trabajadorActual!=null){
                 try {
@@ -492,7 +481,6 @@ public class FrmTrabajador extends javax.swing.JFrame {
             }
         } else {
             try {
-                // TODO add your handling code here:
                 Trabajador t = new Trabajador();
                 t.setNombres(txtNombres.getText());
                 t.setApellidoPaterno(txtApellidoPaterno.getText());
@@ -558,7 +546,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         }
     }
 
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegresarActionPerformed
         if (modoEdicion) {
             if (trabajadorActual != null) {
                 int confirm = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas eliminar al trabajador?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
@@ -585,7 +573,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         }        
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
         modoEdicion = false;
         trabajadorActual = null;
@@ -594,7 +582,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnRegresar.setText(ConstantesUITrabajador.BOTON_CERRAR);
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    private void tableTrabajadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableTrabajadorMouseClicked
+    private void tableTrabajadorMouseClicked(java.awt.event.MouseEvent evt) {//NOSONAR //GEN-FIRST:event_tableTrabajadorMouseClicked
         tableTrabajador.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -668,11 +656,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmTrabajador().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new FrmTrabajador().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
