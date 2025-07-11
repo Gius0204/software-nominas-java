@@ -117,7 +117,9 @@ public class TrabajadorDAO {
             stmt.setString(6, t.getTelefono());
             stmt.setString(7, t.getCorreo());
             stmt.setString(8, t.getSexo());
-            stmt.setDate(9, new java.sql.Date(t.getFechaNacimiento().getTime()));
+            stmt.setDate(9, java.sql.Date.valueOf(
+                t.getFechaNacimiento().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            ));
             stmt.setString(10, t.getDireccion());
             stmt.setString(11, t.getDescripcion());
 
@@ -211,7 +213,9 @@ public class TrabajadorDAO {
             stmt.setString(7, t.getTelefono());
             stmt.setString(8, t.getCorreo());
             stmt.setString(9, t.getSexo());
-            stmt.setDate(10, new java.sql.Date(t.getFechaNacimiento().getTime()));
+            stmt.setDate(10, java.sql.Date.valueOf(
+                t.getFechaNacimiento().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            ));
             stmt.setString(11, t.getDireccion());
             stmt.setString(12, t.getDescripcion());
 

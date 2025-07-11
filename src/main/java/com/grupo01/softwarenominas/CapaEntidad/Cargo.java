@@ -1,17 +1,22 @@
 
 package com.grupo01.softwarenominas.capaentidad;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class Cargo {
     private int idCargo;
     private String nombre;
     private String descripcion;
     private boolean estado;
     private Date fechaRegistro;
-
-    public Cargo() {}
 
     public Cargo(int idCargo, String nombre) {
         this.idCargo = idCargo;
@@ -23,46 +28,6 @@ public class Cargo {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.estado = estado;
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public int getIdCargo() {
-        return idCargo;
-    }
-
-    public void setIdCargo(int idCargo) {
-        this.idCargo = idCargo;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
-    }
-
-    public Date getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(Date fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 

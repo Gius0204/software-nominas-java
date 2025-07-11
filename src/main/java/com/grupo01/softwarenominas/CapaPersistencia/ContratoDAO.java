@@ -103,8 +103,12 @@ public class ContratoDAO {
             stmt.setInt(1, c.getIdTrabajador());
             stmt.setInt(2, c.getIdTipoContrato());
             stmt.setInt(3, c.getIdCargo());
-            stmt.setDate(4, new java.sql.Date(c.getFechaInicio().getTime()));
-            stmt.setDate(5, new java.sql.Date(c.getFechaFin().getTime()));
+            stmt.setDate(4, java.sql.Date.valueOf(
+                c.getFechaInicio().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            ));
+            stmt.setDate(5, java.sql.Date.valueOf(
+                c.getFechaFin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            ));
             stmt.setDouble(6, c.getSalarioBase());
             stmt.setInt(7, c.getHorasTotales());
             stmt.setString(8, c.getDescripcion());
@@ -145,8 +149,12 @@ public class ContratoDAO {
             stmt.setInt(1, c.getIdContrato());
             stmt.setInt(2, c.getIdTipoContrato());
             stmt.setInt(3, c.getIdCargo());
-            stmt.setDate(4, new java.sql.Date(c.getFechaInicio().getTime()));
-            stmt.setDate(5, new java.sql.Date(c.getFechaFin().getTime()));
+            stmt.setDate(4, java.sql.Date.valueOf(
+                c.getFechaInicio().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            ));
+            stmt.setDate(5, java.sql.Date.valueOf(
+                c.getFechaFin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+            ));
             stmt.setDouble(6, c.getSalarioBase());
             stmt.setInt(7, c.getHorasTotales());
             stmt.setString(8, c.getDescripcion());

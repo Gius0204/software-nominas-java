@@ -1,7 +1,18 @@
 package com.grupo01.softwarenominas.capaentidad;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.util.Date;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ContratoPeriodo {
     private int idContratoPeriodo;
     private int idContrato;
@@ -11,10 +22,7 @@ public class ContratoPeriodo {
     private int horasTrabajadas;
     private String estadoPago;
     private boolean estado;
-    private java.util.Date fechaRegistro;
-
-    public ContratoPeriodo() {
-    }
+    private Date fechaRegistro;
 
     public ContratoPeriodo(int idContratoPeriodo, Contrato contrato, PeriodoPago periodo, int horasTrabajadas) {
         this.idContratoPeriodo = idContratoPeriodo;
@@ -32,78 +40,5 @@ public class ContratoPeriodo {
         this.estado = estado;
         this.fechaRegistro = fechaRegistro;
     }
-
-    public int getIdContrato() {
-        return idContrato;
-    }
-
-    public void setIdContrato(int idContrato) {
-        this.idContrato = idContrato;
-    }
-
-    public int getIdPeriodo() {
-        return idPeriodo;
-    }
-
-    public void setIdPeriodo(int idPeriodo) {
-        this.idPeriodo = idPeriodo;
-    }
-
-    public int getIdContratoPeriodo() {
-        return idContratoPeriodo;
-    }
-
-    public void setIdContratoPeriodo(int idContratoPeriodo) {
-        this.idContratoPeriodo = idContratoPeriodo;
-    }
-
-    public Contrato getContrato() {
-        return contrato;
-    }
-
-    public void setContrato(Contrato contrato) {
-        this.contrato = contrato;
-    }
-
-    public PeriodoPago getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(PeriodoPago periodo) {
-        this.periodo = periodo;
-    }
-
-    public int getHorasTrabajadas() {
-        return horasTrabajadas;
-    }
-
-    public void setHorasTrabajadas(int horasTrabajadas) {
-        this.horasTrabajadas = horasTrabajadas;
-    }
-
-    public String getEstadoPago() {
-        return estadoPago;
-    }
-
-    public void setEstadoPago(String estadoPago) {
-        this.estadoPago = estadoPago;
-    }
-
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
-    }
-
-    public Date getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(Date fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-    
 }
 

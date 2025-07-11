@@ -192,138 +192,76 @@ public class FrmContrato extends javax.swing.JFrame {
         
         cmbEspecialidad.addActionListener(e -> actualizarSalarioSiListo());
     }
-    
-    private void configurarFocusListeners(){
-        txtDNI.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                    
-                String dni = txtDNI.getText().trim();
-                if (!dni.matches("^\\d{8,9}$")) {
-                    lblMensaje.setText("El DNI debe tener entre 8 y 9 dígitos numéricos.");                  
-                }
-                validarFormularioCompleto();
-            }
-        });
 
-        txtHorasTotales.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                        
-                String horasTexto = txtHorasTotales.getText().trim();
-                try {
-                    int horas = Integer.parseInt(horasTexto);
-                    if (horas < 80 || horas > 200) {
-                        lblMensaje.setText("Las horas deben estar entre 80 y 200.");
-                        
-                    }
-                    validarFormularioCompleto();
-                } catch (NumberFormatException ex) {
-                    lblMensaje.setText("Ingrese un número válido para horas.");
-                }
-            }
-        });
-
-        jtxDescripcion.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                    
-                String descripcion = jtxDescripcion.getText().trim();
-                if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*")) {
-                    lblMensaje.setText("La descripción debe tener solo letras y números (máx. 250).");
-                    
-                }
-                validarFormularioCompleto();
-            }
-        });
-
-        txtSalario.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                    
-                String tipo = cmbTipoContrato.getSelectedItem().toString();
-                if (tipo.equalsIgnoreCase(ConstantesUIContrato.TEXTO_SERVICIO_EXTERNO)) {
-                    String salarioTexto = txtSalario.getText().trim();
-                    try {
-                        double salario = Double.parseDouble(salarioTexto);
-                        if (salario < 1025 || salario >= 1000000) {
-                            lblMensaje.setText("El salario debe ser mayor al mínimo de 1025 soles y tener hasta 6 cifras.");
-                            
-                        }
-                        validarFormularioCompleto();
-                    } catch (NumberFormatException ex) {
-                        lblMensaje.setText("Ingrese un número válido para salario.");
-                    }
-                }
-            }
-        });
-        
-        cmbTipoContrato.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                
-                TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-                if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT )){
-                    lblMensaje.setText("Seleccionar un tipo de contrato.");
-                }
-                
-                validarFormularioCompleto();
-            }
-        });
-        cmbCargo.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                
-                Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-                if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)){
-                    lblMensaje.setText("Seleccionar un cargo.");
-                }
-                
-                validarFormularioCompleto();
-            }
-        });
-        cmbArea.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                
-                Area area = (Area) cmbArea.getSelectedItem();
-                if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)){
-                    lblMensaje.setText("Seleccionar un area.");
-                }
-                
-                validarFormularioCompleto();
-            }
-        });
-        cmbEspecialidad.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-                jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-                
-                Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-                
-                if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)){
-                    lblMensaje.setText("Seleccionar una especialidad.");
-                }             
-                validarFormularioCompleto();
-            }
-        });         
+    private void resetUI() {
+        lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
+        jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
     }
     
+    
+
+    private void validarHorasTotales() {
+        String horasTexto = txtHorasTotales.getText().trim();
+        try {
+            int horas = Integer.parseInt(horasTexto);
+            if (horas < 80 || horas > 200) {
+                lblMensaje.setText("Las horas deben estar entre 80 y 200.");
+            }
+        } catch (NumberFormatException ex) {
+            lblMensaje.setText("Ingrese un número válido para horas.");
+        }
+    }
+
+    private void validarComboTipoContrato() {
+        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
+        if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT)) {
+            lblMensaje.setText("Seleccionar un tipo de contrato.");
+        }
+    }
+
+    private void validarComboCargo() {
+        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
+        if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)) {
+            lblMensaje.setText("Seleccionar un cargo.");
+        }
+    }
+
+    private void validarComboArea() {
+        Area area = (Area) cmbArea.getSelectedItem();
+        if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)) {
+            lblMensaje.setText("Seleccionar un área.");
+        }
+    }
+
+    private void validarComboEspecialidad() {
+        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
+        if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)) {
+            lblMensaje.setText("Seleccionar una especialidad.");
+        }
+    }
+
+    private FocusAdapter crearFocusAdapter(Runnable validador) {
+        return new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                resetUI();
+                validador.run();
+                validarFormularioCompleto();
+            }
+        };
+    }
+
+    private void configurarFocusListeners() {
+        txtDNI.addFocusListener(crearFocusAdapter(this::validarDNI));
+        txtHorasTotales.addFocusListener(crearFocusAdapter(this::validarHorasTotales));
+        jtxDescripcion.addFocusListener(crearFocusAdapter(this::validarDescripcion));
+        txtSalario.addFocusListener(crearFocusAdapter(this::validarSalario));
+        cmbTipoContrato.addFocusListener(crearFocusAdapter(this::validarComboTipoContrato));
+        cmbCargo.addFocusListener(crearFocusAdapter(this::validarComboCargo));
+        cmbArea.addFocusListener(crearFocusAdapter(this::validarComboArea));
+        cmbEspecialidad.addFocusListener(crearFocusAdapter(this::validarComboEspecialidad));
+    }
+
     private void listenersFechas(){
         jdcFechaInicio.getJCalendar().setMinSelectableDate(new java.util.Date());
 
@@ -546,6 +484,9 @@ public class FrmContrato extends javax.swing.JFrame {
 
     private boolean validarDNI() {
         String dni = txtDNI.getText().trim();
+        if (!dni.matches("^\\d{8,9}$")) {
+            lblMensaje.setText("El DNI debe tener entre 8 y 9 dígitos numéricos.");
+        }
         return dni.matches("^\\d{8,9}$");
     }
 
@@ -555,7 +496,44 @@ public class FrmContrato extends javax.swing.JFrame {
 
     private boolean validarDescripcion() {
         String descripcion = jtxDescripcion.getText().trim();
+        if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*")) {
+            lblMensaje.setText("La descripción debe tener solo letras y números (máx. 250).");
+        }
         return descripcion.length() <= 250 && descripcion.matches("[a-zA-Z0-9\\s]*");
+    }
+
+    private String validarRangoSalario(String salarioTexto) {
+        try {
+            double salario = Double.parseDouble(salarioTexto);
+            if (salario < 1025 || salario >= 1_000_000) {
+                return "El salario debe ser mayor al mínimo de 1025 soles y tener hasta 6 cifras.";
+            }
+        } catch (NumberFormatException ex) {
+            return "Ingrese un número válido para salario.";
+        }
+        return null; // Sin error
+    }
+
+    private String validarCombosMensaje() {
+        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
+        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
+        Area area = (Area) cmbArea.getSelectedItem();
+        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
+
+        if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT)) {
+            return "Seleccionar un tipo de contrato.";
+        }
+        if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)) {
+            return "Seleccionar un cargo.";
+        }
+        if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)) {
+            return "Seleccionar un área.";
+        }
+        if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)) {
+            return "Seleccionar una especialidad.";
+        }
+
+        return null; // Sin error
     }
 
     private boolean validarSalario() {
@@ -563,39 +541,28 @@ public class FrmContrato extends javax.swing.JFrame {
         String salarioTexto = txtSalario.getText().trim();
 
         if (tipo.equalsIgnoreCase(ConstantesUIContrato.TEXTO_SERVICIO_EXTERNO)) {
-            try {
-                double salario = Double.parseDouble(salarioTexto);
-                if (salario < 1025 || salario >= 1000000) return false;
-            } catch (NumberFormatException e) {
+            String error = validarRangoSalario(salarioTexto);
+            if (error != null) {
+                lblMensaje.setText(error);
                 return false;
             }
-        }else{
-            TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-            Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-            Area area = (Area) cmbArea.getSelectedItem();
-            Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-                
-            if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT )){
+        } else {
+            String errorCombos = validarCombosMensaje();
+            if (errorCombos != null) {
+                lblMensaje.setText(errorCombos);
                 return false;
             }
-            if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)){
-                return false;
-            }
-            if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)){
-                return false;
-            }
-            if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)){
-                return false;
-            }       
-            try {
-                double salario = Double.parseDouble(salarioTexto);
-                if (salario < 1025 || salario >= 1000000) return false;
-            } catch (NumberFormatException e) {
+
+            String errorSalario = validarRangoSalario(salarioTexto);
+            if (errorSalario != null) {
+                lblMensaje.setText(errorSalario);
                 return false;
             }
         }
+
         return true;
     }
+
 
     private boolean validarCombos() {
         return !(cmbTipoContrato.getSelectedIndex() == 0 || cmbCargo.getSelectedIndex() == 0 ||
@@ -651,36 +618,49 @@ public class FrmContrato extends javax.swing.JFrame {
         Contrato contrato = mapearFormularioAContrato();
 
         if (modoEdicionContrato) {
-            contrato.setIdContrato(contratoActual.getIdContrato());
-            if (negocioContratoRegistro.actualizarContrato(contrato)) {
-                DetalleContrato detalle = mapearFormularioADetalleContrato(contrato.getIdContrato());
-                if (negocioContratoRegistro.actualizarDetalleContrato(detalle)) {
-                    mostrarMensaje("Contrato y detalle actualizados.", new Color(0,128,0));
-                    salirModoEditar();
-                    limpiar();
-                } else {
-                    mostrarMensaje("Error al actualizar detalle.", Color.RED);
-                }
-            } else {
-                mostrarMensaje("Error al actualizar contrato.", Color.RED);
-            }
+            actualizarContratoYDetalle(contrato);
         } else {
-            ResultadoOperacion resultado = negocioContratoRegistro.registrarContrato(contrato);
-            if (resultado.isExito()) {
-                DetalleContrato detalle = mapearFormularioADetalleContrato(resultado.getIdGenerado());
-                if (negocioContratoRegistro.registrarDetalleContrato(detalle).isExito()) {
-                    mostrarMensaje("Contrato registrado correctamente.", new Color(0,128,0));
-                    limpiar();
-                } else {
-                    mostrarMensaje("Contrato registrado, detalle falló.", Color.RED);
-                }
-            } else {
-                mostrarMensaje(resultado.getMensaje(), Color.RED);
-            }
+            registrarContratoYDetalle(contrato);
         }
 
         listarContratosTabla(jtbTabla, null, null, "", "");
     }
+
+    private void actualizarContratoYDetalle(Contrato contrato) {
+        contrato.setIdContrato(contratoActual.getIdContrato());
+
+        if (negocioContratoRegistro.actualizarContrato(contrato)) {
+            DetalleContrato detalle = mapearFormularioADetalleContrato(contrato.getIdContrato());
+
+            if (negocioContratoRegistro.actualizarDetalleContrato(detalle)) {
+                mostrarMensaje("Contrato y detalle actualizados.", new Color(0, 128, 0));
+                salirModoEditar();
+                limpiar();
+            } else {
+                mostrarMensaje("Error al actualizar detalle.", Color.RED);
+            }
+        } else {
+            mostrarMensaje("Error al actualizar contrato.", Color.RED);
+        }
+    }
+
+    private void registrarContratoYDetalle(Contrato contrato) {
+        ResultadoOperacion resultado = negocioContratoRegistro.registrarContrato(contrato);
+
+        if (resultado.isExito()) {
+            DetalleContrato detalle = mapearFormularioADetalleContrato(resultado.getIdGenerado());
+
+            if (negocioContratoRegistro.registrarDetalleContrato(detalle).isExito()) {
+                mostrarMensaje("Contrato registrado correctamente.", new Color(0, 128, 0));
+                limpiar();
+            } else {
+                mostrarMensaje("Contrato registrado, detalle falló.", Color.RED);
+            }
+        } else {
+            mostrarMensaje(resultado.getMensaje(), Color.RED);
+        }
+    }
+
 
     private void mostrarMensaje(String mensaje, Color color) {
         lblMensaje.setText("<html><div style='text-align: center; width: 300px;'>" + mensaje + "</div></html>");
@@ -782,11 +762,11 @@ public class FrmContrato extends javax.swing.JFrame {
         txtDNI.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.add(txtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 210, 30));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel5.setText("Area");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel6.setText("Duracion");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 270, -1, -1));
 
@@ -801,7 +781,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 430, 280, 110));
 
         btnRegresar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnRegresar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/saliir.png"))); // NOI18N
         btnRegresar.setText("CERRAR");
         btnRegresar.setBorder(null);
@@ -811,7 +791,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnRegresar.addActionListener(this::btnRegresarActionPerformed);
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 620, 110, 100));
 
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel14.setText("Trabajador");
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 80, -1));
 
@@ -820,7 +800,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel1.add(cmbArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 220, 30));
 
         btnLimpiar.setBackground(new java.awt.Color(255, 254, 255));
-        btnLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnLimpiar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/borrar.png"))); // NOI18N
         btnLimpiar.setText("LIMPIAR");
         btnLimpiar.setBorder(null);
@@ -833,11 +813,11 @@ public class FrmContrato extends javax.swing.JFrame {
         cmbCargo.setBorder(null);
         jPanel1.add(cmbCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, 220, 30));
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel11.setText("Cargo");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 220, -1, -1));
 
-        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel26.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel26.setText("Tipo de Contrato");
         jPanel1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
@@ -845,28 +825,28 @@ public class FrmContrato extends javax.swing.JFrame {
         cmbTipoContrato.setBorder(null);
         jPanel1.add(cmbTipoContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 220, 30));
 
-        jLabel27.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel27.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel27.setText("# Horas");
         jPanel1.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
 
         txtHorasTotales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.add(txtHorasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 320, 80, 30));
 
-        jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel28.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel28.setText("Fecha Inicio");
         jPanel1.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, -1, -1));
 
         jdcFechaFin.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jdcFechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 360, 170, 30));
 
-        jLabel29.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel29.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel29.setText("Fecha Fin");
         jPanel1.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, -1, -1));
 
         jdcFechaInicio.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jdcFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, 170, 30));
 
-        jLabel30.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel30.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel30.setText("Salario");
         jPanel1.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, -1, -1));
 
@@ -875,17 +855,17 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jcbAsignacion.setBackground(new java.awt.Color(255, 255, 255));
-        jcbAsignacion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jcbAsignacion.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jcbAsignacion.setText("Asignación Familiar");
         jPanel7.add(jcbAsignacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 160, -1));
 
         jcbSeguroVida.setBackground(new java.awt.Color(255, 255, 255));
-        jcbSeguroVida.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jcbSeguroVida.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jcbSeguroVida.setText("Seguro de Vida");
         jPanel7.add(jcbSeguroVida, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 160, -1));
 
         jcbSeguroAccidentes.setBackground(new java.awt.Color(255, 255, 255));
-        jcbSeguroAccidentes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jcbSeguroAccidentes.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jcbSeguroAccidentes.setText("Seguro Accidentes");
         jPanel7.add(jcbSeguroAccidentes, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 160, -1));
 
@@ -899,7 +879,7 @@ public class FrmContrato extends javax.swing.JFrame {
         rtnESSALUD.setText("ESSALUD");
         jPanel7.add(rtnESSALUD, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel7.setText("Tipo Seguro Salud");
         jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, -1));
 
@@ -909,11 +889,11 @@ public class FrmContrato extends javax.swing.JFrame {
 
         jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 180, 170));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel4.setText("Documento Identidad (DNI/CE)");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
-        moduloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        moduloContrato.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 24)); // NOI18N
         moduloContrato.setText("MODULO CONTRATO");
         jPanel1.add(moduloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
@@ -923,7 +903,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel25.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(255, 255, 255));
         jLabel25.setText("Busqueda de Contratos");
         jPanel4.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
@@ -947,7 +927,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel3.add(jdcFechaInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 40, 150, 30));
 
         btnBuscar.setBackground(new java.awt.Color(255, 254, 255));
-        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBuscar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/buscar.png"))); // NOI18N
         btnBuscar.setText("BUSCAR");
         btnBuscar.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -960,18 +940,18 @@ public class FrmContrato extends javax.swing.JFrame {
         txtDocumentoBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.add(txtDocumentoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 210, 30));
 
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel16.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
         jLabel16.setText("Por Fechas :");
         jPanel3.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, -1));
 
         txtNombresBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.add(txtNombresBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 210, 30));
 
-        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel19.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
         jLabel19.setText("Por Nombres del Trabajador :");
         jPanel3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
 
-        jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel21.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
         jLabel21.setText("Por Documento :");
         jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
@@ -988,7 +968,7 @@ public class FrmContrato extends javax.swing.JFrame {
 
         jPanel12.setBackground(new java.awt.Color(0, 0, 0));
 
-        lblMensajeBuscar.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblMensajeBuscar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
         lblMensajeBuscar.setForeground(new java.awt.Color(255, 255, 255));
         lblMensajeBuscar.setText("Mensaje: ");
         jPanel12.add(lblMensajeBuscar);
@@ -997,7 +977,7 @@ public class FrmContrato extends javax.swing.JFrame {
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 640, 620, 40));
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel8.setText("Especialidad");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, -1, -1));
 
@@ -1011,33 +991,33 @@ public class FrmContrato extends javax.swing.JFrame {
 
         rtn6meses.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn6meses);
-        rtn6meses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        rtn6meses.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
         rtn6meses.setText("6 meses");
         jPanel10.add(rtn6meses, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 80, -1));
 
         rtn3meses.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn3meses);
-        rtn3meses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        rtn3meses.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
         rtn3meses.setText("3 meses");
         jPanel10.add(rtn3meses, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, -1));
 
         rtn1anio.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn1anio);
-        rtn1anio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        rtn1anio.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
         rtn1anio.setText("1 año");
         jPanel10.add(rtn1anio, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 80, -1));
 
         jPanel1.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 290, 100, 110));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel9.setText("Descripcion");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 410, -1, -1));
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         jLabel10.setText("Detalle");
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, -1, -1));
 
-        lblMensaje.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblMensaje.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
         lblMensaje.setText("Mensaje: ");
         jpanelContenedor.add(lblMensaje);
 
@@ -1048,7 +1028,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel1.add(btnEditarHorasTrabajadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 550, 280, -1));
 
         btnRegistrar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnRegistrar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
         btnRegistrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/log-out.png"))); // NOI18N
         btnRegistrar.setText("REGISTRAR");
         btnRegistrar.setBorder(null);
