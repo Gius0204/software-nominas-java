@@ -9,6 +9,7 @@ public class ConstantesBDContrato {
     public static final String HORAS_TOTALES = "HorasTotales";
     public static final String DOCUMENTO_IDENTIDAD = "DocumentoIdentidad";
     public static final String NOMBRES = "Nombres";
+    public static final String NOMBRE = "Nombre";
     public static final String APELLIDO_PATERNO = "ApellidoPaterno";
     public static final String APELLIDO_MATERNO = "ApellidoMaterno";
     public static final String AREA_NOMBRE = "AreaNombre";

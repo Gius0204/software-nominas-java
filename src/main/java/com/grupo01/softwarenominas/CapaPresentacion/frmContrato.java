@@ -7,9 +7,13 @@ import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
 import com.grupo01.softwarenominas.capaentidad.Cargo;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capaentidad.Trabajador;
-import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
-import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioCalculo;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioListado;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioLlenado;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioRegistro;
+import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioCalculo.Resultado;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroDescripcion;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroNumerico;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroSalario;
@@ -32,10 +36,14 @@ import javax.swing.text.AbstractDocument;
 
 public class FrmContrato extends javax.swing.JFrame {   
 
+    private final transient ContratoNegocioLlenado negocioContratoLlenado = new ContratoNegocioLlenado();
+    private final transient ContratoNegocioCalculo negocioContratoCalculo = new ContratoNegocioCalculo();
+    private final transient ContratoNegocioListado negocioContratoListado = new ContratoNegocioListado();
+    private final transient ContratoNegocioRegistro negocioContratoRegistro = new ContratoNegocioRegistro();
+    private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
+
     private static final long serialVersionUID = 1L;
-    transient Utilidades utilidades = new Utilidades();    
-    transient ContratoDAO contratoDAO = new ContratoDAO();
-    transient TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
+    transient Utilidades utilidades = new Utilidades();
     private transient Trabajador trabajadorActual;
     private transient Contrato contratoActual;
     private transient DetalleContrato detalleContratoActual;
@@ -45,21 +53,16 @@ public class FrmContrato extends javax.swing.JFrame {
     public FrmContrato() {
         initComponents();
         inicializarFormulario();
-        inicializarTrueOrFalseComponents();
-        configurarListeners();
-        configurarListenersCombobox();
-        listenersFechas();
-        rtnESSALUD.setSelected(true);      
-        inicializarCamposValidados();       
-        configurarFocusListeners();
+        
     }
 
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
-        trabajadorDAO.cargarAreas(cmbArea);
-        contratoDAO.cargarTiposContrato(cmbTipoContrato);
-        contratoDAO.cargarCargos(cmbCargo);       
-        inicializarTablaContrato(jtbTabla);       
+        rtnESSALUD.setSelected(true);
+        negocioContratoLlenado.cargarAreas(cmbArea);
+        negocioContratoLlenado.cargarTiposContrato(cmbTipoContrato);
+        negocioContratoLlenado.cargarCargos(cmbCargo);       
+        inicializarTablaContrato();       
         listarContratosTabla(jtbTabla, null, null, "", "");        
         jdcFechaInicial.addPropertyChangeListener("date", evt -> {
             Date fechaInicio = jdcFechaInicial.getDate();
@@ -70,6 +73,14 @@ public class FrmContrato extends javax.swing.JFrame {
                 lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
             }
         });
+
+        inicializarListenersTabla();
+        inicializarTrueOrFalseComponents();
+        configurarListeners();
+        configurarListenersCombobox();
+        listenersFechas(); 
+        inicializarCamposValidados();       
+        configurarFocusListeners();
     }
     
     private void inicializarTrueOrFalseComponents(){
@@ -92,7 +103,7 @@ public class FrmContrato extends javax.swing.JFrame {
         ((AbstractDocument) txtNombresBuscar.getDocument()).setDocumentFilter(new FiltroDescripcion());
     }
     
-    public void inicializarTablaContrato(JTable tabla){
+    public void inicializarTablaContrato(){
             DefaultTableModel modelo = new DefaultTableModel();
             String[] columnasDeseadas = {
                 "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
@@ -102,8 +113,8 @@ public class FrmContrato extends javax.swing.JFrame {
             for (String col : columnasDeseadas) {
                 modelo.addColumn(col);
             }
-            tabla.setModel(modelo);          
-            utilidades.ajustarTabla(tabla);
+            jtbTabla.setModel(modelo);          
+            utilidades.ajustarTabla(jtbTabla);
     }
 
     private void configurarListeners() {
@@ -129,10 +140,56 @@ public class FrmContrato extends javax.swing.JFrame {
         });
     }
 
+    private void inicializarListenersTabla() {
+    jtbTabla.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int fila = jtbTabla.getSelectedRow();
+            if (fila != -1) {
+                String documentoIdentidad = jtbTabla.getValueAt(fila, 3).toString();
+                lblMensaje.setText("Contrato encontrado: DNI " + documentoIdentidad);
+
+                Trabajador t = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(documentoIdentidad);
+                Contrato c = negocioContratoLlenado.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
+                DetalleContrato dc = negocioContratoLlenado.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
+
+                if (t != null && c != null && dc != null) {
+                    trabajadorActual = t;
+                    contratoActual = c;
+                    detalleContratoActual = dc;
+
+                    modoEdicionContrato = true;
+                    btnRegistrar.setText("EDITAR");
+                    btnLimpiar.setText("NUEVO");
+
+                    rtn3meses.setEnabled(false);
+                    rtn6meses.setEnabled(false);
+                    rtn1anio.setEnabled(false);
+                    jdcFechaInicio.setEnabled(false);
+
+                    btnEditarHorasTrabajadas.setEnabled(true);
+
+                    cargarFormularioConContrato();
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontró información del contrato.");
+                }
+            }
+        }
+    });
+}
+
+
     private void configurarListenersCombobox(){
+        cmbArea.addActionListener(e -> {
+            Area area = (Area) cmbArea.getSelectedItem();
+            if (area != null) {
+                negocioContratoLlenado.cargarEspecialidadesPorArea(cmbEspecialidad, area.getIdArea());
+            }
+            actualizarSalarioSiListo();
+        });
         cmbTipoContrato.addActionListener(e -> actualizarSalarioSiListo());
         cmbCargo.addActionListener(e -> actualizarSalarioSiListo());
-        cmbArea.addActionListener(e -> actualizarSalarioSiListo());
+        
         cmbEspecialidad.addActionListener(e -> actualizarSalarioSiListo());
     }
     
@@ -283,64 +340,7 @@ public class FrmContrato extends javax.swing.JFrame {
     }
     
     private void validarFormularioCompleto() {
-        boolean esValido = true;
-
-        String dni = txtDNI.getText().trim();
-        if (!dni.matches("^\\d{8,9}$")) esValido = false;
-
-        try {
-            int horas = Integer.parseInt(txtHorasTotales.getText().trim());
-            if (horas < 80 || horas > 200) esValido = false;
-        } catch (NumberFormatException e) {
-            esValido = false;
-        }
-
-        String descripcion = jtxDescripcion.getText().trim();
-        if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*")) esValido = false;
-
-        String tipo = cmbTipoContrato.getSelectedItem().toString();
-        String salarioTexto = txtSalario.getText().trim();
-
-        if (tipo.equalsIgnoreCase(ConstantesUIContrato.TEXTO_SERVICIO_EXTERNO)) {
-            try {
-                double salario = Double.parseDouble(salarioTexto);
-                if (salario < 1025 || salario >= 1000000) esValido = false;
-            } catch (NumberFormatException e) {
-                esValido = false;
-            }
-        }else{
-            TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-            Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-            Area area = (Area) cmbArea.getSelectedItem();
-            Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-                
-            if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT )){
-                esValido = false;
-            }
-            if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)){
-                esValido = false;
-            }
-            if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)){
-                esValido = false;
-            }
-            if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)){
-                esValido = false;
-            }       
-            try {
-                double salario = Double.parseDouble(salarioTexto);
-                if (salario < 1025 || salario >= 1000000) esValido = false;
-            } catch (NumberFormatException e) {
-                esValido = false;
-            }
-        }
-
-        Date fechaInicio = jdcFechaInicio.getDate();
-        Date fechaFin = jdcFechaFin.getDate();
-
-        if (fechaInicio == null || fechaFin == null) {
-            esValido = false;
-        }
-        btnRegistrar.setEnabled(esValido);
+        btnRegistrar.setEnabled(formularioValido());
     }
     
     private void calcularFechaFin() {
@@ -377,7 +377,7 @@ public class FrmContrato extends javax.swing.JFrame {
         String dni = txtDNI.getText().trim();
         if (dni.isEmpty()) return;
 
-        trabajadorActual = trabajadorDAO.buscarPorDocumentoIdentidad(dni);
+        trabajadorActual = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(dni);
 
         if (trabajadorActual != null) {
             txtNombres.setText(trabajadorActual.getNombres() + " " +
@@ -433,10 +433,6 @@ public class FrmContrato extends javax.swing.JFrame {
         Area area = (Area) cmbArea.getSelectedItem();
         Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
 
-        if (tipoContrato == null || cargo == null || area == null || especialidad == null) {
-            return;
-        }
-        
         if (cmbTipoContrato.getSelectedIndex() == 0 ||
             cmbCargo.getSelectedIndex() == 0 ||
             cmbArea.getSelectedIndex() == 0 ||
@@ -444,41 +440,14 @@ public class FrmContrato extends javax.swing.JFrame {
             return;
         }
 
-        String tipoContratoNombre = tipoContrato.getNombre();
+        Resultado resultado = negocioContratoCalculo.actualizarSalarioSiListo(tipoContrato, cargo, area, especialidad);
 
-        if (!tipoContratoNombre.equalsIgnoreCase(ConstantesUIContrato.TEXTO_SERVICIO_EXTERNO)) {
-            
-            double salario = contratoDAO.obtenerSalarioBase(
-                area.getIdArea(),
-                especialidad.getIdEspecialidad(),
-                cargo.getIdCargo(),
-                tipoContrato.getIdTipoContrato()
-            );
-
-            if (salario != -1) {
-                txtSalario.setText(String.valueOf(salario));
-                txtSalario.setEditable(false);
-                lblMensaje.setText("Se muestra el salario base del trabajador");
-            } else {
-                txtSalario.setText("");
-                txtSalario.setEditable(false);
-                lblMensaje.setText("No se encontró salario base para su elección.");
-            }
-        } else {
-            txtSalario.setText("");
-            txtSalario.setEditable(true);
-            lblMensaje.setText("Ingrese el salario manualmente. No debe ser menor al sueldo mínimo.");
-        }
+        txtSalario.setText(resultado.salario());
+        txtSalario.setEditable(resultado.estado());
+        lblMensaje.setText(resultado.mensaje());
+        
     }
 
-    public boolean validarSalario(String valor) {
-        try {
-            double salario = Double.parseDouble(valor);
-            return salario >= 1025 && salario <= 999999;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
     
     public boolean validarHoras(String horasStr) {
         try {
@@ -504,9 +473,9 @@ public class FrmContrato extends javax.swing.JFrame {
             txtHorasTotales.setText(String.valueOf(contratoActual.getHorasTotales()));
             jtxDescripcion.setText(contratoActual.getDescripcion());
             
-            trabajadorDAO.cargarAreas(cmbArea);
+            negocioContratoLlenado.cargarAreas(cmbArea);
             
-            trabajadorDAO.cargarEspecialidadesPorArea(cmbEspecialidad, contratoActual.getArea().getIdArea());
+            negocioContratoLlenado.cargarEspecialidadesPorArea(cmbEspecialidad, contratoActual.getArea().getIdArea());
             
             cmbArea.setSelectedItem(contratoActual.getArea());
             cmbEspecialidad.setSelectedItem(contratoActual.getEspecialidad());
@@ -557,7 +526,7 @@ public class FrmContrato extends javax.swing.JFrame {
     }
     
     public void listarContratosTabla(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres){
-        int resultados = contratoDAO.listarContratosFiltrado(tabla, fechaInicio, fechaFin, documentoIdentidad, nombres);
+        int resultados = negocioContratoListado.listarContratosFiltrado(tabla, fechaInicio, fechaFin, documentoIdentidad, nombres);
         
         utilidades.ajustarTabla(tabla);
 
@@ -571,118 +540,225 @@ public class FrmContrato extends javax.swing.JFrame {
 
     }
 
+    private boolean formularioValido() {
+        return validarDNI() && validarHoras() && validarDescripcion() && validarSalario() && validarCombos() && validarFechas();
+    }
+
+    private boolean validarDNI() {
+        String dni = txtDNI.getText().trim();
+        return dni.matches("^\\d{8,9}$");
+    }
+
+    private boolean validarHoras() {
+        return validarHoras(txtHorasTotales.getText().trim());
+    }
+
+    private boolean validarDescripcion() {
+        String descripcion = jtxDescripcion.getText().trim();
+        return descripcion.length() <= 250 && descripcion.matches("[a-zA-Z0-9\\s]*");
+    }
+
+    private boolean validarSalario() {
+        String tipo = cmbTipoContrato.getSelectedItem().toString();
+        String salarioTexto = txtSalario.getText().trim();
+
+        if (tipo.equalsIgnoreCase(ConstantesUIContrato.TEXTO_SERVICIO_EXTERNO)) {
+            try {
+                double salario = Double.parseDouble(salarioTexto);
+                if (salario < 1025 || salario >= 1000000) return false;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }else{
+            TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
+            Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
+            Area area = (Area) cmbArea.getSelectedItem();
+            Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
+                
+            if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT )){
+                return false;
+            }
+            if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)){
+                return false;
+            }
+            if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)){
+                return false;
+            }
+            if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)){
+                return false;
+            }       
+            try {
+                double salario = Double.parseDouble(salarioTexto);
+                if (salario < 1025 || salario >= 1000000) return false;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validarCombos() {
+        return !(cmbTipoContrato.getSelectedIndex() == 0 || cmbCargo.getSelectedIndex() == 0 ||
+                cmbArea.getSelectedIndex() == 0 || cmbEspecialidad.getSelectedIndex() == 0);
+    }
+
+    private boolean validarFechas() {
+        return jdcFechaInicio.getDate() != null && jdcFechaFin.getDate() != null;
+    }
+
+    private Contrato mapearFormularioAContrato() {
+        Contrato contrato = new Contrato();
+        contrato.setIdTrabajador(trabajadorActual.getIdTrabajador());
+        contrato.setIdTipoContrato(((TipoContrato) cmbTipoContrato.getSelectedItem()).getIdTipoContrato());
+        contrato.setIdCargo(((Cargo) cmbCargo.getSelectedItem()).getIdCargo());
+        contrato.setFechaInicio(jdcFechaInicio.getDate());
+        contrato.setFechaFin(jdcFechaFin.getDate());
+        contrato.setSalarioBase(Double.parseDouble(txtSalario.getText()));
+        contrato.setHorasTotales(Integer.parseInt(txtHorasTotales.getText()));
+        contrato.setDescripcion(jtxDescripcion.getText());
+        contrato.setIdArea(((Area) cmbArea.getSelectedItem()).getIdArea());
+        contrato.setIdEspecialidad(((Especialidad) cmbEspecialidad.getSelectedItem()).getIdEspecialidad());
+        return contrato;
+    }
+
+    private DetalleContrato mapearFormularioADetalleContrato(int idContrato) {
+        DetalleContrato detalle = new DetalleContrato();
+        detalle.setIdContrato(idContrato);
+
+        String tipoSeguro = "NINGUNO";
+        if (jhcSeguroSalud.isSelected()) {
+            if (rtnESSALUD.isSelected()) {
+                tipoSeguro = ConstantesUIContrato.TEXTO_ESSALUD;
+            } else if (rtnEPS.isSelected()) {
+                tipoSeguro = "EPS";
+            } else {
+                tipoSeguro = "NINGUNO";
+            }
+        }
+        detalle.setTipoSeguroSalud(tipoSeguro);
+        detalle.setTieneSeguroDeVida(jcbSeguroVida.isSelected());
+        detalle.setTieneSeguroDeAccidentes(jcbSeguroAccidentes.isSelected());
+        detalle.setTieneAsignacionFamiliar(jcbAsignacion.isSelected());
+        return detalle;
+    }
+
+    private void procesarContrato() {
+        if (!formularioValido()) {
+            mostrarMensaje("Formulario incompleto o inválido.", Color.RED);
+            return;
+        }
+
+        Contrato contrato = mapearFormularioAContrato();
+
+        if (modoEdicionContrato) {
+            contrato.setIdContrato(contratoActual.getIdContrato());
+            if (negocioContratoRegistro.actualizarContrato(contrato)) {
+                DetalleContrato detalle = mapearFormularioADetalleContrato(contrato.getIdContrato());
+                if (negocioContratoRegistro.actualizarDetalleContrato(detalle)) {
+                    mostrarMensaje("Contrato y detalle actualizados.", new Color(0,128,0));
+                    salirModoEditar();
+                    limpiar();
+                } else {
+                    mostrarMensaje("Error al actualizar detalle.", Color.RED);
+                }
+            } else {
+                mostrarMensaje("Error al actualizar contrato.", Color.RED);
+            }
+        } else {
+            ResultadoOperacion resultado = negocioContratoRegistro.registrarContrato(contrato);
+            if (resultado.isExito()) {
+                DetalleContrato detalle = mapearFormularioADetalleContrato(resultado.getIdGenerado());
+                if (negocioContratoRegistro.registrarDetalleContrato(detalle).isExito()) {
+                    mostrarMensaje("Contrato registrado correctamente.", new Color(0,128,0));
+                    limpiar();
+                } else {
+                    mostrarMensaje("Contrato registrado, detalle falló.", Color.RED);
+                }
+            } else {
+                mostrarMensaje(resultado.getMensaje(), Color.RED);
+            }
+        }
+
+        listarContratosTabla(jtbTabla, null, null, "", "");
+    }
+
+    private void mostrarMensaje(String mensaje, Color color) {
+        lblMensaje.setText("<html><div style='text-align: center; width: 300px;'>" + mensaje + "</div></html>");
+        lblMensaje.setForeground(color);
+    }
+
+
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
-        javax.swing.ButtonGroup bgDuracion;
-        javax.swing.ButtonGroup bgTipoSeguroSalud;
-
-        javax.swing.JPanel panelMov;
-        javax.swing.JLabel moduloContrato;
-        javax.swing.JButton btnBuscar ;
-
-        javax.swing.JLabel jLabel1 ;
-        javax.swing.JLabel jLabel4 ;
-        javax.swing.JLabel jLabel10 ;
-        javax.swing.JLabel jLabel11 ;
-        javax.swing.JLabel jLabel13 ;
-        javax.swing.JLabel jLabel14 ;
-        javax.swing.JLabel jLabel16 ;
-        javax.swing.JLabel jLabel19 ;
-        javax.swing.JLabel jLabel21 ;
-        javax.swing.JLabel jLabel25 ;
-        javax.swing.JLabel jLabel26 ;
-        javax.swing.JLabel jLabel27 ;
-        javax.swing.JLabel jLabel28 ;
-        javax.swing.JLabel jLabel29 ;
-        javax.swing.JLabel jLabel30 ;
-        javax.swing.JLabel jLabel5 ;
-        javax.swing.JLabel jLabel6 ;
-        javax.swing.JLabel jLabel7 ;
-        javax.swing.JLabel jLabel8 ;
-        javax.swing.JLabel jLabel9 ;
-
-        javax.swing.JPanel jPanel1 ;
-        javax.swing.JPanel jPanel3 ;
-        javax.swing.JPanel jPanel4 ;
-        javax.swing.JPanel jPanel5 ;
-        javax.swing.JPanel jPanel7 ;
-        javax.swing.JPanel jPanel10 ;
-        javax.swing.JPanel jPanel12 ;
-
-        javax.swing.JScrollPane jScrollPane1;
-        javax.swing.JScrollPane jScrollPane5;
-
-        javax.swing.JSeparator jSeparator2;
-        
-        bgDuracion = new javax.swing.ButtonGroup();
-        bgTipoSeguroSalud = new javax.swing.ButtonGroup();
-        panelMov = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        javax.swing.ButtonGroup bgDuracion = new javax.swing.ButtonGroup();
+        javax.swing.ButtonGroup bgTipoSeguroSalud = new javax.swing.ButtonGroup();
+        javax.swing.JPanel panelMov = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         txtNombres = new javax.swing.JTextField();
         txtDNI = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel5 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
         txtSalario = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         jtxDescripcion = new javax.swing.JTextArea();
         btnRegresar = new javax.swing.JButton();
-        jLabel14 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel14 = new javax.swing.JLabel();
         cmbArea = new javax.swing.JComboBox<>();
         btnLimpiar = new javax.swing.JButton();
         cmbCargo = new javax.swing.JComboBox<>();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel11 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel26 = new javax.swing.JLabel();
         cmbTipoContrato = new javax.swing.JComboBox<>();
-        jLabel27 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel27 = new javax.swing.JLabel();
         txtHorasTotales = new javax.swing.JTextField();
-        jLabel28 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel28 = new javax.swing.JLabel();
         jdcFechaFin = new com.toedter.calendar.JDateChooser();
-        jLabel29 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel29 = new javax.swing.JLabel();
         jdcFechaInicio = new com.toedter.calendar.JDateChooser();
-        jLabel30 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel30 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel7 = new javax.swing.JPanel();
         jcbAsignacion = new javax.swing.JCheckBox();
         jcbSeguroVida = new javax.swing.JCheckBox();
         jcbSeguroAccidentes = new javax.swing.JCheckBox();
         rtnEPS = new javax.swing.JRadioButton();
         rtnESSALUD = new javax.swing.JRadioButton();
-        jLabel7 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
         jhcSeguroSalud = new javax.swing.JCheckBox();
-        jLabel4 = new javax.swing.JLabel();
-        moduloContrato = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel25 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
+        javax.swing.JLabel moduloContrato = new javax.swing.JLabel();
+        javax.swing.JSeparator jSeparator2 = new javax.swing.JSeparator();
+        javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel25 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel13 = new javax.swing.JLabel();
         jdcFechaFinal = new com.toedter.calendar.JDateChooser();
         jdcFechaInicial = new com.toedter.calendar.JDateChooser();
-        btnBuscar = new javax.swing.JButton();
+        javax.swing.JButton btnBuscar = new javax.swing.JButton();
         txtDocumentoBuscar = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel16 = new javax.swing.JLabel();
         txtNombresBuscar = new javax.swing.JTextField();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel19 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel21 = new javax.swing.JLabel();
         jhcHabilitarFechas = new javax.swing.JCheckBox();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel12 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel5 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel12 = new javax.swing.JPanel();
         lblMensajeBuscar = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel8 = new javax.swing.JLabel();
         cmbEspecialidad = new javax.swing.JComboBox<>();
-        jPanel10 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel10 = new javax.swing.JPanel();
         rtn6meses = new javax.swing.JRadioButton();
         rtn3meses = new javax.swing.JRadioButton();
         rtn1anio = new javax.swing.JRadioButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel9 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel10 = new javax.swing.JLabel();
         jpanelContenedor = new javax.swing.JPanel();
         lblMensaje = new javax.swing.JLabel();
         btnEditarHorasTrabajadas = new javax.swing.JButton();
         btnRegistrar = new javax.swing.JButton();
-        jScrollPane5 = new javax.swing.JScrollPane();
+        javax.swing.JScrollPane jScrollPane5 = new javax.swing.JScrollPane();
         jtbTabla = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -706,11 +782,11 @@ public class FrmContrato extends javax.swing.JFrame {
         txtDNI.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.add(txtDNI, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 210, 30));
 
-        jLabel5.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Area");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
 
-        jLabel6.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Duracion");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 270, -1, -1));
 
@@ -725,7 +801,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 430, 280, 110));
 
         btnRegresar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegresar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/saliir.png"))); // NOI18N
         btnRegresar.setText("CERRAR");
         btnRegresar.setBorder(null);
@@ -735,17 +811,16 @@ public class FrmContrato extends javax.swing.JFrame {
         btnRegresar.addActionListener(this::btnRegresarActionPerformed);
         jPanel1.add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 620, 110, 100));
 
-        jLabel14.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setText("Trabajador");
         jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, 80, -1));
 
         cmbArea.setBackground(new java.awt.Color(254, 255, 255));
         cmbArea.setBorder(null);
-        cmbArea.addActionListener(this::cmbAreaActionPerformed);
         jPanel1.add(cmbArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 220, 30));
 
         btnLimpiar.setBackground(new java.awt.Color(255, 254, 255));
-        btnLimpiar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/borrar.png"))); // NOI18N
         btnLimpiar.setText("LIMPIAR");
         btnLimpiar.setBorder(null);
@@ -758,11 +833,11 @@ public class FrmContrato extends javax.swing.JFrame {
         cmbCargo.setBorder(null);
         jPanel1.add(cmbCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, 220, 30));
 
-        jLabel11.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setText("Cargo");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 220, -1, -1));
 
-        jLabel26.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel26.setText("Tipo de Contrato");
         jPanel1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
@@ -770,28 +845,28 @@ public class FrmContrato extends javax.swing.JFrame {
         cmbTipoContrato.setBorder(null);
         jPanel1.add(cmbTipoContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 220, 30));
 
-        jLabel27.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel27.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel27.setText("# Horas");
         jPanel1.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, -1, -1));
 
         txtHorasTotales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.add(txtHorasTotales, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 320, 80, 30));
 
-        jLabel28.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel28.setText("Fecha Inicio");
         jPanel1.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, -1, -1));
 
         jdcFechaFin.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jdcFechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 360, 170, 30));
 
-        jLabel29.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel29.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel29.setText("Fecha Fin");
         jPanel1.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, -1, -1));
 
         jdcFechaInicio.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jdcFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, 170, 30));
 
-        jLabel30.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel30.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel30.setText("Salario");
         jPanel1.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, -1, -1));
 
@@ -800,17 +875,17 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jcbAsignacion.setBackground(new java.awt.Color(255, 255, 255));
-        jcbAsignacion.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jcbAsignacion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jcbAsignacion.setText("Asignación Familiar");
         jPanel7.add(jcbAsignacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 160, -1));
 
         jcbSeguroVida.setBackground(new java.awt.Color(255, 255, 255));
-        jcbSeguroVida.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jcbSeguroVida.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jcbSeguroVida.setText("Seguro de Vida");
         jPanel7.add(jcbSeguroVida, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 160, -1));
 
         jcbSeguroAccidentes.setBackground(new java.awt.Color(255, 255, 255));
-        jcbSeguroAccidentes.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jcbSeguroAccidentes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jcbSeguroAccidentes.setText("Seguro Accidentes");
         jPanel7.add(jcbSeguroAccidentes, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 160, -1));
 
@@ -824,7 +899,7 @@ public class FrmContrato extends javax.swing.JFrame {
         rtnESSALUD.setText("ESSALUD");
         jPanel7.add(rtnESSALUD, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Tipo Seguro Salud");
         jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, -1));
 
@@ -834,11 +909,11 @@ public class FrmContrato extends javax.swing.JFrame {
 
         jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 180, 170));
 
-        jLabel4.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Documento Identidad (DNI/CE)");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
-        moduloContrato.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 24)); // NOI18N
+        moduloContrato.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         moduloContrato.setText("MODULO CONTRATO");
         jPanel1.add(moduloContrato, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, -1, -1));
 
@@ -848,7 +923,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel25.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(255, 255, 255));
         jLabel25.setText("Busqueda de Contratos");
         jPanel4.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
@@ -872,7 +947,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel3.add(jdcFechaInicial, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 40, 150, 30));
 
         btnBuscar.setBackground(new java.awt.Color(255, 254, 255));
-        btnBuscar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/buscar.png"))); // NOI18N
         btnBuscar.setText("BUSCAR");
         btnBuscar.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -885,18 +960,18 @@ public class FrmContrato extends javax.swing.JFrame {
         txtDocumentoBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.add(txtDocumentoBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 210, 30));
 
-        jLabel16.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel16.setText("Por Fechas :");
         jPanel3.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 10, -1, -1));
 
         txtNombresBuscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.add(txtNombresBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 210, 30));
 
-        jLabel19.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel19.setText("Por Nombres del Trabajador :");
         jPanel3.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
 
-        jLabel21.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 12)); // NOI18N
+        jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel21.setText("Por Documento :");
         jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
@@ -913,7 +988,7 @@ public class FrmContrato extends javax.swing.JFrame {
 
         jPanel12.setBackground(new java.awt.Color(0, 0, 0));
 
-        lblMensajeBuscar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
+        lblMensajeBuscar.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblMensajeBuscar.setForeground(new java.awt.Color(255, 255, 255));
         lblMensajeBuscar.setText("Mensaje: ");
         jPanel12.add(lblMensajeBuscar);
@@ -922,7 +997,7 @@ public class FrmContrato extends javax.swing.JFrame {
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 640, 620, 40));
 
-        jLabel8.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Especialidad");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 160, -1, -1));
 
@@ -936,33 +1011,33 @@ public class FrmContrato extends javax.swing.JFrame {
 
         rtn6meses.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn6meses);
-        rtn6meses.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
+        rtn6meses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         rtn6meses.setText("6 meses");
         jPanel10.add(rtn6meses, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 80, -1));
 
         rtn3meses.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn3meses);
-        rtn3meses.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
+        rtn3meses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         rtn3meses.setText("3 meses");
         jPanel10.add(rtn3meses, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 80, -1));
 
         rtn1anio.setBackground(new java.awt.Color(255, 255, 255));
         bgDuracion.add(rtn1anio);
-        rtn1anio.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
+        rtn1anio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         rtn1anio.setText("1 año");
         jPanel10.add(rtn1anio, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 80, -1));
 
         jPanel1.add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 290, 100, 110));
 
-        jLabel9.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Descripcion");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 410, -1, -1));
 
-        jLabel10.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Detalle");
         jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, -1, -1));
 
-        lblMensaje.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 3, 12)); // NOI18N
+        lblMensaje.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         lblMensaje.setText("Mensaje: ");
         jpanelContenedor.add(lblMensaje);
 
@@ -973,7 +1048,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jPanel1.add(btnEditarHorasTrabajadas, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 550, 280, -1));
 
         btnRegistrar.setBackground(new java.awt.Color(255, 254, 255));
-        btnRegistrar.setFont(new java.awt.Font(ConstantesUIContrato.FUENTE_SEGOE_UI, 1, 14)); // NOI18N
+        btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnRegistrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/log-out.png"))); // NOI18N
         btnRegistrar.setText("REGISTRAR");
         btnRegistrar.setBorder(null);
@@ -995,12 +1070,6 @@ public class FrmContrato extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jtbTabla.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtbTablaMouseClicked(evt);
-            }
-        });
         jScrollPane5.setViewportView(jtbTabla);
 
         jPanel1.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 250, 620, 390));
@@ -1010,28 +1079,18 @@ public class FrmContrato extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
    
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegresarActionPerformed
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnRegresarActionPerformed
         FrmMenu menu = new FrmMenu();
         menu.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnLimpiarActionPerformed
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
         salirModoEditar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
-    private void cmbAreaActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_cmbAreaActionPerformed
-        cmbArea.addActionListener(e -> {
-          Area areaSeleccionada = (Area) cmbArea.getSelectedItem();
-          if (areaSeleccionada != null) {
-              int idArea = areaSeleccionada.getIdArea();
-              trabajadorDAO.cargarEspecialidadesPorArea(cmbEspecialidad, idArea);
-          }
-      });
-    }//GEN-LAST:event_cmbAreaActionPerformed
-
-    private void btnEditarHorasTrabajadasActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnEditarHorasTrabajadasActionPerformed
+    private void btnEditarHorasTrabajadasActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnEditarHorasTrabajadasActionPerformed
         //int idContratoSeleccionado = contratoActual.getIdContrato(); // Tu método para extraer ID seleccionado
         FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(this, true); // modal
         dialog.inicializarConContrato(contratoActual);
@@ -1039,187 +1098,11 @@ public class FrmContrato extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEditarHorasTrabajadasActionPerformed
 
-    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarActionPerformed
-        
-        if(modoEdicionContrato){
-            try {
-                if (trabajadorActual == null || contratoActual == null || detalleContratoActual == null) {
-                    JOptionPane.showMessageDialog(this, "Faltan datos para actualizar el contrato.");
-                    return;
-                }
-
-                TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-                Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-                Area area = (Area) cmbArea.getSelectedItem();
-                Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-
-                Date fechaInicio = jdcFechaInicio.getDate();
-                Date fechaFin = jdcFechaFin.getDate();
-                double salario = Double.parseDouble(txtSalario.getText());
-                int horasTotales = Integer.parseInt(txtHorasTotales.getText());
-                String descripcion = jtxDescripcion.getText();
-
-                contratoActual.setIdTipoContrato(tipoContrato.getIdTipoContrato());
-                contratoActual.setIdCargo(cargo.getIdCargo());
-                contratoActual.setFechaInicio(fechaInicio);
-                contratoActual.setFechaFin(fechaFin);
-                contratoActual.setSalarioBase(salario);
-                contratoActual.setHorasTotales(horasTotales);
-                contratoActual.setDescripcion(descripcion);
-                contratoActual.setIdArea(area.getIdArea());
-                contratoActual.setIdEspecialidad(especialidad.getIdEspecialidad());
-
-                boolean actualizado = contratoDAO.actualizarContrato(contratoActual);
-
-                if (!actualizado) {
-                    JOptionPane.showMessageDialog(this, "Error al actualizar el contrato.");
-                    return;
-                }
-                
-                // Determinar tipo de seguro salud seleccionado
-                String tipoSeguroSalud = "NINGUNO";
-
-
-                if (jhcSeguroSalud.isSelected()) {
-                    if (rtnESSALUD.isSelected()) {
-                        tipoSeguroSalud = ConstantesUIContrato.TEXTO_ESSALUD;
-                    } else if (rtnEPS.isSelected()) {
-                        tipoSeguroSalud = "EPS";
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de seguro de salud.");
-                        return;
-                    }
-                }
-
-                detalleContratoActual.setTipoSeguroSalud(tipoSeguroSalud);
-                detalleContratoActual.setTieneSeguroDeVida(jcbSeguroVida.isSelected());
-                detalleContratoActual.setTieneSeguroDeAccidentes(jcbSeguroAccidentes.isSelected());
-                detalleContratoActual.setTieneAsignacionFamiliar(jcbAsignacion.isSelected());
-
-                boolean detalleActualizado = contratoDAO.actualizarDetalleContrato(detalleContratoActual);
-
-                if (detalleActualizado) {
-                    
-                    salirModoEditar();
-                    JOptionPane.showMessageDialog(this, "Contrato y detalle actualizados correctamente.");
-                    btnRegistrar.setEnabled(false);
-                    
-                    limpiar();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Contrato actualizado, pero falló la actualización del detalle.");
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al actualizar contrato: " + e.getMessage());
-            }
-                    
-        } else{
-            try {
-                if (trabajadorActual == null) {
-                    lblMensaje.setText("Debe ingresar un DNI válido primero.");
-                    return;
-                }
-
-                TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-                Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-
-                Date fechaInicio = jdcFechaInicio.getDate();
-                Date fechaFin = jdcFechaFin.getDate();
-
-                if (fechaInicio == null || fechaFin == null) {
-                    lblMensaje.setText("Seleccionar las fechas y/o duración.");
-                    return;
-                }
-
-                double salario = Double.parseDouble(txtSalario.getText());
-                int horasTotales = Integer.parseInt(txtHorasTotales.getText());
-                String descripcion = jtxDescripcion.getText();
-
-                Area area = (Area) cmbArea.getSelectedItem();
-                Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-                
-                if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT )){
-                    lblMensaje.setText("Seleccionar un tipo de contrato.");
-                    return;
-                }
-                if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)){
-                    lblMensaje.setText("Seleccionar un cargo.");
-                    return;
-                }
-                if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)){
-                    lblMensaje.setText("Seleccionar un area.");
-                    return;
-                }
-                if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)){
-                    lblMensaje.setText("Seleccionar una especialidad.");
-                    return;
-                }
-
-                Contrato contrato = new Contrato();
-                contrato.setIdTrabajador(trabajadorActual.getIdTrabajador());
-                contrato.setIdTipoContrato(tipoContrato.getIdTipoContrato());
-                contrato.setIdCargo(cargo.getIdCargo());
-                contrato.setFechaInicio(fechaInicio);
-                contrato.setFechaFin(fechaFin);
-                contrato.setSalarioBase(salario);
-                contrato.setHorasTotales(horasTotales);
-                contrato.setDescripcion(descripcion);
-                contrato.setIdArea(area.getIdArea());
-                contrato.setIdEspecialidad(especialidad.getIdEspecialidad());
-
-                ResultadoOperacion resultado = contratoDAO.registrarContrato(contrato);
-                String mensajeHTML = "<html><div style='text-align: center; width: 300px;'>" + resultado.getMensaje() + "</div></html>";
-                lblMensaje.setText(mensajeHTML);
-                lblMensaje.setForeground(Color.RED);
-                
-                if (resultado.isExito()) {
-                    String tipoSeguroSalud = "NINGUNO";
-                    
-                    
-                    if (jhcSeguroSalud.isSelected()) {
-                        if (rtnESSALUD.isSelected()) {
-                            tipoSeguroSalud = ConstantesUIContrato.TEXTO_ESSALUD;
-                        } else if (rtnEPS.isSelected()) {
-                            tipoSeguroSalud = "EPS";
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de seguro de salud.");
-                            return;
-                        }
-                    }
-
-                    DetalleContrato detalle = new DetalleContrato();
-                    detalle.setIdContrato(resultado.getIdGenerado());
-                    detalle.setTipoSeguroSalud(tipoSeguroSalud);
-                    detalle.setTieneSeguroDeVida(jcbSeguroVida.isSelected());
-                    detalle.setTieneSeguroDeAccidentes(jcbSeguroAccidentes.isSelected());
-                    detalle.setTieneAsignacionFamiliar(jcbAsignacion.isSelected());
-                    
-                    ResultadoOperacion resultadoDetalle = contratoDAO.registrarDetalleContrato(detalle);
-                    String mensaje2HTML = "<html><div style='text-align: center; width: 300px;'>" + resultado.getMensaje() + "</div></html>";
-                    lblMensaje.setText(mensaje2HTML);
-                    
-                    if (resultadoDetalle.isExito()) {
-                        
-                        lblMensaje.setForeground(new Color(0,128,0)); // para error
-                        
-                        btnRegistrar.setEnabled(false);
-                        
-                        limpiar();
-                    }
-
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al registrar contrato: " + e.getMessage());
-            }
-        }
-        
-        
-        
-        listarContratosTabla(jtbTabla, null, null, "", "");
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnRegistrarActionPerformed
+        procesarContrato();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnBuscarActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnBuscarActionPerformed
         
         
         String documento = txtDocumentoBuscar.getText().trim();
@@ -1248,50 +1131,6 @@ public class FrmContrato extends javax.swing.JFrame {
         listarContratosTabla(jtbTabla, fechaInicio, fechaFin, documento, nombres);
         
     }//GEN-LAST:event_btnBuscarActionPerformed
-
-    private void jtbTablaMouseClicked(java.awt.event.MouseEvent evt) {//NOSONAR //GEN-FIRST:event_jtbTablaMouseClicked
-        
-        jtbTabla.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            int fila = jtbTabla.getSelectedRow();
-            if (fila != -1) {
-                String documentoIdentidad = jtbTabla.getValueAt(fila, 3).toString();
-                lblMensaje.setText("Contrato Encontrado de Trabajador con Documento de Identidad: " + documentoIdentidad);
-                
-                Trabajador t = trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
-                
-                Contrato c = contratoDAO.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
-                DetalleContrato dc = contratoDAO.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
-
-
-                if (t != null && c!=null && dc!=null) {
-                    trabajadorActual = t;
-                    contratoActual = c;
-                    detalleContratoActual = dc;
-                    
-                    modoEdicionContrato = true;
-                    btnRegistrar.setText("EDITAR");
-                    btnLimpiar.setText("NUEVO");
-                    
-                    rtn3meses.setEnabled(false);
-                    rtn6meses.setEnabled(false);
-                    rtn1anio.setEnabled(false);
-                    
-                    jdcFechaInicio.setEnabled(false);
-                    
-                    btnEditarHorasTrabajadas.setEnabled(true);
-                    
-                    cargarFormularioConContrato();
-                    
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se encontró información del contrato.");
-                }
-
-                }
-            }
-        });
-    }//GEN-LAST:event_jtbTablaMouseClicked
   
     /**
      * @param args the command line arguments
@@ -1322,38 +1161,38 @@ public class FrmContrato extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<Area> cmbArea;
-    private javax.swing.JComboBox<Cargo> cmbCargo;
-    private javax.swing.JComboBox<Especialidad> cmbEspecialidad;
-    private javax.swing.JComboBox<TipoContrato> cmbTipoContrato;
-    private javax.swing.JButton btnEditarHorasTrabajadas;
-    private javax.swing.JButton btnLimpiar;
-    private javax.swing.JButton btnRegistrar;
-    private javax.swing.JButton btnRegresar;
-    private javax.swing.JTextField txtDNI;
-    private javax.swing.JTextField txtDocumentoBuscar;
-    private javax.swing.JTextField txtHorasTotales;
-    private javax.swing.JTextField txtNombres;
-    private javax.swing.JTextField txtNombresBuscar;
-    private javax.swing.JTextField txtSalario;
-    private javax.swing.JCheckBox jcbAsignacion;
-    private javax.swing.JCheckBox jcbSeguroAccidentes;
-    private javax.swing.JCheckBox jcbSeguroVida;
-    private javax.swing.JCheckBox jhcHabilitarFechas;
-    private javax.swing.JCheckBox jhcSeguroSalud;
-    private javax.swing.JRadioButton rtn1anio;
-    private javax.swing.JRadioButton rtn3meses;
-    private javax.swing.JRadioButton rtn6meses;
-    private javax.swing.JRadioButton rtnEPS;
-    private javax.swing.JRadioButton rtnESSALUD;
-    private javax.swing.JLabel lblMensaje;
-    private javax.swing.JLabel lblMensajeBuscar;
-    private javax.swing.JPanel jpanelContenedor;
-    private javax.swing.JTable jtbTabla;
-    private javax.swing.JTextArea jtxDescripcion;
-    private com.toedter.calendar.JDateChooser jdcFechaFin;
-    private com.toedter.calendar.JDateChooser jdcFechaFinal;
-    private com.toedter.calendar.JDateChooser jdcFechaInicial;
-    private com.toedter.calendar.JDateChooser jdcFechaInicio;
+        private javax.swing.JTextField txtNombres;
+        private javax.swing.JTextField txtDNI;
+        private javax.swing.JTextField txtSalario;
+        private javax.swing.JTextArea jtxDescripcion;
+        private javax.swing.JButton btnRegresar;
+        private javax.swing.JComboBox<Area> cmbArea;
+        private javax.swing.JButton btnLimpiar;
+        private javax.swing.JComboBox<Cargo> cmbCargo;
+        private javax.swing.JComboBox<TipoContrato> cmbTipoContrato;
+        private javax.swing.JTextField txtHorasTotales;
+        private com.toedter.calendar.JDateChooser jdcFechaFin;
+        private com.toedter.calendar.JDateChooser jdcFechaInicio;
+        private javax.swing.JCheckBox jcbAsignacion;
+        private javax.swing.JCheckBox jcbSeguroVida;
+        private javax.swing.JCheckBox jcbSeguroAccidentes;
+        private javax.swing.JRadioButton rtnEPS;
+        private javax.swing.JRadioButton rtnESSALUD;
+        private javax.swing.JCheckBox jhcSeguroSalud;
+        private com.toedter.calendar.JDateChooser jdcFechaFinal;
+        private com.toedter.calendar.JDateChooser jdcFechaInicial;
+        private javax.swing.JTextField txtDocumentoBuscar;
+        private javax.swing.JTextField txtNombresBuscar;
+        private javax.swing.JCheckBox jhcHabilitarFechas;
+        private javax.swing.JLabel lblMensajeBuscar;
+        private javax.swing.JComboBox<Especialidad> cmbEspecialidad;
+        private javax.swing.JRadioButton rtn6meses;
+        private javax.swing.JRadioButton rtn3meses;
+        private javax.swing.JRadioButton rtn1anio;
+        private javax.swing.JPanel jpanelContenedor;
+        private javax.swing.JLabel lblMensaje;
+        private javax.swing.JButton btnEditarHorasTrabajadas;
+        private javax.swing.JButton btnRegistrar;
+        private javax.swing.JTable jtbTabla;
     // End of variables declaration//GEN-END:variables
 }

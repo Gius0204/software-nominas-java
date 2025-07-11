@@ -1,7 +1,10 @@
 
 package com.grupo01.softwarenominas.capanegocio.contratonegocio;
+import javax.swing.JTable;
+
 import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
+import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
@@ -12,10 +15,10 @@ public class ContratoNegocioRegistro {
       
     
     
-    public String actualizarContrato(Contrato c){
+    public String actualizarContratoMensaje(Contrato c){
         String mensaje = "";
         try{
-            boolean actualizado = contratoDAO.actualizarContrato(c);
+            boolean actualizado = actualizarContrato(c);
             
             if (actualizado) {
                 mensaje = "Contrato actualizado correctamente.";
@@ -28,8 +31,13 @@ public class ContratoNegocioRegistro {
         
         return mensaje;
     }
+
+    public boolean actualizarContrato(Contrato c) {
+        return contratoDAO.actualizarContrato(c);
+    }
+
     
-    public String actualizarDetalleContrato(DetalleContrato dc){
+    public String actualizarDetalleContratoMensaje(DetalleContrato dc){
         String mensaje = "";
         try{
             boolean detalleactualizado = contratoDAO.actualizarDetalleContrato(dc);
@@ -46,6 +54,20 @@ public class ContratoNegocioRegistro {
         
         return mensaje;
     }
-    
-    
+
+    public boolean actualizarDetalleContrato(DetalleContrato detalleContratoActual) {
+        return contratoDAO.actualizarDetalleContrato(detalleContratoActual);
+    }
+
+    public ResultadoOperacion registrarContrato(Contrato contrato) {
+      return contratoDAO.registrarContrato(contrato);
+    }
+
+    public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {
+        return contratoDAO.registrarDetalleContrato(detalle);
+    }
+
+    public void guardarHorasTrabajadasDesdeTabla(JTable table) {
+        contratoDAO.guardarHorasTrabajadasDesdeTabla(table);
+    }
 }

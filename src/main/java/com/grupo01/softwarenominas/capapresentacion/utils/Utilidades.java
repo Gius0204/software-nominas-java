@@ -2,11 +2,16 @@ package com.grupo01.softwarenominas.capapresentacion.utils;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.List;
+
+import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 
 public class Utilidades {
     public void ajustarTabla(JTable tabla){
@@ -59,4 +64,20 @@ public class Utilidades {
             .setHorizontalAlignment(SwingConstants.CENTER);
     }
     
+    public int obtenerIdPeriodoSeleccionado(JComboBox<PeriodoPago> combo) {
+        PeriodoPago periodo = (PeriodoPago) combo.getSelectedItem();
+        return (periodo != null) ? periodo.getIdPeriodoPago() : -1;
+    }
+
+    public String construirMensajeHtmlLista(List<String> lista) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>Antes de procesar estos contratos debe pagar los períodos anteriores de los trabajadores, incluidos:<br>");
+        for (String nombre : lista) {
+            sb.append("• ").append(nombre).append("<br>");
+        }
+        sb.append("</html>");
+        return sb.toString();
+    }
+
+
 }

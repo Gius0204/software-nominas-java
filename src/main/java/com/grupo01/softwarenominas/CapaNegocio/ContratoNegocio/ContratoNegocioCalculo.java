@@ -39,7 +39,7 @@ public class ContratoNegocioCalculo {
         String mensaje = "";
 
         if (!tipoContratoNombre.equalsIgnoreCase("SERVICIO EXTERNO")) {
-            double salario = contratoDAO.obtenerSalarioBase(
+            double salario = obtenerSalarioBase(
                 area.getIdArea(),
                 especialidad.getIdEspecialidad(),
                 cargo.getIdCargo(),
@@ -61,4 +61,13 @@ public class ContratoNegocioCalculo {
             return new Resultado("", estado, mensaje);
         }
     }
-}
+
+  private double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
+        return contratoDAO.obtenerSalarioBase(
+                idArea,
+                idEspecialidad,
+                idCargo,
+                idTipoContrato
+            );
+      }
+  }

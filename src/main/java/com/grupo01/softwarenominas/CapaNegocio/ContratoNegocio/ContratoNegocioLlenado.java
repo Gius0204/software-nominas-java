@@ -6,18 +6,23 @@ import javax.swing.JOptionPane;
 
 import com.grupo01.softwarenominas.capaentidad.Area;
 import com.grupo01.softwarenominas.capaentidad.Cargo;
+import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capaentidad.ContratoPeriodo;
+import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
 import com.grupo01.softwarenominas.capaentidad.Especialidad;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
+import com.grupo01.softwarenominas.capapersistencia.ContratoPeriodoDAO;
 
 public class ContratoNegocioLlenado {
-    ContratoDAO contratoDAO = new ContratoDAO();
-    TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
+    private final ContratoDAO contratoDAO = new ContratoDAO();
+    
+    private final ContratoPeriodoDAO contratoPeriodoDAO = new ContratoPeriodoDAO();
+
     
     public void cargarAreas(JComboBox<Area> comboBoxArea) {
         try{
-            trabajadorDAO.cargarAreas(comboBoxArea);
+            contratoDAO.cargarAreas(comboBoxArea);
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar las areas: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
@@ -26,12 +31,14 @@ public class ContratoNegocioLlenado {
     
     public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
         try{
-            trabajadorDAO.cargarEspecialidadesPorArea(comboBoxEspecialidad, idArea);
+            contratoDAO.cargarEspecialidadesPorArea(comboBoxEspecialidad, idArea);
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar las especialidades: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    
     
     public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
         try{
@@ -49,5 +56,16 @@ public class ContratoNegocioLlenado {
         catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error al cargar los cargos: " + ex.getMessage(), ConstantesUIContratoNegocio.ERROR, JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {
+        return contratoDAO.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
+    }
+    public DetalleContrato obtenerDetalleContratoPorDocumentoIdentidad(String documentoIdentidad) {
+        return contratoDAO.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
+    }
+
+    public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodoPago) {
+        return contratoPeriodoDAO.obtenerContratoPeriodo(idContrato, idPeriodoPago);
     }
 }

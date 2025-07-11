@@ -1,9 +1,4 @@
 package com.grupo01.softwarenominas.capapresentacion;
-
-import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.capapersistencia.NominaDAO;
-import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
-import com.grupo01.softwarenominas.capapersistencia.ContratoPeriodoDAO;
 import com.grupo01.softwarenominas.capaentidad.Trabajador;
 import com.grupo01.softwarenominas.capaentidad.ContratoPeriodo;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
@@ -11,8 +6,14 @@ import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 import com.grupo01.softwarenominas.capaentidad.Nomina;
 import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
-import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioListado;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioLlenado;
+import com.grupo01.softwarenominas.capanegocio.nominanegocio.NominaNegocioListado;
+import com.grupo01.softwarenominas.capanegocio.nominanegocio.NominaNegocioLlenado;
 import com.grupo01.softwarenominas.capanegocio.nominanegocio.NominaNegocioRegistro;
+import com.grupo01.softwarenominas.capanegocio.nominanegocio.NominaNegocioVerificacion;
+import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -22,11 +23,13 @@ import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUINomina;
 
 
 public class FrmNomina extends javax.swing.JFrame {
-    private final transient ContratoDAO contratoDAO = new ContratoDAO();
-    
-    transient TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
-    
-    private transient NominaDAO nominas = new NominaDAO();
+    private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
+    private final transient ContratoNegocioListado negocioContratoListado = new ContratoNegocioListado();
+    private final transient ContratoNegocioLlenado negocioContratoLlenado = new ContratoNegocioLlenado();
+    private final transient NominaNegocioListado negocioNominaListado = new NominaNegocioListado();
+    private final transient NominaNegocioRegistro negocioNominaRegistro = new NominaNegocioRegistro();
+    private final transient NominaNegocioLlenado negocioNominaLlenado = new NominaNegocioLlenado();
+    private final transient NominaNegocioVerificacion negocioNominaVerificacion = new NominaNegocioVerificacion();
 
     transient Utilidades utilidades = new Utilidades();
 
@@ -37,24 +40,14 @@ public class FrmNomina extends javax.swing.JFrame {
         inicializarFormulario();
     }
     
-    private int obtenerIdPeriodoSeleccionado1() {
-        PeriodoPago periodo = (PeriodoPago) cmbPeriodoPago1.getSelectedItem();
-        return (periodo != null) ? periodo.getIdPeriodoPago() : -1;
-    }
-    
-    private int obtenerIdPeriodoSeleccionado2() {
-        PeriodoPago periodo = (PeriodoPago) cmbPeriodoPago2.getSelectedItem();
-        return (periodo != null) ? periodo.getIdPeriodoPago() : -1;
-    }
-    
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
         
-        inicializarTablaContrato(tableContrato);
-        inicializarTablaNominas(tableNominas);
+        inicializarTablaContrato();
+        inicializarTablaNominas();
         
-        nominas.cargarPeriodosPago(cmbPeriodoPago1);
-        nominas.cargarPeriodosPago(cmbPeriodoPago2);
+        negocioNominaLlenado.cargarPeriodosPago(cmbPeriodoPago1);
+        negocioNominaLlenado.cargarPeriodosPago(cmbPeriodoPago2);
         cmbMetodoPago.removeAllItems();
         cmbMetodoPago.addItem("EN EFECTIVO");
         cmbMetodoPago.addItem("TRANSFERENCIA BANCARIA");
@@ -67,18 +60,18 @@ public class FrmNomina extends javax.swing.JFrame {
             lblSeleccionados.setText("Seleccionados: " + seleccionados + " contratos");
         });
         
-        cmbPeriodoPago2.addActionListener(e -> listarContratosTabla(tableContrato));
+        cmbPeriodoPago2.addActionListener(e -> listarContratosTabla());
         
-        cmbPeriodoPago1.addActionListener(e -> listarNominasTabla(tableNominas));
+        cmbPeriodoPago1.addActionListener(e -> listarNominasTabla());
 
     }
     
-    public void listarContratosTabla(JTable tabla){
-        int idPeriodo = obtenerIdPeriodoSeleccionado2();
+    private void listarContratosTabla(){
+        int idPeriodo = utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago2);
         if (idPeriodo > 0) {
-            int resultados = contratoDAO.listarContratosPorPeriodo(tabla, idPeriodo);
+            int resultados = negocioContratoListado.listarContratosPorPeriodo(tableContrato, idPeriodo);
 
-            utilidades.ajustarTabla(tabla);
+            utilidades.ajustarTabla(tableContrato);
 
             lblContratos.setText(
                 switch (resultados) {
@@ -88,12 +81,12 @@ public class FrmNomina extends javax.swing.JFrame {
                 }
             );
         } else {
-            inicializarTablaContrato(tableContrato);
+            inicializarTablaContrato();
         }
         
     }
     
-    public void inicializarTablaContrato(JTable tabla){
+    private void inicializarTablaContrato(){
             DefaultTableModel modelo = new DefaultTableModel();
             String[] columnasDeseadas = {
                 "FechaInicio", "FechaFin", "HorasTotales", "HorasTrabajadas", "EstadoPago", "DocumentoIdentidad", "Nombres",
@@ -103,19 +96,19 @@ public class FrmNomina extends javax.swing.JFrame {
             for (String col : columnasDeseadas) {
                 modelo.addColumn(col);
             }
-            tabla.setModel(modelo);
+            tableContrato.setModel(modelo);
             
-            utilidades.ajustarTabla(tabla);
+            utilidades.ajustarTabla(tableContrato);
 
             lblContratos.setText("Seleccione un Periodo antes, por favor");
     }
     
-    public void listarNominasTabla(JTable tabla){
-        int idPeriodo = obtenerIdPeriodoSeleccionado1();
+    private void listarNominasTabla(){
+        int idPeriodo = utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago1);
         if (idPeriodo > 0) {
-            int resultados = nominas.listarNominasPorPeriodo(tabla, idPeriodo);
+            int resultados = negocioNominaListado.listarNominasPorPeriodo(tableNominas, idPeriodo);
 
-            utilidades.ajustarTabla(tabla);
+            utilidades.ajustarTabla(tableNominas);
 
             lblNominas.setText(
                 switch (resultados) {
@@ -126,11 +119,11 @@ public class FrmNomina extends javax.swing.JFrame {
             );
 
         } else {
-            inicializarTablaNominas(tableNominas);
+            inicializarTablaNominas();
         }
     }
     
-    public void inicializarTablaNominas(JTable tabla){
+    private void inicializarTablaNominas(){
         DefaultTableModel modelo = new DefaultTableModel();
 
         String[] columnasDeseadas = {
@@ -145,13 +138,96 @@ public class FrmNomina extends javax.swing.JFrame {
             modelo.addColumn(col);
         }
 
-        tabla.setModel(modelo);
+        tableNominas.setModel(modelo);
 
-        utilidades.ajustarTabla(tabla);
+        utilidades.ajustarTabla(tableNominas);
 
         lblNominas.setText("Seleccione un Periodo antes, por favor");
     }
     
+    private boolean verificarDeudasGlobales(int[] filasSeleccionadas, PeriodoPago periodo) {
+        if (!negocioNominaVerificacion.existePeriodoAnteriorPendiente(periodo.getIdPeriodoPago())) {
+            return false;
+        }
+
+        ArrayList<String> trabajadoresConDeuda = new ArrayList<>();
+
+        for (int fila : filasSeleccionadas) {
+            String documento = obtenerDocumentoIdentidadFila(fila);
+            Trabajador t = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(documento);
+            Contrato c = negocioContratoLlenado.obtenerContratoPorDocumentoIdentidad(documento);
+
+            if (t != null && c != null) {
+                boolean tienePendiente = negocioNominaVerificacion.existePeriodoAnteriorPendientePorContrato(
+                    c.getIdContrato(), periodo.getIdPeriodoPago()
+                );
+                if (tienePendiente) {
+                    trabajadoresConDeuda.add(t.getNombreCompleto());
+                }
+            }
+        }
+
+        if (!trabajadoresConDeuda.isEmpty()) {
+            mostrarMensaje(utilidades.construirMensajeHtmlLista(trabajadoresConDeuda));
+        } else {
+            mostrarMensaje("Error: Hay períodos anteriores sin pagar. Verifique todos los contratos.");
+        }
+
+        return true;
+    }
+
+    private int procesarContratosSeleccionados(int[] filasSeleccionadas, PeriodoPago periodo, String metodoPago) {
+        int registrosExitosos = 0;
+
+        for (int fila : filasSeleccionadas) {
+            String documento = obtenerDocumentoIdentidadFila(fila);
+            Trabajador t = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(documento);
+            Contrato c = negocioContratoLlenado.obtenerContratoPorDocumentoIdentidad(documento);
+            DetalleContrato dc = negocioContratoLlenado.obtenerDetalleContratoPorDocumentoIdentidad(documento);
+
+            TipoContrato tc = null;
+            ContratoPeriodo cp = null;
+
+            boolean datosCompletos = (t != null && c != null && dc != null);
+
+            if (datosCompletos) {
+                tc = negocioNominaLlenado.obtenerTipoContratoPorId(c.getIdTipoContrato());
+                c.setTipoContrato(tc);
+                cp = negocioContratoLlenado.obtenerContratoPeriodo(c.getIdContrato(), periodo.getIdPeriodoPago());
+
+                if (cp == null) {
+                    JOptionPane.showMessageDialog(null,
+                        "No se encontró un ContratoPeriodo válido para el trabajador " + t.getNombreCompleto());
+                    datosCompletos = false;
+                }
+            }
+
+            if (!datosCompletos) continue;
+
+            cp.setContrato(c);
+            cp.setPeriodo(periodo);
+
+            Nomina nomina = negocioNominaRegistro.procesarNominaCompleta(cp, dc, metodoPago, dc.getTipoSeguroSalud());
+            ResultadoOperacion resultado = negocioNominaRegistro.insertarNominaCompleta(nomina);
+
+            if (!resultado.isExito()) {
+                mostrarMensaje("Error: " + resultado.getMensaje());
+            } else {
+                registrosExitosos++;
+            }
+        }
+
+        return registrosExitosos;
+    }
+
+    private String obtenerDocumentoIdentidadFila(int fila) {
+        return tableContrato.getValueAt(fila, 5).toString();
+    }
+
+    private void mostrarMensaje(String mensaje) {
+        lblProcesados.setText(mensaje);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -393,107 +469,35 @@ public class FrmNomina extends javax.swing.JFrame {
         try {
             int[] filasSeleccionadas = tableContrato.getSelectedRows();
             if (filasSeleccionadas.length == 0) {
-                lblProcesados.setText("Seleccione al menos un contrato.");
+                mostrarMensaje("Seleccione al menos un contrato.");
                 return;
             }
 
-            PeriodoPago p = (PeriodoPago) cmbPeriodoPago2.getSelectedItem();
+            PeriodoPago periodo = (PeriodoPago) cmbPeriodoPago2.getSelectedItem();
             String metodoPago = cmbMetodoPago.getSelectedItem().toString();
 
-            NominaDAO dao = new NominaDAO();
-            ContratoPeriodoDAO contratoPeriodoDAO = new ContratoPeriodoDAO();
-            
-    
-            ArrayList<String> trabajadoresConDeuda = new ArrayList<>();
-
-            int registrosExitosos = 0;
-
-            boolean existeGlobalPendiente = dao.existePeriodoAnteriorPendiente(p.getIdPeriodoPago());
-
-            if (existeGlobalPendiente) {
-                for (int fila : filasSeleccionadas) {
-                    String documentoIdentidad = tableContrato.getValueAt(fila, 5).toString();
-
-                    Trabajador t = trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
-                    Contrato c = contratoDAO.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
-
-                    if (t != null && c != null) {
-                        boolean tienePendiente = dao.existePeriodoAnteriorPendientePorContrato(
-                            c.getIdContrato(), p.getIdPeriodoPago()
-                        );
-
-                        if (tienePendiente) {
-                            trabajadoresConDeuda.add(t.getNombreCompleto());
-                        }
-                    }
-                }
-
-                if (!trabajadoresConDeuda.isEmpty()) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("<html>Antes de procesar estos contratos debe pagar los períodos anteriores de los trabajadores, incluidos:<br>");
-                    for (String nombre : trabajadoresConDeuda) {
-                        sb.append("• ").append(nombre).append("<br>");
-                    }
-                    sb.append("</html>");
-                    lblProcesados.setText(sb.toString());
-                } else {
-                    lblProcesados.setText("Error: Hay períodos anteriores sin pagar. Verifique todos los contratos.");
-                }
+            if (verificarDeudasGlobales(filasSeleccionadas, periodo)) {
                 return;
             }
 
-            for (int fila : filasSeleccionadas) {
-                String documentoIdentidad = tableContrato.getValueAt(fila, 5).toString();
-
-                Trabajador t = trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
-                Contrato c = contratoDAO.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
-                DetalleContrato dc = contratoDAO.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
-                TipoContrato tc = nominas.obtenerTipoContratoPorId(c.getIdTipoContrato());
-                c.setTipoContrato(tc);
-
-                if (t != null && c != null && dc != null) {
-                    ContratoPeriodo cp = contratoPeriodoDAO.obtenerContratoPeriodo(
-                        c.getIdContrato(), p.getIdPeriodoPago()
-                    );
-
-                    if (cp == null) {
-                        JOptionPane.showMessageDialog(
-                            null, 
-                            "No se encontró un ContratoPeriodo válido para el trabajador " + t.getNombreCompleto()
-                        );
-                        continue;
-                    }
-
-                    cp.setContrato(c);
-                    cp.setPeriodo(p);
-                    
-
-                    Nomina nomina = new NominaNegocioRegistro().procesarNominaCompleta(cp, dc, metodoPago,dc.getTipoSeguroSalud());
-
-                    ResultadoOperacion resultado = dao.insertarNominaCompleta(nomina);
-
-                    if (!resultado.isExito()) {
-                        lblProcesados.setText("Error: " + resultado.getMensaje());
-                    } else {
-                        registrosExitosos++;
-                    }
-                }
-            }
+            int registrosExitosos = procesarContratosSeleccionados(filasSeleccionadas, periodo, metodoPago);
 
             if (registrosExitosos > 0) {
-                lblProcesados.setText("Se registraron " + registrosExitosos + " nóminas exitosamente.");
-                listarContratosTabla(tableContrato);
-                listarNominasTabla(tableNominas);
+                mostrarMensaje("Se registraron " + registrosExitosos + " nóminas exitosamente.");
+                listarContratosTabla();
+                listarNominasTabla();
             } else {
-                lblProcesados.setText("No se registró ninguna nómina.");
+                mostrarMensaje("No se registró ninguna nómina.");
             }
 
         } catch (Exception ex) {
-            lblProcesados.setText("Error al procesar la nómina: " + ex.getMessage());
+            mostrarMensaje("Error al procesar la nómina: " + ex.getMessage());
             JOptionPane.showMessageDialog(this, "Error al procesar la nómina: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnProcesarActionPerformed
       
+
+
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

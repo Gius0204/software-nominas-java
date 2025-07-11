@@ -1,39 +1,41 @@
 package com.grupo01.softwarenominas.capapresentacion;
 import com.grupo01.softwarenominas.capaentidad.Trabajador;
-import com.grupo01.softwarenominas.capanegocio.TrabajadorNegocioVarios;
+import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioListado;
+import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioRegistro;
+import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioValidacion;
+import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroDescripcion;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroNumerico;
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 
-
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITrabajador;
 
 public class FrmTrabajador extends javax.swing.JFrame {
+    private final transient TrabajadorNegocioListado negocioListado = new TrabajadorNegocioListado();
+    private final transient TrabajadorNegocioRegistro negocioRegistro = new TrabajadorNegocioRegistro();
+    private final transient TrabajadorNegocioValidacion negocioValidacion = new TrabajadorNegocioValidacion();
+    private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
 
-    transient TrabajadorNegocioVarios negocio = new TrabajadorNegocioVarios();
     private transient Trabajador trabajadorActual;
-    
-    transient Utilidades utilidades = new Utilidades();
-    
     private boolean modoEdicion = false;
+
+    transient Utilidades utilidades = new Utilidades();
     
     public FrmTrabajador() {
         initComponents();
         inicializarFormulario();
-        configurarListeners();
     }
 
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
         inicializarCamposValidados();
-        inicializarTablaTrabajadores(tableTrabajador);
+        inicializarTablaTrabajadores();
         listarTrabajadoresTabla(null, null);
+        configurarListeners();
     }
     
     private void inicializarCamposValidados(){
@@ -48,7 +50,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
     }
     
-    public void inicializarTablaTrabajadores(JTable tabla){
+    public void inicializarTablaTrabajadores(){
         DefaultTableModel modelo = new DefaultTableModel();
         String[] columnasDeseadas = {
             "Nombres", "ApellidoPaterno", "ApellidoMaterno", 
@@ -57,31 +59,11 @@ public class FrmTrabajador extends javax.swing.JFrame {
         for (String col : columnasDeseadas) {
             modelo.addColumn(col);
         }
-        tabla.setModel(modelo);
+        tableTrabajador.setModel(modelo);
 
-        utilidades.ajustarTabla(tabla);
+        utilidades.ajustarTabla(tableTrabajador);
     }
     
-    public void listarTrabajadoresTabla(Date fechaInicio, Date fechaFin){
-        int resultados = 0;
-        
-        if (fechaInicio != null && fechaFin != null) {
-            resultados = negocio.listarTrabajadoresFiltradoPorFecha(tableTrabajador, fechaInicio, fechaFin);
-        } else {
-            resultados = negocio.listarTrabajadoresFiltrado(tableTrabajador);
-        }
-        
-        utilidades.ajustarTabla(tableTrabajador);
-
-        lblMensajeBuscar.setText(
-            switch (resultados) {
-                case 0 -> "No se encontraron trabajadores en la base de datos.";
-                case 1 -> "Se encontró 1 trabajador.";
-                default -> "Se encontraron " + resultados + " trabajadores.";
-            }
-        );
-    }
-
     private void configurarListeners() {
         jhcHabilitarFechas.addActionListener(e -> {
             if (jhcHabilitarFechas.isSelected()) {
@@ -98,88 +80,155 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 listarTrabajadoresTabla(null, null);
             }
         });
+
+        tableTrabajador.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = tableTrabajador.getSelectedRow();
+                if (fila != -1) {
+                    String doc = tableTrabajador.getValueAt(fila, 4).toString();
+                    trabajadorActual = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(doc);
+                    if (trabajadorActual != null) {
+                        cargarFormularioConTrabajador();
+                        modoEdicion = true;
+                        btnRegistra.setText("EDITAR");
+                        btnRegresar.setText("ELIMINAR");
+                    }
+                }
+            }
+        });
+    }
+
+    
+    public void listarTrabajadoresTabla(Date fechaInicio, Date fechaFin){
+        int resultados = 0;
+        
+        if (fechaInicio != null && fechaFin != null) {
+            resultados = negocioListado.listarTrabajadoresFiltradoPorFecha(tableTrabajador, fechaInicio, fechaFin);
+        } else {
+            resultados = negocioListado.listarTrabajadoresFiltrado(tableTrabajador);
+        }
+        
+        utilidades.ajustarTabla(tableTrabajador);
+
+        lblMensajeBuscar.setText(
+            switch (resultados) {
+                case 0 -> "No se encontraron trabajadores en la base de datos.";
+                case 1 -> "Se encontró 1 trabajador.";
+                default -> "Se encontraron " + resultados + " trabajadores.";
+            }
+        );
+    }
+
+    private void cargarFormularioConTrabajador() {
+        txtNombres.setText(trabajadorActual.getNombres());
+        txtApellidoPaterno.setText(trabajadorActual.getApellidoPaterno());
+        txtApellidoMaterno.setText(trabajadorActual.getApellidoMaterno());
+        txtDocumentoIdentidad.setText(trabajadorActual.getDocumentoIdentidad());
+        txtTelefono.setText(trabajadorActual.getTelefono());
+        txtCorreo.setText(trabajadorActual.getCorreo());
+        txtDireccion.setText(trabajadorActual.getDireccion());
+        txtDescripcion.setText(trabajadorActual.getDescripcion());
+        dcFechaNacimiento.setDate(trabajadorActual.getFechaNacimiento());
+
+        if ("DNI".equals(trabajadorActual.getTipoDocumento())) rbDNI.setSelected(true);
+        else rbCE.setSelected(true);
+
+        if (ConstantesUITrabajador.MASCULINO.equals(trabajadorActual.getSexo())) rbMasculino.setSelected(true);
+        else rbFemenino.setSelected(true);
+    }
+
+    private Trabajador construirTrabajadorDesdeFormulario() {
+        Trabajador t = modoEdicion && trabajadorActual != null ? trabajadorActual : new Trabajador();
+
+        t.setNombres(txtNombres.getText());
+        t.setApellidoPaterno(txtApellidoPaterno.getText());
+        t.setApellidoMaterno(txtApellidoMaterno.getText());
+        t.setDocumentoIdentidad(txtDocumentoIdentidad.getText());
+        t.setTelefono(txtTelefono.getText());
+        t.setCorreo(txtCorreo.getText());
+        t.setDireccion(txtDireccion.getText());
+        t.setDescripcion(txtDescripcion.getText());
+        t.setFechaNacimiento(dcFechaNacimiento.getDate());
+
+        t.setTipoDocumento(rbDNI.isSelected() ? "DNI" : "CE");
+        t.setSexo(rbMasculino.isSelected() ? ConstantesUITrabajador.MASCULINO : "Femenino");
+
+        return t;
+    }
+    
+    private void limpiarCampos() {
+        txtNombres.setText("");
+        txtApellidoPaterno.setText("");
+        txtApellidoMaterno.setText("");
+        txtDocumentoIdentidad.setText("");
+        txtTelefono.setText("");
+        txtCorreo.setText("");
+        txtDireccion.setText("");
+        txtDescripcion.setText("");
+        dcFechaNacimiento.setDate(null);
+
+        rbDNI.setSelected(true);
+        rbMasculino.setSelected(true);
+
+        trabajadorActual = null;
+        modoEdicion = false;
+        btnRegistra.setText("REGISTRAR");
+        btnRegresar.setText("CERRAR");
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        javax.swing.ButtonGroup bgDocumentoIdentidad;
-        javax.swing.ButtonGroup bgSexo;
-        javax.swing.JPanel panelMov;
-        javax.swing.JPanel jPanel1 ;
-        javax.swing.JPanel jPanel3;
-        javax.swing.JPanel jPanel4 ;
-        javax.swing.JPanel jPanel10 ;
-        javax.swing.JPanel jPanel11 ;
-        javax.swing.JPanel jPanel12 ;
-
-        javax.swing.JLabel moduloContrato;
-        javax.swing.JLabel jLabel1 ;
-        javax.swing.JLabel jLabel4 ;
-        javax.swing.JLabel jLabel5 ;
-        javax.swing.JLabel jLabel6 ;
-        javax.swing.JLabel jLabel9 ;
-        javax.swing.JLabel jLabel13 ;
-        javax.swing.JLabel jLabel14 ;
-        javax.swing.JLabel jLabel19 ;
-        javax.swing.JLabel jLabel24 ;
-        javax.swing.JLabel jLabel25;
-        javax.swing.JLabel jLabel26 ;
-        javax.swing.JLabel jLabel27 ;
-        javax.swing.JLabel jLabel28 ;
-        javax.swing.JLabel jLabel29 ;
-
-        javax.swing.JScrollPane jScrollPane1;
-        javax.swing.JScrollPane jScrollPane2;
-        javax.swing.JSeparator jSeparator2;
-        
-        bgDocumentoIdentidad = new javax.swing.ButtonGroup();
-        bgSexo = new javax.swing.ButtonGroup();
-        panelMov = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+      
+        javax.swing.JButton btnLimpiar;
+        javax.swing.ButtonGroup bgDocumentoIdentidad = new javax.swing.ButtonGroup();
+        javax.swing.ButtonGroup bgSexo = new javax.swing.ButtonGroup();
+        javax.swing.JPanel panelMov = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         txtNombres = new javax.swing.JTextField();
         txtDocumentoIdentidad = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
         btnRegistra = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
-        jLabel14 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel14 = new javax.swing.JLabel();
         btnLimpiar = new javax.swing.JButton();
-        jLabel28 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel28 = new javax.swing.JLabel();
         dcFechaNacimiento = new com.toedter.calendar.JDateChooser();
-        jLabel4 = new javax.swing.JLabel();
-        moduloContrato = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel25 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
+        javax.swing.JLabel moduloContrato = new javax.swing.JLabel();
+        javax.swing.JSeparator jSeparator2 = new javax.swing.JSeparator();
+        javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel25 = new javax.swing.JLabel();
         jhcHabilitarFechas = new javax.swing.JCheckBox();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel13 = new javax.swing.JLabel();
         jdcFechaFinal = new com.toedter.calendar.JDateChooser();
         jdcFechaInicial = new com.toedter.calendar.JDateChooser();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        javax.swing.JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
         tableTrabajador = new javax.swing.JTable();
-        jPanel10 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel10 = new javax.swing.JPanel();
         rbCE = new javax.swing.JRadioButton();
         rbDNI = new javax.swing.JRadioButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel9 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel5 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel19 = new javax.swing.JLabel();
         txtApellidoMaterno = new javax.swing.JTextField();
-        jLabel24 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel24 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
-        jLabel26 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel26 = new javax.swing.JLabel();
         txtApellidoPaterno = new javax.swing.JTextField();
-        jLabel27 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel27 = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jPanel11 = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel11 = new javax.swing.JPanel();
         rbFemenino = new javax.swing.JRadioButton();
         rbMasculino = new javax.swing.JRadioButton();
-        jLabel29 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel29 = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
-        jPanel12 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel12 = new javax.swing.JPanel();
         lblMensajeBuscar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -309,12 +358,6 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tableTrabajador.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableTrabajadorMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(tableTrabajador);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 210, 620, 430));
@@ -390,7 +433,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         rbMasculino.setBackground(new java.awt.Color(255, 255, 255));
         bgSexo.add(rbMasculino);
         rbMasculino.setFont(new java.awt.Font(ConstantesUITrabajador.FUENTE_SEGOE_UI, 0, 14)); // NOI18N
-        rbMasculino.setText("Masculino");
+        rbMasculino.setText(ConstantesUITrabajador.MASCULINO);
         jPanel11.add(rbMasculino, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel1.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, 210, 40));
@@ -417,194 +460,48 @@ public class FrmTrabajador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void limpiar(){
-        txtDocumentoIdentidad.setText("");
-        txtNombres.setText("");
-        txtApellidoPaterno.setText("");
-        txtApellidoMaterno.setText("");
-        txtDocumentoIdentidad.setText("");
-        txtTelefono.setText("");
-        txtCorreo.setText("");
-        txtDireccion.setText("");
-        dcFechaNacimiento.setDate(null);
-        rbDNI.setSelected(false);
-        rbCE.setSelected(false);
-        rbMasculino.setSelected(false);
-        rbFemenino.setSelected(false);
-        txtDescripcion.setText("");
-        
-        rbDNI.setSelected(true);
-        rbMasculino.setSelected(true);
-    }
 
     private void btnRegistraActionPerformed(java.awt.event.ActionEvent evt) { //NOSONAR
-        if (modoEdicion) {
-            if(trabajadorActual!=null){
-                try {
-                    trabajadorActual.setNombres(txtNombres.getText());
-                    trabajadorActual.setApellidoPaterno(txtApellidoPaterno.getText());
-                    trabajadorActual.setApellidoMaterno(txtApellidoMaterno.getText());
-                    trabajadorActual.setDocumentoIdentidad(txtDocumentoIdentidad.getText());
-                    trabajadorActual.setTipoDocumento(rbDNI.isSelected() ? "DNI" : "CE");
-                    trabajadorActual.setTelefono(txtTelefono.getText());
-                    trabajadorActual.setCorreo(txtCorreo.getText());
-                    trabajadorActual.setSexo(rbMasculino.isSelected() ? "M" : "F");
-
-                    Date fecha = dcFechaNacimiento.getDate();
-                    if (fecha != null) {
-                        trabajadorActual.setFechaNacimiento(fecha);
-                    }
-
-                    trabajadorActual.setDireccion(txtDireccion.getText());
-                    trabajadorActual.setDescripcion(txtDescripcion.getText());
-                    
-                    String mensajeValidacion = negocio.validarTrabajador(trabajadorActual);
-                    if (mensajeValidacion != null) {
-                        JOptionPane.showMessageDialog(this, mensajeValidacion);
-                        return;
-                    }
-
-                    if (negocio.actualizarTrabajador(trabajadorActual)) {
-                        btnRegresar.setText(ConstantesUITrabajador.BOTON_CERRAR);
-                        btnRegistra.setText(ConstantesUITrabajador.BOTON_REGISTRAR);
-                        btnLimpiar.setText(ConstantesUITrabajador.BOTON_LIMPIAR);
-                        modoEdicion=false;
-                        trabajadorActual=null;
-                        JOptionPane.showMessageDialog(this, "Trabajador actualizado correctamente.");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Error al actualizar trabajador.");
-                    }
-
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Error al actualizar trabajador: " + e.getMessage());
-                }
-            }
-        } else {
-            try {
-                Trabajador t = new Trabajador();
-                t.setNombres(txtNombres.getText());
-                t.setApellidoPaterno(txtApellidoPaterno.getText());
-                t.setApellidoMaterno(txtApellidoMaterno.getText());
-                t.setDocumentoIdentidad(txtDocumentoIdentidad.getText());
-                t.setTipoDocumento(rbDNI.isSelected() ? "DNI" : "CE");
-                t.setTelefono(txtTelefono.getText());
-                t.setCorreo(txtCorreo.getText());
-                t.setSexo(rbMasculino.isSelected() ? "M" : "F");
-
-                Date fecha = dcFechaNacimiento.getDate();
-                if (fecha != null) {
-                    t.setFechaNacimiento(fecha);
-                }
-
-                t.setDireccion(txtDireccion.getText());
-                t.setDescripcion(txtDescripcion.getText());
-                
-                String mensajeValidacion = negocio.validarTrabajador(t);
-                if (mensajeValidacion != null) {
-                    JOptionPane.showMessageDialog(this, mensajeValidacion);
-                    return;
-                }
-
-                if (negocio.registrarTrabajador(t)) {
-                    JOptionPane.showMessageDialog(this, "Trabajador registrado correctamente.");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error al registrar trabajador.");
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al registrar Trabajador: " + e.getMessage());
-            }
+        Trabajador t = construirTrabajadorDesdeFormulario();
+        String validacion = negocioValidacion.validarTrabajador(t);
+        if (validacion != null) {
+            JOptionPane.showMessageDialog(this, validacion);
+            return;
         }
 
-        limpiar();
+        boolean ok = modoEdicion ? negocioRegistro.actualizarTrabajador(t) : negocioRegistro.registrarTrabajador(t);
+        if (ok) {
+            JOptionPane.showMessageDialog(this, "Operación exitosa");
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al registrar/actualizar");
+        }
+
+        limpiarCampos();
         listarTrabajadoresTabla(null, null);
     }
     
-    private void cargarFormularioConTrabajador(Trabajador t){
-        txtNombres.setText(t.getNombres());
-        txtApellidoPaterno.setText(t.getApellidoPaterno());
-        txtApellidoMaterno.setText(t.getApellidoMaterno());
-        txtDocumentoIdentidad.setText(t.getDocumentoIdentidad());
-        txtTelefono.setText(t.getTelefono());
-        txtCorreo.setText(t.getCorreo());
+    
 
-        if (t.getTipoDocumento().equalsIgnoreCase("DNI")) {
-            rbDNI.setSelected(true);
-        } else if (t.getTipoDocumento().equalsIgnoreCase("CE")) {
-            rbCE.setSelected(true);
-        }
-
-        dcFechaNacimiento.setDate(t.getFechaNacimiento());
-        
-        txtDireccion.setText(t.getTelefono());
-        txtDescripcion.setText(t.getDescripcion());
-        
-        if (t.getSexo().equalsIgnoreCase("M")) {
-            rbMasculino.setSelected(true);
-        } else if (t.getTipoDocumento().equalsIgnoreCase("F")) {
-            rbFemenino.setSelected(true);
-        }
-    }
-
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegresarActionPerformed
-        if (modoEdicion) {
-            if (trabajadorActual != null) {
-                int confirm = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas eliminar al trabajador?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-
-                    if (negocio.eliminarTrabajador(trabajadorActual.getIdTrabajador())) {
-                        JOptionPane.showMessageDialog(this, "Trabajador eliminado correctamente.");
-                        limpiar();
-                        listarTrabajadoresTabla(null, null);
-                        modoEdicion = false;
-                        trabajadorActual = null;
-                        btnRegistra.setText(ConstantesUITrabajador.BOTON_REGISTRAR);
-                        btnLimpiar.setText(ConstantesUITrabajador.BOTON_LIMPIAR);
-                        btnRegresar.setText(ConstantesUITrabajador.BOTON_CERRAR);
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Error al eliminar trabajador.");
-                    }
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnRegresarActionPerformed
+        if (modoEdicion && trabajadorActual != null) {
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar trabajador?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (negocioRegistro.eliminarTrabajador(trabajadorActual.getIdTrabajador())) {
+                    JOptionPane.showMessageDialog(this, "Eliminado");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar");
                 }
+                limpiarCampos();
+                listarTrabajadoresTabla(null, null);
             }
         } else {
-            FrmMenu menu = new FrmMenu();
-            menu.setVisible(true);
-            this.setVisible(false);
+            this.dispose(); // Cierra ventana
         }        
     }//GEN-LAST:event_btnRegresarActionPerformed
 
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnLimpiarActionPerformed
-        limpiar();
-        modoEdicion = false;
-        trabajadorActual = null;
-        btnRegistra.setText(ConstantesUITrabajador.BOTON_REGISTRAR);
-        btnLimpiar.setText(ConstantesUITrabajador.BOTON_LIMPIAR);
-        btnRegresar.setText(ConstantesUITrabajador.BOTON_CERRAR);
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarCampos();
     }//GEN-LAST:event_btnLimpiarActionPerformed
-
-    private void tableTrabajadorMouseClicked(java.awt.event.MouseEvent evt) {//NOSONAR //GEN-FIRST:event_tableTrabajadorMouseClicked
-        tableTrabajador.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            int fila = tableTrabajador.getSelectedRow();
-            if (fila != -1) {
-                String documentoIdentidad = tableTrabajador.getValueAt(fila, 4).toString();
-                
-                Trabajador t = negocio.buscarPorDocumentoIdentidad(documentoIdentidad);
-
-                if (t != null) {
-                    cargarFormularioConTrabajador(t);
-                    trabajadorActual = t;
-                    btnRegistra.setText("EDITAR");
-                    btnLimpiar.setText("NUEVO");
-                    modoEdicion = true;
-                    
-                    btnRegresar.setText("ELIMINAR");
-                }
-            }
-        }
-    });
-    }//GEN-LAST:event_tableTrabajadorMouseClicked
     
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
@@ -660,26 +557,33 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLimpiar;
-    private javax.swing.JButton btnRegistra;
-    private javax.swing.JButton btnRegresar;
-    private com.toedter.calendar.JDateChooser dcFechaNacimiento;
-    private com.toedter.calendar.JDateChooser jdcFechaFinal;
-    private com.toedter.calendar.JDateChooser jdcFechaInicial;
-    private javax.swing.JCheckBox jhcHabilitarFechas;
-    private javax.swing.JLabel lblMensajeBuscar;
-    private javax.swing.JRadioButton rbCE;
-    private javax.swing.JRadioButton rbDNI;
-    private javax.swing.JRadioButton rbFemenino;
-    private javax.swing.JRadioButton rbMasculino;
-    private javax.swing.JTable tableTrabajador;
-    private javax.swing.JTextField txtApellidoMaterno;
-    private javax.swing.JTextField txtApellidoPaterno;
-    private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextArea txtDescripcion;
-    private javax.swing.JTextField txtDireccion;
-    private javax.swing.JTextField txtDocumentoIdentidad;
-    private javax.swing.JTextField txtNombres;
-    private javax.swing.JTextField txtTelefono;
+        private javax.swing.JTextField txtNombres;
+        private javax.swing.JTextField txtDocumentoIdentidad;
+        private javax.swing.JTextArea txtDescripcion;
+        private javax.swing.JButton btnRegistra;
+        private javax.swing.JButton btnRegresar;
+        private com.toedter.calendar.JDateChooser dcFechaNacimiento;
+        
+        private javax.swing.JCheckBox jhcHabilitarFechas;
+        
+        private com.toedter.calendar.JDateChooser jdcFechaFinal;
+        private com.toedter.calendar.JDateChooser jdcFechaInicial;
+        
+        private javax.swing.JTable tableTrabajador;
+        
+        private javax.swing.JRadioButton rbCE;
+        private javax.swing.JRadioButton rbDNI;
+        
+        private javax.swing.JTextField txtApellidoMaterno;
+        
+        private javax.swing.JTextField txtCorreo;
+        
+        private javax.swing.JTextField txtApellidoPaterno;
+        
+        private javax.swing.JTextField txtTelefono;
+        private javax.swing.JRadioButton rbFemenino;
+        private javax.swing.JRadioButton rbMasculino;
+        private javax.swing.JTextField txtDireccion;
+        private javax.swing.JLabel lblMensajeBuscar;
     // End of variables declaration//GEN-END:variables
 }

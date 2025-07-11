@@ -1,5 +1,5 @@
 
-package com.grupo01.softwarenominas.capanegocio.contratonegocio;
+package com.grupo01.softwarenominas.capanegocio;
 
 public class ResultadoOperacion {
     private boolean exito;

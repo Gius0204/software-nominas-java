@@ -7,14 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import com.grupo01.softwarenominas.capaconexion.CConexion;
-import com.grupo01.softwarenominas.capaentidad.Area;
-import com.grupo01.softwarenominas.capaentidad.Especialidad;
 import com.grupo01.softwarenominas.capaentidad.Trabajador;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.APELLIDO_MATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.APELLIDO_PATERNO;
@@ -105,49 +102,6 @@ public class TrabajadorDAO {
         return totalResultados;
     }
 
-    public void cargarAreas(JComboBox<Area> comboBoxArea) {
-        comboBoxArea.removeAllItems();
-        comboBoxArea.addItem(new Area(0, "-- Area --", "", true, new Date()));
-        CConexion objetoConexion = new CConexion();
-        
-        try (Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarAreas}");
-        ) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("IdArea");
-                String nombre = rs.getString("Nombre");
-                comboBoxArea.addItem(new Area(id, nombre));
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error cargando áreas.");
-        }
-    }
-
-    public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
-        comboBoxEspecialidad.removeAllItems();
-        comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
-        CConexion objetoConexion = new CConexion();
-        
-        try (Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}");)
-        {
-            
-            stmt.setInt(1, idArea);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("IdEspecialidad");
-                String nombre = rs.getString("Nombre");
-                comboBoxEspecialidad.addItem(new Especialidad(id, idArea, nombre));
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error cargando especialidades por área.");
-        }
-    }
-    
     public boolean registrarTrabajador(Trabajador t) {
         CConexion objetoConexion = new CConexion();
         

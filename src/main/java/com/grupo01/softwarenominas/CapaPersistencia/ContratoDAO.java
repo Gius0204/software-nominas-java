@@ -21,7 +21,8 @@ import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
 import com.grupo01.softwarenominas.capaentidad.Especialidad;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
-import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
+
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.APELLIDO_MATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.APELLIDO_PATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.AREA_NOMBRE;
@@ -42,8 +43,53 @@ import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDCon
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.TIPO_CONTRATO_NOMBRE;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ERROR;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_AREA;
+import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.NOMBRE;
 
 public class ContratoDAO {
+    
+    public void cargarAreas(JComboBox<Area> comboBoxArea) {
+        comboBoxArea.removeAllItems();
+        comboBoxArea.addItem(new Area(0, "-- Area --", "", true, new Date()));
+        CConexion objetoConexion = new CConexion();
+        
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarAreas}");
+        ) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("IdArea");
+                String nombre = rs.getString(NOMBRE);
+                comboBoxArea.addItem(new Area(id, nombre));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error cargando áreas.");
+        }
+    }
+
+    public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
+        comboBoxEspecialidad.removeAllItems();
+        comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
+        CConexion objetoConexion = new CConexion();
+        
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}");)
+        {
+            
+            stmt.setInt(1, idArea);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("IdEspecialidad");
+                String nombre = rs.getString(NOMBRE);
+                comboBoxEspecialidad.addItem(new Especialidad(id, idArea, nombre));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error cargando especialidades por área.");
+        }
+    }
+    
     public ResultadoOperacion registrarContrato(Contrato c) {
         int idGenerado;
         String mensaje;
@@ -332,7 +378,7 @@ public class ContratoDAO {
             while (rs.next()) {
                 comboBox.addItem(new TipoContrato(
                         rs.getInt(ID_TIPO_CONTRATO),
-                        rs.getString("Nombre"),
+                        rs.getString(NOMBRE),
                         "", true, new Date()
                 ));
             }
@@ -359,7 +405,7 @@ public class ContratoDAO {
             while (rs.next()) {
                 comboBox.addItem(new Cargo(
                         rs.getInt(ID_CARGO),
-                        rs.getString("Nombre"),
+                        rs.getString(NOMBRE),
                         "", true, new Date()
                 ));
             }

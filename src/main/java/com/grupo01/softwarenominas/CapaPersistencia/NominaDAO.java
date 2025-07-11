@@ -16,7 +16,7 @@ import com.grupo01.softwarenominas.capaconexion.CConexion;
 import com.grupo01.softwarenominas.capaentidad.Nomina;
 import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
-import com.grupo01.softwarenominas.capanegocio.contratonegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
 
 public class NominaDAO {
 

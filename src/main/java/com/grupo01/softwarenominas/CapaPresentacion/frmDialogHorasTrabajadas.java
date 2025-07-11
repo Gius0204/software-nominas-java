@@ -1,15 +1,16 @@
 
 package com.grupo01.softwarenominas.capapresentacion;
 
-import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
-
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.grupo01.softwarenominas.capaentidad.Contrato;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioListado;
+import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioRegistro;
 
 public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
 
-    transient ContratoDAO contratoDao = new ContratoDAO();
+    private final transient ContratoNegocioListado negocioContratoListado = new ContratoNegocioListado();
+    private final transient ContratoNegocioRegistro negocioContratoRegistro = new ContratoNegocioRegistro();
 
 
     public FrmDialogHorasTrabajadas(java.awt.Frame parent, boolean modal) {
@@ -19,7 +20,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
     }
     
     public void inicializarConContrato(Contrato contrato) {
-        contratoDao.listarContratoPeriodosPorContrato(jtbTablaHorasTrabajadas, contrato.getIdContrato());
+        negocioContratoListado.listarContratoPeriodosPorContrato(jtbTablaHorasTrabajadas, contrato.getIdContrato());
         txtHorasTotales.setText(String.valueOf(contrato.getHorasTotales()));
     }
 
@@ -105,7 +106,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnGuardarCambiosActionPerformed
-        contratoDao.guardarHorasTrabajadasDesdeTabla(jtbTablaHorasTrabajadas);
+        negocioContratoRegistro.guardarHorasTrabajadasDesdeTabla(jtbTablaHorasTrabajadas);
         this.dispose();
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 

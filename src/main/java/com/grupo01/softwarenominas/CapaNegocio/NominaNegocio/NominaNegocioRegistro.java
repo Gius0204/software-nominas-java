@@ -7,9 +7,12 @@ import com.grupo01.softwarenominas.capaentidad.ContratoPeriodo;
 import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
 import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
+import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
+import com.grupo01.softwarenominas.capapersistencia.NominaDAO;
 import com.grupo01.softwarenominas.capaentidad.DetalleNomina;
 
 public class NominaNegocioRegistro {  
+    NominaDAO dao = new NominaDAO();
     
     public Nomina procesarNominaCompleta(ContratoPeriodo cp, DetalleContrato detalleContrato, String metodoPago, String tipoSeguro) {
         Contrato contrato = cp.getContrato();
@@ -62,4 +65,9 @@ public class NominaNegocioRegistro {
 
         return nomina;
     }
-}
+
+    public ResultadoOperacion insertarNominaCompleta(Nomina nomina) {
+        return dao.insertarNominaCompleta(nomina);
+    }
+
+  }
