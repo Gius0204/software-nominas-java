@@ -1,7 +1,7 @@
 
 package com.grupo01.softwarenominas.capapersistencia;
+import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,7 +15,7 @@ public class PeriodoPagoDAO {
     PeriodoPago p = null;
     try (
         Connection conn = new CConexion().establecerConexion();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM PeriodoPago WHERE IdPeriodo = ?");
+        CallableStatement stmt = conn.prepareCall("{call sp_ObtenerPeriodoPagoPorId(?)}");
     ) {
         
         stmt.setInt(1, idPeriodo);

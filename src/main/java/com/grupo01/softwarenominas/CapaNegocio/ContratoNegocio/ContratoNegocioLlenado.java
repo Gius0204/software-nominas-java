@@ -11,8 +11,6 @@ import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
-import com.grupo01.softwarenominas.capanegocio.contratonegocio.ConstantesUIContratoNegocio;
-
 public class ContratoNegocioLlenado {
     ContratoDAO contratoDAO = new ContratoDAO();
     TrabajadorDAO trabajadorDAO = new TrabajadorDAO();

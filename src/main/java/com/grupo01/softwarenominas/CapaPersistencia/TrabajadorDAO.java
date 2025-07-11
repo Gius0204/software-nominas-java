@@ -3,7 +3,6 @@ package com.grupo01.softwarenominas.capapersistencia;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -180,11 +179,10 @@ public class TrabajadorDAO {
     public Trabajador buscarPorDNI(String dni) {
         Trabajador trabajador = null;
         CConexion conn = new CConexion();
-        
-        String sql = "SELECT * FROM Trabajador WHERE DocumentoIdentidad = ?";
 
-        try (Connection cn = conn.establecerConexion();
-            PreparedStatement ps = cn.prepareStatement(sql);
+        try (
+            Connection cn = conn.establecerConexion();
+            CallableStatement ps = cn.prepareCall("{call sp_BuscarTrabajadorPorDNI(?)}");
         ) {
             
             ps.setString(1, dni);

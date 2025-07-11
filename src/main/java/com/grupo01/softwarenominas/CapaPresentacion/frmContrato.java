@@ -14,7 +14,6 @@ import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.Fil
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroNumerico;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroSalario;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

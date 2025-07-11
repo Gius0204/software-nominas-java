@@ -527,7 +527,7 @@ public class ContratoDAO {
         Contrato contrato = null;
         try (
             Connection conn = new CConexion().establecerConexion();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Contrato WHERE IdContrato = ?");
+            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPorId(?)}");
         ) {
             
             stmt.setInt(1, idContrato);
