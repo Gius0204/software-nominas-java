@@ -2,11 +2,9 @@ package com.grupo01.softwarenominas.capapersistencia;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Date;
 
 import javax.swing.JComboBox;
@@ -46,124 +44,138 @@ import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDCon
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.NOMBRE;
 
 public class ContratoDAO {
-    
-    public void cargarAreas(JComboBox<Area> comboBoxArea) {
-        comboBoxArea.removeAllItems();
-        comboBoxArea.addItem(new Area(0, "-- Area --", "", true, new Date()));
-        CConexion objetoConexion = new CConexion();
-        
-        try (Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarAreas}");
-        ) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("IdArea");
-                String nombre = rs.getString(NOMBRE);
-                comboBoxArea.addItem(new Area(id, nombre));
-            }
 
+    private DefaultTableModel crearModeloTabla(JTable tabla, String[] columnas) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        tabla.setModel(modelo);
+        for (String col : columnas) {
+            modelo.addColumn(col);
+        }
+        return modelo;
+    }
+
+    private int llenarTabla(DefaultTableModel modelo, ResultSet rs, String[] columnas) throws SQLException {
+        int total = 0;
+        while (rs.next()) {
+            Object[] fila = new Object[columnas.length];
+            for (int i = 0; i < columnas.length; i++) {
+                fila[i] = rs.getObject(columnas[i]);
+            }
+            modelo.addRow(fila);
+            total++;
+        }
+        return total;
+    }
+
+    @FunctionalInterface
+    interface ResultSetMapper<T> {
+        T map(ResultSet rs) throws SQLException;
+    }
+
+    private <T> void cargarComboBox(JComboBox<T> comboBox, CallableStatement stmt, ResultSetMapper<T> mapper, T opcionInicial) throws SQLException {
+        comboBox.removeAllItems();
+        comboBox.addItem(opcionInicial);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            comboBox.addItem(mapper.map(rs));
+        }
+    }
+    
+
+    public void cargarAreas(JComboBox<Area> comboBoxArea) {
+        CConexion objetoConexion = new CConexion();
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarAreas}")) {
+            cargarComboBox(comboBoxArea, stmt,
+                rs -> new Area(rs.getInt("IdArea"), rs.getString(NOMBRE)),
+                new Area(0, "-- Area --", "", true, new Date()));
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error cargando áreas.");
         }
     }
 
+
     public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
-        comboBoxEspecialidad.removeAllItems();
-        comboBoxEspecialidad.addItem(new Especialidad(0, "-- Especialidad --", "", true, new Date()));
         CConexion objetoConexion = new CConexion();
-        
         try (Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}");)
-        {
-            
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}")) {
             stmt.setInt(1, idArea);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("IdEspecialidad");
-                String nombre = rs.getString(NOMBRE);
-                comboBoxEspecialidad.addItem(new Especialidad(id, idArea, nombre));
-            }
-
+            cargarComboBox(comboBoxEspecialidad, stmt,
+                rs -> new Especialidad(rs.getInt("IdEspecialidad"), idArea, rs.getString(NOMBRE)),
+                new Especialidad(0, "-- Especialidad --", "", true, new Date()));
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error cargando especialidades por área.");
+        }
+    }
+
+    public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
+        CConexion objetoConexion = new CConexion();
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarTiposContrato}")) {
+            cargarComboBox(comboBox, stmt,
+                rs -> new TipoContrato(rs.getInt(ID_TIPO_CONTRATO), rs.getString(NOMBRE), "", true, new Date()),
+                new TipoContrato(0, "-- Tipo de Contrato --", "", true, new Date()));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void cargarCargos(JComboBox<Cargo> comboBox) {
+        CConexion objetoConexion = new CConexion();
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ListarCargos}")) {
+            cargarComboBox(comboBox, stmt,
+                rs -> new Cargo(rs.getInt(ID_CARGO), rs.getString(NOMBRE), "", true, new Date()),
+                new Cargo(0, "-- Cargo --", "", true, new Date()));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar cargos: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
     }
     
     public ResultadoOperacion registrarContrato(Contrato c) {
         int idGenerado;
         String mensaje;
-
-        try (
-            Connection conn = new CConexion().establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_CrearContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-        ) {
-            
+        try (Connection conn = new CConexion().establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_CrearContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
             stmt.setInt(1, c.getIdTrabajador());
             stmt.setInt(2, c.getIdTipoContrato());
             stmt.setInt(3, c.getIdCargo());
-            stmt.setDate(4, java.sql.Date.valueOf(
-                c.getFechaInicio().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-            ));
-            stmt.setDate(5, java.sql.Date.valueOf(
-                c.getFechaFin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-            ));
+            stmt.setDate(4, java.sql.Date.valueOf(c.getFechaInicio().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()));
+            stmt.setDate(5, java.sql.Date.valueOf(c.getFechaFin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()));
             stmt.setDouble(6, c.getSalarioBase());
             stmt.setInt(7, c.getHorasTotales());
             stmt.setString(8, c.getDescripcion());
             stmt.setInt(9, c.getIdArea());
             stmt.setInt(10, c.getIdEspecialidad());
-
             stmt.registerOutParameter(11, java.sql.Types.INTEGER);
 
             stmt.execute();
-
             idGenerado = stmt.getInt(11);
 
-            if (idGenerado > 0) {
-                mensaje = "Contrato registrado correctamente.";
-                return new ResultadoOperacion(true, idGenerado, mensaje);
-            } else {
-                mensaje = "No se pudo registrar el contrato. Restricción de negocio.";
-                return new ResultadoOperacion(false, -1, mensaje);
-            }
+            mensaje = (idGenerado > 0) ? "Contrato registrado correctamente." : "No se pudo registrar el contrato.";
+            return new ResultadoOperacion(idGenerado > 0, idGenerado, mensaje);
 
         } catch (SQLException e) {
-            mensaje = e.getMessage();
-            return new ResultadoOperacion(false, -1, mensaje);
+            return new ResultadoOperacion(false, -1, e.getMessage());
         }
     }
 
     public boolean actualizarContrato(Contrato c) {
-        CConexion objetoConexion = new CConexion();
-        
-
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ActualizarContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-        )
-        {
-            
-
+        try (Connection conn = new CConexion().establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ActualizarContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
             stmt.setInt(1, c.getIdContrato());
             stmt.setInt(2, c.getIdTipoContrato());
             stmt.setInt(3, c.getIdCargo());
-            stmt.setDate(4, java.sql.Date.valueOf(
-                c.getFechaInicio().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-            ));
-            stmt.setDate(5, java.sql.Date.valueOf(
-                c.getFechaFin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-            ));
+            stmt.setDate(4, java.sql.Date.valueOf(c.getFechaInicio().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()));
+            stmt.setDate(5, java.sql.Date.valueOf(c.getFechaFin().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()));
             stmt.setDouble(6, c.getSalarioBase());
             stmt.setInt(7, c.getHorasTotales());
             stmt.setString(8, c.getDescripcion());
             stmt.setInt(9, c.getIdArea());
             stmt.setInt(10, c.getIdEspecialidad());
-
             stmt.execute();
             return true;
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al actualizar contrato: " + e.getMessage());
             return false;
@@ -172,8 +184,6 @@ public class ContratoDAO {
 
     public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {
         CConexion objetoConexion = new CConexion();
-        
-
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -181,38 +191,24 @@ public class ContratoDAO {
                 return column == 4 && !estado.equalsIgnoreCase("PAGADO") && !estado.equalsIgnoreCase("CANCELADO");
             }
         };
-
         tabla.setModel(modelo);
 
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            PreparedStatement stmt = conn.prepareStatement(
-                "SELECT cp.IdContratoPeriodo, p.Nombre AS Periodo, p.FechaInicio, p.FechaFin, " +
-                "cp.HorasTrabajadas, cp.EstadoPago " +
-                "FROM ContratoPeriodo cp " +
-                "INNER JOIN PeriodoPago p ON cp.IdPeriodo = p.IdPeriodo " +
-                "WHERE cp.IdContrato = ? ORDER BY p.FechaInicio"
-            );
-        )
-        {
-            
+        try (Connection conn = objetoConexion.establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPeriodosPorContrato(?)}")) {
+
             stmt.setInt(1, idContrato);
             ResultSet rs = stmt.executeQuery();
             ResultSetMetaData meta = rs.getMetaData();
-            int columnas = meta.getColumnCount();
-
-            for (int i = 1; i <= columnas; i++) {
+            for (int i = 1; i <= meta.getColumnCount(); i++) {
                 modelo.addColumn(meta.getColumnLabel(i));
             }
-
             while (rs.next()) {
-                Object[] fila = new Object[columnas];
-                for (int i = 0; i < columnas; i++) {
+                Object[] fila = new Object[meta.getColumnCount()];
+                for (int i = 0; i < meta.getColumnCount(); i++) {
                     fila[i] = rs.getObject(i + 1);
                 }
                 modelo.addRow(fila);
             }
-
             tabla.getColumnModel().getColumn(0).setMinWidth(0);
             tabla.getColumnModel().getColumn(0).setMaxWidth(0);
             tabla.getColumnModel().getColumn(0).setWidth(0);
@@ -222,14 +218,27 @@ public class ContratoDAO {
         }
     }
     
-    public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {
-        CConexion objetoConexion = new CConexion();
-        
+    public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {
+        String[] columnas = {FECHA_INICIO, FECHA_FIN, HORAS_TOTALES, DOCUMENTO_IDENTIDAD, NOMBRES, APELLIDO_PATERNO, APELLIDO_MATERNO, AREA_NOMBRE, ESPECIALIDAD, TIPO_CONTRATO_NOMBRE, CARGO_NOMBRE};
+        DefaultTableModel modelo = crearModeloTabla(tabla, columnas);
 
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-        )
-        {
+        int total = 0;
+        try (Connection conn = new CConexion().establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosFiltrados(?, ?, ?, ?)}")) {
+            stmt.setDate(1, fechaInicio != null ? new java.sql.Date(fechaInicio.getTime()) : null);
+            stmt.setDate(2, fechaFin != null ? new java.sql.Date(fechaFin.getTime()) : null);
+            stmt.setString(3, documentoIdentidad.isEmpty() ? null : documentoIdentidad);
+            stmt.setString(4, nombres.isEmpty() ? null : nombres);
+            total = llenarTabla(modelo, stmt.executeQuery(), columnas);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al filtrar contratos:\n" + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
+        }
+        return total;
+    }
+
+    
+    public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {
+        try (Connection conn = new CConexion().establecerConexion()) {
             for (int i = 0; i < tabla.getRowCount(); i++) {
                 String estado = tabla.getValueAt(i, 5).toString();
                 if (estado.equalsIgnoreCase("PAGADO") || estado.equalsIgnoreCase("CANCELADO")) {
@@ -239,197 +248,42 @@ public class ContratoDAO {
                 int idContratoPeriodo = Integer.parseInt(tabla.getValueAt(i, 0).toString());
                 int horasTrabajadas = Integer.parseInt(tabla.getValueAt(i, 4).toString());
 
-                try (
-                    CallableStatement stmt = conn.prepareCall("{call sp_ActualizarHorasContratoPeriodo(?, ?)}");
-                )
-                {
+                try (CallableStatement stmt = conn.prepareCall("{call sp_ActualizarHorasContratoPeriodo(?, ?)}")) {
                     stmt.setInt(1, idContratoPeriodo);
                     stmt.setInt(2, horasTrabajadas);
                     stmt.execute();
                 }
-
             }
-
             JOptionPane.showMessageDialog(null, "Horas actualizadas correctamente.");
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al guardar horas trabajadas.");
         }
     }
     
-    public int listarContratosFiltrado(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres) {
-        CConexion objetoConexion = new CConexion();
-        
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        String[] columnasDeseadas = {
-            FECHA_INICIO, FECHA_FIN , HORAS_TOTALES, DOCUMENTO_IDENTIDAD, NOMBRES, 
-            APELLIDO_PATERNO, APELLIDO_MATERNO, AREA_NOMBRE, ESPECIALIDAD,
-            TIPO_CONTRATO_NOMBRE, CARGO_NOMBRE
-        };
-
-        for (String col : columnasDeseadas) {
-            modelo.addColumn(col);
-        }
-
-        int totalResultados = 0;
-
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosFiltrados(?, ?, ?, ?)}");
-        )
-        {
-            
-
-            if (fechaInicio != null) {
-                stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
-            } else {
-                stmt.setNull(1, Types.DATE);
-            }
-
-            if (fechaFin != null) {
-                stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
-            } else {
-                stmt.setNull(2, Types.DATE);
-            }
-
-            if (!documentoIdentidad.isEmpty()) {
-                stmt.setString(3, documentoIdentidad);
-            } else {
-                stmt.setNull(3, Types.VARCHAR);
-            }
-
-            if (!nombres.isEmpty()) {
-                stmt.setString(4, nombres);
-            } else {
-                stmt.setNull(4, Types.VARCHAR);
-            }
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Object[] fila = new Object[columnasDeseadas.length];
-                for (int i = 0; i < columnasDeseadas.length; i++) {
-                    fila[i] = rs.getObject(columnasDeseadas[i]);
-                }
-                modelo.addRow(fila);
-                totalResultados++;
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al filtrar contratos:\n" + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
-        }
-
-        return totalResultados;
-    }
     
     public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {
-        CConexion objetoConexion = new CConexion();
-        
-
-        DefaultTableModel modelo = new DefaultTableModel();
-        tabla.setModel(modelo);
-
-        String[] columnasDeseadas = {
-            FECHA_INICIO, FECHA_FIN , HORAS_TOTALES, "HorasTrabajadas", "EstadoPago", DOCUMENTO_IDENTIDAD, NOMBRES,
-            APELLIDO_PATERNO, APELLIDO_MATERNO, AREA_NOMBRE, ESPECIALIDAD,
-            TIPO_CONTRATO_NOMBRE, CARGO_NOMBRE
+        String[] columnas = {
+            FECHA_INICIO, FECHA_FIN, HORAS_TOTALES, "HorasTrabajadas", "EstadoPago",
+            DOCUMENTO_IDENTIDAD, NOMBRES, APELLIDO_PATERNO, APELLIDO_MATERNO,
+            AREA_NOMBRE, ESPECIALIDAD, TIPO_CONTRATO_NOMBRE, CARGO_NOMBRE
         };
 
-        for (String col : columnasDeseadas) {
-            modelo.addColumn(col);
-        }
-        
-        int totalResultados = 0;
+        DefaultTableModel modelo = crearModeloTabla(tabla, columnas);
+        int total = 0;
 
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosPorPeriodo(?)}");
-        )
-        {
+        try (Connection conn = new CConexion().establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosPorPeriodo(?)}")) {
             stmt.setInt(1, idPeriodo);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Object[] fila = new Object[columnasDeseadas.length];
-                for (int i = 0; i < columnasDeseadas.length; i++) {
-                    fila[i] = rs.getObject(columnasDeseadas[i]);
-                }
-                modelo.addRow(fila);
-                totalResultados++;
-            }
-
+            total = llenarTabla(modelo, stmt.executeQuery(), columnas);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al listar contratos por periodo:\n" + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
         }
-        
-        return totalResultados;
+        return total;
     }
 
-    public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
-        comboBox.removeAllItems();
-        comboBox.addItem(new TipoContrato(0, "-- Tipo de Contrato --", "", true, new Date()));
-
-        CConexion objetoConexion = new CConexion();
-        
-
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarTiposContrato}");
-        )
-        {
-            
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                comboBox.addItem(new TipoContrato(
-                        rs.getInt(ID_TIPO_CONTRATO),
-                        rs.getString(NOMBRE),
-                        "", true, new Date()
-                ));
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar tipos de contrato: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void cargarCargos(JComboBox<Cargo> comboBox) {
-        comboBox.removeAllItems();
-        comboBox.addItem(new Cargo(0, "-- Cargo --", "", true, new Date()));
-
-        CConexion objetoConexion = new CConexion();
-        
-
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ListarCargos}");
-        )
-        {
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                comboBox.addItem(new Cargo(
-                        rs.getInt(ID_CARGO),
-                        rs.getString(NOMBRE),
-                        "", true, new Date()
-                ));
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar cargos: " + e.getMessage(), ERROR, JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
     public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {
-        String mensaje;
-
         try (Connection conn = new CConexion().establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleContrato(?, ?, ?, ?, ?, ?)}");
-        ) {
-            
+            CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleContrato(?, ?, ?, ?, ?, ?)}")) {
 
             stmt.setInt(1, detalle.getIdContrato());
             stmt.setString(2, detalle.getTipoSeguroSalud());
@@ -437,18 +291,64 @@ public class ContratoDAO {
             stmt.setBoolean(4, detalle.isTieneSeguroDeAccidentes());
             stmt.setBoolean(5, detalle.isTieneAsignacionFamiliar());
             stmt.setString(6, detalle.getDescripcion());
-
             stmt.execute();
 
-            mensaje = "Detalle de contrato registrado correctamente.";
-            return new ResultadoOperacion(true, detalle.getIdContrato(), mensaje);
-
+            return new ResultadoOperacion(true, detalle.getIdContrato(), "Detalle de contrato registrado correctamente.");
         } catch (SQLException e) {
-            mensaje = "Error al registrar detalle contrato: " + e.getMessage();
-            return new ResultadoOperacion(false, -1, mensaje);
+            return new ResultadoOperacion(false, -1, "Error al registrar detalle contrato: " + e.getMessage());
         }
     }
 
+    public boolean actualizarDetalleContrato(DetalleContrato detalle) {
+        try (Connection conn = new CConexion().establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ActualizarDetalleContrato(?, ?, ?, ?, ?, ?)}")) {
+
+            stmt.setInt(1, detalle.getIdDetalleContrato());
+            stmt.setString(2, detalle.getTipoSeguroSalud());
+            stmt.setBoolean(3, detalle.isTieneSeguroDeVida());
+            stmt.setBoolean(4, detalle.isTieneSeguroDeAccidentes());
+            stmt.setBoolean(5, detalle.isTieneAsignacionFamiliar());
+            stmt.setString(6, detalle.getDescripcion());
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar detalle del contrato: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public Contrato obtenerContratoPorId(int idContrato) {
+        Contrato contrato = null;
+        try (Connection conn = new CConexion().establecerConexion();
+            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPorId(?)}")) {
+
+            stmt.setInt(1, idContrato);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                contrato = new Contrato();
+                contrato.setIdContrato(rs.getInt(ID_CONTRATO));
+                contrato.setIdTrabajador(rs.getInt("IdTrabajador"));
+                contrato.setFechaInicio(rs.getDate(FECHA_INICIO));
+                contrato.setFechaFin(rs.getDate(FECHA_FIN));
+                contrato.setSalarioBase(rs.getDouble("SalarioBase"));
+                contrato.setHorasTotales(rs.getInt(HORAS_TOTALES));
+                contrato.setDescripcion(rs.getString(DESCRIPCION));
+                contrato.setIdArea(rs.getInt(ID_AREA));
+                contrato.setIdEspecialidad(rs.getInt(ID_ESPECIALIDAD));
+                contrato.setIdTipoContrato(rs.getInt(ID_TIPO_CONTRATO));
+                contrato.setIdCargo(rs.getInt(ID_CARGO));
+                contrato.setEstadoContrato(rs.getString("EstadoContrato"));
+                contrato.setEstado(rs.getBoolean(ESTADO));
+                contrato.setFechaRegistro(rs.getTimestamp(FECHA_REGISTRO));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener contrato por ID: " + e.getMessage());
+        }
+        return contrato;
+    }
+
+    
+    
     public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {
         Contrato contrato = null;
 
@@ -527,30 +427,6 @@ public class ContratoDAO {
         return detalle;
     }
     
-    public boolean actualizarDetalleContrato(DetalleContrato detalle) {
-        CConexion objetoConexion = new CConexion();
-        
-
-        try (
-            Connection conn = objetoConexion.establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ActualizarDetalleContrato(?, ?, ?, ?, ?, ?)}");
-        )
-        {
-            stmt.setInt(1, detalle.getIdDetalleContrato());
-            stmt.setString(2, detalle.getTipoSeguroSalud());
-            stmt.setBoolean(3, detalle.isTieneSeguroDeVida());
-            stmt.setBoolean(4, detalle.isTieneSeguroDeAccidentes());
-            stmt.setBoolean(5, detalle.isTieneAsignacionFamiliar());
-            stmt.setString(6, detalle.getDescripcion());
-
-            stmt.execute();
-            return true;
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al actualizar detalle del contrato: " + e.getMessage());
-            return false;
-        }
-    }
     
     public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
         double salario = -1;
@@ -575,38 +451,5 @@ public class ContratoDAO {
         }
 
         return salario;
-    }
-    
-    public Contrato obtenerContratoPorId(int idContrato) {
-        Contrato contrato = null;
-        try (
-            Connection conn = new CConexion().establecerConexion();
-            CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPorId(?)}");
-        ) {
-            
-            stmt.setInt(1, idContrato);
-
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                contrato = new Contrato();
-                contrato.setIdContrato(rs.getInt(ID_CONTRATO));
-                contrato.setIdTrabajador(rs.getInt("IdTrabajador"));
-                contrato.setFechaInicio(rs.getDate(FECHA_INICIO));
-                contrato.setFechaFin(rs.getDate(FECHA_FIN ));
-                contrato.setSalarioBase(rs.getDouble("SalarioBase"));
-                contrato.setHorasTotales(rs.getInt(HORAS_TOTALES));
-                contrato.setDescripcion(rs.getString(DESCRIPCION));
-                contrato.setIdArea(rs.getInt(ID_AREA));
-                contrato.setIdEspecialidad(rs.getInt(ID_ESPECIALIDAD));
-                contrato.setIdTipoContrato(rs.getInt(ID_TIPO_CONTRATO));
-                contrato.setIdCargo(rs.getInt(ID_CARGO));
-                contrato.setEstadoContrato(rs.getString("EstadoContrato"));
-                contrato.setEstado(rs.getBoolean(ESTADO));
-                contrato.setFechaRegistro(rs.getTimestamp(FECHA_REGISTRO));
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener contrato por ID: " + e.getMessage());
-        }
-        return contrato;
     }
 }
