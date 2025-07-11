@@ -14,8 +14,6 @@ import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioLl
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioRegistro;
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioCalculo.Resultado;
-import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroDescripcion;
-import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroNumerico;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroSalario;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -29,9 +27,6 @@ import javax.swing.*;
 
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
-
-import javax.swing.table.DefaultTableModel;
-
 import javax.swing.text.AbstractDocument;
 
 public class FrmContrato extends javax.swing.JFrame {   
@@ -43,7 +38,6 @@ public class FrmContrato extends javax.swing.JFrame {
     private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
 
     private static final long serialVersionUID = 1L;
-    transient Utilidades utilidades = new Utilidades();
     private transient Trabajador trabajadorActual;
     private transient Contrato contratoActual;
     private transient DetalleContrato detalleContratoActual;
@@ -94,27 +88,21 @@ public class FrmContrato extends javax.swing.JFrame {
     }
     
     private void inicializarCamposValidados(){
-        ((AbstractDocument) txtDNI.getDocument()).setDocumentFilter(new FiltroNumerico(9));
-        ((AbstractDocument) txtHorasTotales.getDocument()).setDocumentFilter(new FiltroNumerico(3));
-        ((AbstractDocument) jtxDescripcion.getDocument()).setDocumentFilter(new FiltroDescripcion());
+        Utilidades.aplicarFiltroNumerico(9, txtDNI, txtDocumentoBuscar);
+        Utilidades.aplicarFiltroNumerico(3, txtHorasTotales);
+        Utilidades.aplicarFiltroTextoGeneral(txtNombres, txtNombresBuscar, jtxDescripcion);
         ((AbstractDocument) txtSalario.getDocument()).setDocumentFilter(new FiltroSalario());
         
-        ((AbstractDocument) txtDocumentoBuscar.getDocument()).setDocumentFilter(new FiltroNumerico(9));
-        ((AbstractDocument) txtNombresBuscar.getDocument()).setDocumentFilter(new FiltroDescripcion());
     }
     
     public void inicializarTablaContrato(){
-            DefaultTableModel modelo = new DefaultTableModel();
             String[] columnasDeseadas = {
                 "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
                 "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
                 "TipoContratoNombre", "CargoNombre"
             };
-            for (String col : columnasDeseadas) {
-                modelo.addColumn(col);
-            }
-            jtbTabla.setModel(modelo);          
-            utilidades.ajustarTabla(jtbTabla);
+
+            Utilidades.configurarTabla(jtbTabla, columnasDeseadas);
     }
 
     private void configurarListeners() {
@@ -198,8 +186,6 @@ public class FrmContrato extends javax.swing.JFrame {
         jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
     }
     
-    
-
     private void validarHorasTotales() {
         String horasTexto = txtHorasTotales.getText().trim();
         try {
@@ -332,13 +318,15 @@ public class FrmContrato extends javax.swing.JFrame {
     }
     
     private void limpiar(){
-        txtDNI.setText("");
-        txtNombres.setText("");
+        Utilidades.limpiarCamposTexto(
+            txtDNI, txtNombres, txtHorasTotales, txtSalario, jtxDescripcion, 
+            txtDocumentoBuscar, txtNombresBuscar
+        );
+        
         cmbArea.setSelectedIndex(0);
         cmbCargo.setSelectedIndex(0);
         cmbTipoContrato.setSelectedIndex(0);
-        txtHorasTotales.setText("");
-        txtSalario.setText("");
+        
         jdcFechaInicio.setDate(null);
         jdcFechaFin.setDate(null);
         rtn3meses.setSelected(false);
@@ -347,7 +335,7 @@ public class FrmContrato extends javax.swing.JFrame {
         jcbAsignacion.setSelected(false);
         jcbSeguroAccidentes.setSelected(false);
         jcbSeguroVida.setSelected(false);
-        jtxDescripcion.setText("");     
+        
         btnRegistrar.setEnabled(false);
     }
     
@@ -466,7 +454,7 @@ public class FrmContrato extends javax.swing.JFrame {
     public void listarContratosTabla(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres){
         int resultados = negocioContratoListado.listarContratosFiltrado(tabla, fechaInicio, fechaFin, documentoIdentidad, nombres);
         
-        utilidades.ajustarTabla(tabla);
+        Utilidades.ajustarTabla(tabla);
 
         lblMensajeBuscar.setText(
             switch (resultados) {

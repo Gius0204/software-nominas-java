@@ -3,18 +3,21 @@ package com.grupo01.softwarenominas.capaentidad;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Builder;
 
 import java.util.Date;
-import java.util.Objects;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "idEspecialidad")
+@ToString(of = "nombre")
 @Builder
 public class Especialidad {
     private int idEspecialidad;
@@ -45,22 +48,4 @@ public class Especialidad {
         this.fechaRegistro = fechaRegistro;
     }
     
-    @Override
-    public String toString(){
-        return nombre;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Especialidad other = (Especialidad) obj;
-        return idEspecialidad == other.idEspecialidad;
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(idEspecialidad);
-    }
-
 }

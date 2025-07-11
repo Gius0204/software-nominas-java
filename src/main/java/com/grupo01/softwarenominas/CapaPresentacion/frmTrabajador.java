@@ -4,15 +4,11 @@ import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegoc
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioRegistro;
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioValidacion;
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
-import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroDescripcion;
-import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroNumerico;
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
 import java.util.Date;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.AbstractDocument;
-
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITrabajador;
+import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITablas;
 
 public class FrmTrabajador extends javax.swing.JFrame {
     private final transient TrabajadorNegocioListado negocioListado = new TrabajadorNegocioListado();
@@ -22,8 +18,6 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
     private transient Trabajador trabajadorActual;
     private boolean modoEdicion = false;
-
-    transient Utilidades utilidades = new Utilidades();
     
     public FrmTrabajador() {
         initComponents();
@@ -32,36 +26,11 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
-        inicializarCamposValidados();
-        inicializarTablaTrabajadores();
+        Utilidades.aplicarFiltroNumerico(9, txtDocumentoIdentidad,txtTelefono);
+        Utilidades.aplicarFiltroTextoGeneral(txtNombres, txtApellidoPaterno, txtApellidoMaterno, txtDireccion, txtDescripcion);
+        Utilidades.configurarTabla(tableTrabajador, ConstantesUITablas.COLUMNAS_TRABAJADOR);
         listarTrabajadoresTabla(null, null);
         configurarListeners();
-    }
-    
-    private void inicializarCamposValidados(){
-        ((AbstractDocument) txtNombres.getDocument()).setDocumentFilter(new FiltroDescripcion());
-        ((AbstractDocument) txtApellidoPaterno.getDocument()).setDocumentFilter(new FiltroDescripcion());
-        ((AbstractDocument) txtApellidoMaterno.getDocument()).setDocumentFilter(new FiltroDescripcion());
-        ((AbstractDocument) txtDocumentoIdentidad.getDocument()).setDocumentFilter(new FiltroNumerico(9));
-        
-        ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(new FiltroNumerico(9));
-        ((AbstractDocument) txtDireccion.getDocument()).setDocumentFilter(new FiltroDescripcion());
-        ((AbstractDocument) txtDescripcion.getDocument()).setDocumentFilter(new FiltroDescripcion());
-
-    }
-    
-    public void inicializarTablaTrabajadores(){
-        DefaultTableModel modelo = new DefaultTableModel();
-        String[] columnasDeseadas = {
-            "Nombres", "ApellidoPaterno", "ApellidoMaterno", 
-            "TipoDocumento", "DocumentoIdentidad", "Telefono", "CorreoElectronico"
-        };
-        for (String col : columnasDeseadas) {
-            modelo.addColumn(col);
-        }
-        tableTrabajador.setModel(modelo);
-
-        utilidades.ajustarTabla(tableTrabajador);
     }
     
     private void configurarListeners() {
@@ -109,7 +78,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
             resultados = negocioListado.listarTrabajadoresFiltrado(tableTrabajador);
         }
         
-        utilidades.ajustarTabla(tableTrabajador);
+        Utilidades.ajustarTabla(tableTrabajador);
 
         lblMensajeBuscar.setText(
             switch (resultados) {
@@ -158,18 +127,12 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }
     
     private void limpiarCampos() {
-        txtNombres.setText("");
-        txtApellidoPaterno.setText("");
-        txtApellidoMaterno.setText("");
-        txtDocumentoIdentidad.setText("");
-        txtTelefono.setText("");
-        txtCorreo.setText("");
-        txtDireccion.setText("");
-        txtDescripcion.setText("");
+        Utilidades.limpiarCamposTexto(txtNombres, txtApellidoPaterno, txtApellidoMaterno,
+                txtDocumentoIdentidad, txtTelefono, txtCorreo, txtDireccion, txtDescripcion);
+                
         dcFechaNacimiento.setDate(null);
 
-        rbDNI.setSelected(true);
-        rbMasculino.setSelected(true);
+        Utilidades.setSeleccionado(true, rbDNI,rbMasculino);
 
         trabajadorActual = null;
         modoEdicion = false;

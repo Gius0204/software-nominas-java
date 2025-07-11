@@ -2,6 +2,7 @@ package com.grupo01.softwarenominas.capaentidad;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Setter
 @Builder
 @NoArgsConstructor
+@ToString(of = "nombre")
 @AllArgsConstructor
 public class PeriodoPago {
     private int idPeriodoPago;
@@ -21,9 +23,4 @@ public class PeriodoPago {
     private String descripcion;
     private boolean estado;
     private Date fechaRegistro;
-
-    @Override
-    public String toString() {
-        return nombre;
-    }
 }

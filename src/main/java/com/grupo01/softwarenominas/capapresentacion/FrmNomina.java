@@ -17,7 +17,6 @@ import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegoc
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUINomina;
 
@@ -30,8 +29,6 @@ public class FrmNomina extends javax.swing.JFrame {
     private final transient NominaNegocioRegistro negocioNominaRegistro = new NominaNegocioRegistro();
     private final transient NominaNegocioLlenado negocioNominaLlenado = new NominaNegocioLlenado();
     private final transient NominaNegocioVerificacion negocioNominaVerificacion = new NominaNegocioVerificacion();
-
-    transient Utilidades utilidades = new Utilidades();
 
 
     public FrmNomina() {
@@ -67,11 +64,11 @@ public class FrmNomina extends javax.swing.JFrame {
     }
     
     private void listarContratosTabla(){
-        int idPeriodo = utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago2);
+        int idPeriodo = Utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago2);
         if (idPeriodo > 0) {
             int resultados = negocioContratoListado.listarContratosPorPeriodo(tableContrato, idPeriodo);
 
-            utilidades.ajustarTabla(tableContrato);
+            Utilidades.ajustarTabla(tableContrato);
 
             lblContratos.setText(
                 switch (resultados) {
@@ -87,28 +84,23 @@ public class FrmNomina extends javax.swing.JFrame {
     }
     
     private void inicializarTablaContrato(){
-            DefaultTableModel modelo = new DefaultTableModel();
             String[] columnasDeseadas = {
                 "FechaInicio", "FechaFin", "HorasTotales", "HorasTrabajadas", "EstadoPago", "DocumentoIdentidad", "Nombres",
                 "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
                 "TipoContratoNombre", "CargoNombre"
             };
-            for (String col : columnasDeseadas) {
-                modelo.addColumn(col);
-            }
-            tableContrato.setModel(modelo);
             
-            utilidades.ajustarTabla(tableContrato);
+            Utilidades.configurarTabla(tableContrato, columnasDeseadas);
 
             lblContratos.setText("Seleccione un Periodo antes, por favor");
     }
     
     private void listarNominasTabla(){
-        int idPeriodo = utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago1);
+        int idPeriodo = Utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago1);
         if (idPeriodo > 0) {
             int resultados = negocioNominaListado.listarNominasPorPeriodo(tableNominas, idPeriodo);
 
-            utilidades.ajustarTabla(tableNominas);
+            Utilidades.ajustarTabla(tableNominas);
 
             lblNominas.setText(
                 switch (resultados) {
@@ -124,8 +116,6 @@ public class FrmNomina extends javax.swing.JFrame {
     }
     
     private void inicializarTablaNominas(){
-        DefaultTableModel modelo = new DefaultTableModel();
-
         String[] columnasDeseadas = {
             "Nombres", "DocumentoIdentidad", "PeriodoPago", "HorasTotales", "HorasTrabajadas", "EstadoPago",
             "SalarioBase", "PagoHorasExtras", "GratificacionLegal","AsignacionFamiliar", "CTS", "TotalIngresos", 
@@ -133,14 +123,7 @@ public class FrmNomina extends javax.swing.JFrame {
             "TotalDescuentos", "SueldoNeto", "MetodoPago"
         };
 
-
-        for (String col : columnasDeseadas) {
-            modelo.addColumn(col);
-        }
-
-        tableNominas.setModel(modelo);
-
-        utilidades.ajustarTabla(tableNominas);
+        Utilidades.configurarTabla(tableNominas, columnasDeseadas);
 
         lblNominas.setText("Seleccione un Periodo antes, por favor");
     }
@@ -168,7 +151,7 @@ public class FrmNomina extends javax.swing.JFrame {
         }
 
         if (!trabajadoresConDeuda.isEmpty()) {
-            mostrarMensaje(utilidades.construirMensajeHtmlLista(trabajadoresConDeuda));
+            mostrarMensaje(Utilidades.construirMensajeHtmlLista(trabajadoresConDeuda));
         } else {
             mostrarMensaje("Error: Hay períodos anteriores sin pagar. Verifique todos los contratos.");
         }

@@ -6,15 +6,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.Builder;
 
 import java.util.Date;
-import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "idArea")
+@ToString(of = "nombre")
 @Builder
 public class Area {
     private int idArea;
@@ -27,23 +30,5 @@ public class Area {
         this.idArea = idArea;
         this.nombre = nombre;
     }
-
-    @Override
-    public String toString(){
-        return nombre;
-    }
     
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Area other = (Area) obj;
-        return idArea == other.idArea;
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(idArea);
-    }
-
 }

@@ -2,7 +2,7 @@ package com.grupo01.softwarenominas.capapresentacion.validacionespresentacion;
 
 import javax.swing.text.*;
 
-public class FiltroDescripcion extends DocumentFilter {
+public class FiltroTexto extends DocumentFilter {
     private static final int MAX = 250;
 
     @Override
