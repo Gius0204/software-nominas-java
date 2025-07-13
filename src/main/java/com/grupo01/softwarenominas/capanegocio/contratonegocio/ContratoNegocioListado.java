@@ -2,44 +2,20 @@
 package com.grupo01.softwarenominas.capanegocio.contratonegocio;
 
 import javax.swing.JTable;
-import com.grupo01.softwarenominas.capaentidad.Trabajador;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class ContratoNegocioListado {
-    private final ContratoDAO contratoDAO = new ContratoDAO();
-    private final TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
-    
-    
-    public record Resultado(Trabajador trabajador, String texto) {}
-    
-    public Resultado buscarTrabajadorPorDocumentoIdentidad(String documentoIdentidad) {
-        if (documentoIdentidad.isEmpty()) return new Resultado(null, "");
-        
-        Trabajador t = trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
-        String texto = "";
-
-        if (t != null) {
-            texto = "Trabajador Encontrado";
-
-        } else {
-            texto = "No se encontró al trabajador, vuelva a intentarlo antes de registrar el contrato.";
-        }
-        
-        return new Resultado(t,texto);
+    private final ContratoDAO contratoDAO;
+    public ContratoNegocioListado() {
+        this.contratoDAO = new ContratoDAO();
     }
-    
-    
-    public Trabajador buscarPorDocumentoIdentidad(String documentoIdentidad) {
-        try{
-            return trabajadorDAO.buscarPorDocumentoIdentidad(documentoIdentidad);
-        }
-        catch (Exception ex) {
-            return null;
-        }
-    }
-    
-    
 
     public int listarContratosPorPeriodo(JTable tabla, int idPeriodo) {
         return contratoDAO.listarContratosPorPeriodo(tabla, idPeriodo);

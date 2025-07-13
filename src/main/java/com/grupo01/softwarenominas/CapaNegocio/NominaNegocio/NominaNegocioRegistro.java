@@ -9,10 +9,21 @@ import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
 import com.grupo01.softwarenominas.capapersistencia.NominaDAO;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import com.grupo01.softwarenominas.capaentidad.DetalleNomina;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class NominaNegocioRegistro {  
-    NominaDAO dao = new NominaDAO();
+    private final NominaDAO dao;
+    public NominaNegocioRegistro() {
+        this.dao = new NominaDAO();
+    }
     
     public Nomina procesarNominaCompleta(ContratoPeriodo cp, DetalleContrato detalleContrato, String metodoPago, String tipoSeguro) {
         Contrato contrato = cp.getContrato();

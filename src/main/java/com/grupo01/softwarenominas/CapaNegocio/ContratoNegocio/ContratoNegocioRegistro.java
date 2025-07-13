@@ -6,14 +6,21 @@ import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.DetalleContrato;
 import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
-import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class ContratoNegocioRegistro {
     
-    ContratoDAO contratoDAO = new ContratoDAO();
-    TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
+    private final ContratoDAO contratoDAO;
       
-    
+    public ContratoNegocioRegistro() {
+        this.contratoDAO = new ContratoDAO();
+    }
     
     public String actualizarContratoMensaje(Contrato c){
         String mensaje = "";

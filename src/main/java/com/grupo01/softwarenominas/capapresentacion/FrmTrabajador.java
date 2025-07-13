@@ -461,7 +461,9 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 listarTrabajadoresTabla(null, null);
             }
         } else {
-            this.dispose(); // Cierra ventana
+            FrmMenu menu = new FrmMenu();
+            menu.setVisible(true);
+            this.setVisible(false);
         }        
     }//GEN-LAST:event_btnRegresarActionPerformed
 

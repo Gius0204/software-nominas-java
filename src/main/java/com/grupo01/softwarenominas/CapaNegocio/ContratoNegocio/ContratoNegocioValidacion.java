@@ -4,11 +4,7 @@ package com.grupo01.softwarenominas.capanegocio.contratonegocio;
 public class ContratoNegocioValidacion {
     
     public boolean validarDocumentoIdentidad (String texto){
-        boolean esValido = true;
-
-        if (!texto.matches("^\\d{8,9}$")) esValido = false;
-        
-        return esValido;       
+        return texto.matches("^\\d{8,9}$");     
     }
     
     public boolean validarHoras(String horasStr) {
@@ -21,11 +17,7 @@ public class ContratoNegocioValidacion {
     }
     
     public boolean validarDescripcion (String texto){
-        boolean esValido = true;
-
-        if (texto.length() > 250 || !texto.matches("[a-zA-Z0-9\\s]*")) esValido = false;
-        
-        return esValido;       
+        return texto.length() <= 250 && texto.matches("[\\p{L}0-9\\s]*");    
     }
     
     public boolean validarSalario(String valor) {
@@ -39,7 +31,7 @@ public class ContratoNegocioValidacion {
     
     public boolean validarSalario (String tipo, String salarioTexto){
         if (tipo.equalsIgnoreCase("SERVICIO EXTERNO")) {
-            validarSalario(salarioTexto);
+            return validarSalario(salarioTexto);
         }
         return true;
     }  

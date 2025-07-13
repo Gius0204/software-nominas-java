@@ -9,14 +9,26 @@ import java.util.regex.Pattern;
 import com.grupo01.softwarenominas.capaentidad.Trabajador;
 import com.grupo01.softwarenominas.capapersistencia.TrabajadorDAO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author Usuario
  */
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class TrabajadorNegocioValidacion {
-    private final TrabajadorDAO trabajadorDAO = new TrabajadorDAO();
+    private final TrabajadorDAO trabajadorDAO;
     private static final Pattern CORREO_PATTERN = Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
 
+    public TrabajadorNegocioValidacion() {
+        this.trabajadorDAO = new TrabajadorDAO();
+    }
+    
     public String validarTrabajador(Trabajador t) {
         try {
             if (t == null) {

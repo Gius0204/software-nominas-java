@@ -14,11 +14,21 @@ import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
 import com.grupo01.softwarenominas.capapersistencia.ContratoPeriodoDAO;
 
-public class ContratoNegocioLlenado {
-    private final ContratoDAO contratoDAO = new ContratoDAO();
-    
-    private final ContratoPeriodoDAO contratoPeriodoDAO = new ContratoPeriodoDAO();
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+public class ContratoNegocioLlenado {
+    private final ContratoDAO contratoDAO;
+    private final ContratoPeriodoDAO contratoPeriodoDAO;
+
+    public ContratoNegocioLlenado() {
+        this.contratoDAO = new ContratoDAO();
+        this.contratoPeriodoDAO = new ContratoPeriodoDAO();
+    }
     
     public void cargarAreas(JComboBox<Area> comboBoxArea) {
         try{

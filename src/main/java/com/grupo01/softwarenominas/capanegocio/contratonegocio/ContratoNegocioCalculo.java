@@ -6,12 +6,24 @@ import com.grupo01.softwarenominas.capaentidad.Cargo;
 import com.grupo01.softwarenominas.capaentidad.Especialidad;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capapersistencia.ContratoDAO;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Calendar;
 import java.util.Date;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class ContratoNegocioCalculo {
     
-    ContratoDAO contratoDAO = new ContratoDAO();
+    private final ContratoDAO contratoDAO;
+
+    public ContratoNegocioCalculo() {
+        this.contratoDAO = new ContratoDAO();
+    }
     
     public Date calcularFechaFin(Date fechaInicio, int meses) {
         if (fechaInicio == null) {

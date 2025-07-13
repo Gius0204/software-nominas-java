@@ -21,6 +21,10 @@ import com.grupo01.softwarenominas.capaentidad.Especialidad;
 import com.grupo01.softwarenominas.capaentidad.TipoContrato;
 import com.grupo01.softwarenominas.capanegocio.ResultadoOperacion;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.APELLIDO_MATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.APELLIDO_PATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.AREA_NOMBRE;
@@ -43,7 +47,14 @@ import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDCon
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.ID_AREA;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDContrato.NOMBRE;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class ContratoDAO {
+    private final CConexion conexion;
+    public ContratoDAO() {
+        this.conexion = new CConexion();
+    }
 
     private DefaultTableModel crearModeloTabla(JTable tabla, String[] columnas) {
         DefaultTableModel modelo = new DefaultTableModel();
@@ -83,8 +94,7 @@ public class ContratoDAO {
     
 
     public void cargarAreas(JComboBox<Area> comboBoxArea) {
-        CConexion objetoConexion = new CConexion();
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarAreas}")) {
             cargarComboBox(comboBoxArea, stmt,
                 rs -> new Area(rs.getInt("IdArea"), rs.getString(NOMBRE)),
@@ -96,8 +106,7 @@ public class ContratoDAO {
 
 
     public void cargarEspecialidadesPorArea(JComboBox<Especialidad> comboBoxEspecialidad, int idArea) {
-        CConexion objetoConexion = new CConexion();
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarEspecialidadesPorArea(?)}")) {
             stmt.setInt(1, idArea);
             cargarComboBox(comboBoxEspecialidad, stmt,
@@ -109,8 +118,7 @@ public class ContratoDAO {
     }
 
     public void cargarTiposContrato(JComboBox<TipoContrato> comboBox) {
-        CConexion objetoConexion = new CConexion();
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarTiposContrato}")) {
             cargarComboBox(comboBox, stmt,
                 rs -> new TipoContrato(rs.getInt(ID_TIPO_CONTRATO), rs.getString(NOMBRE), "", true, new Date()),
@@ -121,8 +129,7 @@ public class ContratoDAO {
     }
 
     public void cargarCargos(JComboBox<Cargo> comboBox) {
-        CConexion objetoConexion = new CConexion();
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ListarCargos}")) {
             cargarComboBox(comboBox, stmt,
                 rs -> new Cargo(rs.getInt(ID_CARGO), rs.getString(NOMBRE), "", true, new Date()),
@@ -135,7 +142,7 @@ public class ContratoDAO {
     public ResultadoOperacion registrarContrato(Contrato c) {
         int idGenerado;
         String mensaje;
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_CrearContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
             stmt.setInt(1, c.getIdTrabajador());
@@ -162,7 +169,7 @@ public class ContratoDAO {
     }
 
     public boolean actualizarContrato(Contrato c) {
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ActualizarContrato(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
             stmt.setInt(1, c.getIdContrato());
             stmt.setInt(2, c.getIdTipoContrato());
@@ -183,7 +190,6 @@ public class ContratoDAO {
     }
 
     public void listarContratoPeriodosPorContrato(JTable tabla, int idContrato) {
-        CConexion objetoConexion = new CConexion();
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -193,7 +199,7 @@ public class ContratoDAO {
         };
         tabla.setModel(modelo);
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPeriodosPorContrato(?)}")) {
 
             stmt.setInt(1, idContrato);
@@ -223,7 +229,7 @@ public class ContratoDAO {
         DefaultTableModel modelo = crearModeloTabla(tabla, columnas);
 
         int total = 0;
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosFiltrados(?, ?, ?, ?)}")) {
             stmt.setDate(1, fechaInicio != null ? new java.sql.Date(fechaInicio.getTime()) : null);
             stmt.setDate(2, fechaFin != null ? new java.sql.Date(fechaFin.getTime()) : null);
@@ -238,7 +244,7 @@ public class ContratoDAO {
 
     
     public void guardarHorasTrabajadasDesdeTabla(JTable tabla) {
-        try (Connection conn = new CConexion().establecerConexion()) {
+        try (Connection conn = this.conexion.establecerConexion()) {
             for (int i = 0; i < tabla.getRowCount(); i++) {
                 String estado = tabla.getValueAt(i, 5).toString();
                 if (estado.equalsIgnoreCase("PAGADO") || estado.equalsIgnoreCase("CANCELADO")) {
@@ -271,7 +277,7 @@ public class ContratoDAO {
         DefaultTableModel modelo = crearModeloTabla(tabla, columnas);
         int total = 0;
 
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratosPorPeriodo(?)}")) {
             stmt.setInt(1, idPeriodo);
             total = llenarTabla(modelo, stmt.executeQuery(), columnas);
@@ -282,7 +288,7 @@ public class ContratoDAO {
     }
 
     public ResultadoOperacion registrarDetalleContrato(DetalleContrato detalle) {
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_CrearDetalleContrato(?, ?, ?, ?, ?, ?)}")) {
 
             stmt.setInt(1, detalle.getIdContrato());
@@ -300,7 +306,7 @@ public class ContratoDAO {
     }
 
     public boolean actualizarDetalleContrato(DetalleContrato detalle) {
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ActualizarDetalleContrato(?, ?, ?, ?, ?, ?)}")) {
 
             stmt.setInt(1, detalle.getIdDetalleContrato());
@@ -319,7 +325,7 @@ public class ContratoDAO {
 
     public Contrato obtenerContratoPorId(int idContrato) {
         Contrato contrato = null;
-        try (Connection conn = new CConexion().establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPorId(?)}")) {
 
             stmt.setInt(1, idContrato);
@@ -352,11 +358,9 @@ public class ContratoDAO {
     public Contrato obtenerContratoPorDocumentoIdentidad(String documentoIdentidad) {
         Contrato contrato = null;
 
-        CConexion objetoConexion = new CConexion();
-        
 
         try (
-            Connection conn = objetoConexion.establecerConexion();
+            Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPorDocumentoIdentidad(?)}");
         )
         {
@@ -395,11 +399,9 @@ public class ContratoDAO {
     
     public DetalleContrato obtenerDetalleContratoPorDocumentoIdentidad(String documentoIdentidad) {
         DetalleContrato detalle = null;
-
-        CConexion objetoConexion = new CConexion();
         
         try (
-            Connection conn = objetoConexion.establecerConexion();
+            Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerDetalleContratoPorDocumentoIdentidad(?)}");
         )
         {
@@ -430,9 +432,8 @@ public class ContratoDAO {
     
     public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
         double salario = -1;
-        CConexion objetoConexion = new CConexion();
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerSalarioBase(?, ?, ?, ?)}");
         ) {
             

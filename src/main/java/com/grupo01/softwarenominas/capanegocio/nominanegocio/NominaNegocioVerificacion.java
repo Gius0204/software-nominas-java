@@ -5,9 +5,19 @@ import java.sql.SQLException;
 
 import com.grupo01.softwarenominas.capapersistencia.NominaDAO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class NominaNegocioVerificacion {
 
-    private final NominaDAO nominaDAO = new NominaDAO();
+    private final NominaDAO nominaDAO;
+    public NominaNegocioVerificacion() {
+        this.nominaDAO = new NominaDAO();
+    }
     
     public boolean existePeriodoAnteriorPendiente(int idPeriodoPago) {
         try {
