@@ -13,6 +13,11 @@ import javax.swing.table.DefaultTableModel;
 
 import com.grupo01.softwarenominas.capaconexion.CConexion;
 import com.grupo01.softwarenominas.capaentidad.Trabajador;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.APELLIDO_MATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.APELLIDO_PATERNO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.CORREO_ELECTRONICO;
@@ -21,7 +26,14 @@ import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTra
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.TELEFONO;
 import static com.grupo01.softwarenominas.capapersistencia.utils.ConstantesBDTrabajador.TIPO_DOCUMENTO;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class TrabajadorDAO {
+    private final CConexion conexion;
+    public TrabajadorDAO() {
+        this.conexion = new CConexion();
+    }
 
     private static final String[] COLUMNAS_DESEADAS = {
         NOMBRES, APELLIDO_PATERNO, APELLIDO_MATERNO,
@@ -82,14 +94,13 @@ public class TrabajadorDAO {
     }
 
     public int listarTrabajadoresFiltrado(JTable paramTablaTrabajadores) {
-        CConexion objetoConexion = new CConexion();
         DefaultTableModel modelo = new DefaultTableModel();
         paramTablaTrabajadores.setModel(modelo);
         configurarColumnasTabla(modelo);
 
         int totalResultados = 0;
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadores}")) {
 
             boolean tieneResultados = stmt.execute();
@@ -110,14 +121,13 @@ public class TrabajadorDAO {
     }
     
     public int listarTrabajadoresFiltradoPorFecha(JTable tabla, Date fechaInicio, Date fechaFin) {
-        CConexion objetoConexion = new CConexion();
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.setModel(modelo);
         configurarColumnasTabla(modelo);
 
         int totalResultados = 0;
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadoresPorFechasRegistro(?, ?)}")) {
 
             stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
@@ -138,9 +148,8 @@ public class TrabajadorDAO {
     }
 
     public boolean registrarTrabajador(Trabajador t) {
-        CConexion objetoConexion = new CConexion();
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_CrearTrabajador(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
             setParamsTrabajador(stmt, t, false);
@@ -154,9 +163,8 @@ public class TrabajadorDAO {
     }
 
     public boolean actualizarTrabajador(Trabajador t) {
-        CConexion objetoConexion = new CConexion();
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ActualizarTrabajador(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
             setParamsTrabajador(stmt, t, true);
@@ -192,9 +200,8 @@ public class TrabajadorDAO {
     
     public Trabajador buscarPorDocumentoIdentidad(String documentoIdentidad){
         Trabajador trabajador = null;
-        CConexion objetoConexion = new CConexion();
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerTrabajadoresPorDocumentoIdentidad(?)}")) {
 
             stmt.setString(1, documentoIdentidad);
@@ -212,9 +219,8 @@ public class TrabajadorDAO {
     
     
     public boolean eliminarTrabajador(int idTrabajador) {
-        CConexion objetoConexion = new CConexion();
 
-        try (Connection conn = objetoConexion.establecerConexion();
+        try (Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_EliminarTrabajador(?)}")) {
 
             stmt.setInt(1, idTrabajador);

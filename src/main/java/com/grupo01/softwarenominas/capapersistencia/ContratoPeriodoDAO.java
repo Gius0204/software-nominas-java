@@ -12,13 +12,29 @@ import com.grupo01.softwarenominas.capaentidad.Contrato;
 import com.grupo01.softwarenominas.capaentidad.ContratoPeriodo;
 import com.grupo01.softwarenominas.capaentidad.PeriodoPago;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class ContratoPeriodoDAO {
+    private final CConexion conexion;
+    private final ContratoDAO contratoDAO;
+    private final PeriodoPagoDAO periodoDAO;
+
+    public ContratoPeriodoDAO() {
+        this.conexion = new CConexion();
+        this.contratoDAO = new ContratoDAO();
+        this.periodoDAO = new PeriodoPagoDAO();
+    }
 
     public ContratoPeriodo obtenerContratoPeriodo(int idContrato, int idPeriodo) {
         ContratoPeriodo cp = null;
 
         try (
-            Connection conn = new CConexion().establecerConexion();
+            Connection conn = this.conexion.establecerConexion();
             CallableStatement stmt = conn.prepareCall("{call sp_ObtenerContratoPeriodo(?, ?)}");
         ) {
             stmt.setInt(1, idContrato);
@@ -38,9 +54,6 @@ public class ContratoPeriodoDAO {
 
                 cp.setPeriodo(new PeriodoPago());
                 cp.getPeriodo().setIdPeriodoPago(idPeriodo);
-
-                ContratoDAO contratoDAO = new ContratoDAO();
-                PeriodoPagoDAO periodoDAO = new PeriodoPagoDAO();
 
                 Contrato contrato = contratoDAO.obtenerContratoPorId(idContrato);
                 PeriodoPago periodo = periodoDAO.obtenerPeriodoPorId(idPeriodo);
@@ -65,4 +78,5 @@ public class ContratoPeriodoDAO {
 
         return cp;
     }
-}
+
+  }

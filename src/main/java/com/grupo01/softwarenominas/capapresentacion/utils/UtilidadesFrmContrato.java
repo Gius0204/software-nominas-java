@@ -6,13 +6,11 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
@@ -21,9 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.JTextComponent;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import com.grupo01.softwarenominas.capaentidad.Area;
 import com.grupo01.softwarenominas.capaentidad.Cargo;
@@ -36,7 +31,6 @@ import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioCa
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioCalculo;
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioListado;
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioLlenado;
-import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capapresentacion.FrmMenu;
 import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroSalario;
 import com.toedter.calendar.JDateChooser;
