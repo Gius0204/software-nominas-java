@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Usuario
  */
-public class FrmTrabajadorTest2 {
+public class FrmTrabajadorTestSegundo {
     @InjectMocks
     private FrmTrabajador frm;
 

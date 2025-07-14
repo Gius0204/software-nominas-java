@@ -44,9 +44,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UtilidadesFrmContrato {
   
-    private transient ContratoNegocioListado negocioContratoListado;
-    private transient ContratoNegocioLlenado negocioContratoLlenado;
-    private transient ContratoNegocioCalculo negocioContratoCalculo;
+    private ContratoNegocioListado negocioContratoListado;
+    private ContratoNegocioLlenado negocioContratoLlenado;
+    private ContratoNegocioCalculo negocioContratoCalculo;
 
     public UtilidadesFrmContrato() {
         this.negocioContratoListado = new ContratoNegocioListado();
@@ -116,7 +116,7 @@ public class UtilidadesFrmContrato {
 
     public static String validarDescripcion(String descripcion) {
         descripcion = descripcion.trim();
-        if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*")) {
+        if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*") || descripcion.trim().isEmpty()) {
             return "La descripción debe tener solo letras y números (máx. 250).";
         }
         return null;
@@ -473,10 +473,7 @@ public class UtilidadesFrmContrato {
             cmbEspecialidad.getSelectedIndex() == 0) {
             return null;
         }
-
-        Resultado resultado = negocioContratoCalculo.actualizarSalarioSiListo(tipoContrato, cargo, area, especialidad);
-
-        return resultado;
+        return negocioContratoCalculo.actualizarSalarioSiListo(tipoContrato, cargo, area, especialidad);
       }
 
 }

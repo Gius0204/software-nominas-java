@@ -37,7 +37,7 @@ public class TrabajadorDAOTest {
     private TrabajadorDAO trabajadorDAO;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         conexionMock = mock(CConexion.class);
         connectionMock = mock(Connection.class);
         stmtMock = mock(CallableStatement.class);

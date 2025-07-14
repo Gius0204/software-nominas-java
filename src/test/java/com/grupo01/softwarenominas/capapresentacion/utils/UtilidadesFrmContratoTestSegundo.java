@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Usuario
  */
-public class UtilidadesFrmContratoTest2 {
+public class UtilidadesFrmContratoTestSegundo {
 
     private ContratoDAO contratoDAOMock;
     private ContratoPeriodoDAO contratoPeriodoDAOMock;

@@ -51,7 +51,7 @@ public class ContratoDAOTest {
     private ContratoDAO contratoDAO;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         conexionMock = mock(CConexion.class);
         connectionMock = mock(Connection.class);
         stmtMock = mock(CallableStatement.class);

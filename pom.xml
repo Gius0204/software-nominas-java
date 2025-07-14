@@ -63,12 +63,6 @@
         </dependency>
         
         <dependency>
-            <groupId>org.sonarsource.scanner.maven</groupId>
-            <artifactId>sonar-maven-plugin</artifactId>
-            <version>5.1.0.4751</version>
-        </dependency>
-        
-        <dependency>
             <groupId>com.toedter</groupId>
             <artifactId>jcalendar</artifactId>
             <version>1.4</version>
@@ -120,5 +114,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>com.grupo01.softwarenominas.Main</exec.mainClass>
+
+        <!-- Sonar Configuration -->
+        <sonar.projectKey>com.mycompany:SoftwareNominas</sonar.projectKey>
+        <sonar.projectName>com.mycompany:SoftwareNominas</sonar.projectName>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.token>sqp_8829bf9bb83c3c284158ae294c824968b296d7a5</sonar.token>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
+
+        <!-- JaCoCo report path for Sonar -->
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+
+        <!-- Exclusions -->
+        <sonar.exclusions>**/Frm*.java</sonar.exclusions>
+        <sonar.coverage.exclusions>**/Frm*.java, **/UtilidadesFrmContrato.java</sonar.coverage.exclusions>
     </properties>
 </project>

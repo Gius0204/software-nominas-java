@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,7 +46,7 @@ public class NominaDAOTest {
     private NominaDAO nominaDAO;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         conexionMock = mock(CConexion.class);
         connectionMock = mock(Connection.class);
         stmtMock = mock(CallableStatement.class);
@@ -86,7 +85,7 @@ public class NominaDAOTest {
         when(connectionMock.prepareCall(anyString())).thenReturn(stmtMock);
 
         doNothing().when(stmtMock).setInt(anyInt(), anyInt());
-        doNothing().when(stmtMock).registerOutParameter(eq(3), eq(Types.BIT));
+        doNothing().when(stmtMock).registerOutParameter(3, Types.BIT);
         when(stmtMock.getBoolean(3)).thenReturn(true);
 
         boolean resultado = nominaDAO.existePeriodoAnteriorPendientePorContrato(1, 2);
@@ -99,7 +98,7 @@ public class NominaDAOTest {
         when(connectionMock.prepareCall(anyString())).thenReturn(stmtMock);
 
         doNothing().when(stmtMock).setInt(anyInt(), anyInt());
-        doNothing().when(stmtMock).registerOutParameter(eq(2), eq(Types.BIT));
+        doNothing().when(stmtMock).registerOutParameter(2,Types.BIT);
         when(stmtMock.getBoolean(2)).thenReturn(false);
 
         boolean resultado = nominaDAO.existePeriodoAnteriorPendiente(3);
@@ -158,7 +157,7 @@ public class NominaDAOTest {
         doNothing().when(stmtMock).setInt(anyInt(), anyInt());
         doNothing().when(stmtMock).setDouble(anyInt(), anyDouble());
         doNothing().when(stmtMock).setString(anyInt(), anyString());
-        doNothing().when(stmtMock).registerOutParameter(eq(17), eq(Types.INTEGER));
+        doNothing().when(stmtMock).registerOutParameter(17,Types.INTEGER);
         when(stmtMock.getInt(17)).thenReturn(999);
 
         ResultadoOperacion resultado = nominaDAO.insertarNominaCompleta(nomina);

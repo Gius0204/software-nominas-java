@@ -39,7 +39,7 @@ public class ContratoPeriodoDAOTest {
     private ContratoPeriodoDAO contratoPeriodoDAO;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         conexionMock = mock(CConexion.class);
         connectionMock = mock(Connection.class);
         stmtMock = mock(CallableStatement.class);
