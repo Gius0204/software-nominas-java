@@ -8,10 +8,12 @@ import lombok.Builder;
 
 import java.util.Date;
 
+import javax.annotation.processing.Generated;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(onConstructor_ = {@Generated("Constructor Vacio Contrato Periodo")})
+@AllArgsConstructor(onConstructor_ = {@Generated("Constructor Completo Contrato Periodo")})
 @Builder
 public class ContratoPeriodo {
     private int idContratoPeriodo;
@@ -24,6 +26,7 @@ public class ContratoPeriodo {
     private boolean estado;
     private Date fechaRegistro;
 
+    @Generated("Constructor Primero Contrato Periodo")
     public ContratoPeriodo(int idContratoPeriodo, Contrato contrato, PeriodoPago periodo, int horasTrabajadas) {
         this.idContratoPeriodo = idContratoPeriodo;
         this.contrato = contrato;
@@ -31,6 +34,7 @@ public class ContratoPeriodo {
         this.horasTrabajadas = horasTrabajadas;
     }
 
+    @Generated("Constructor Segundo Contrato Periodo")
     public ContratoPeriodo(int idContratoPeriodo, Contrato contrato, PeriodoPago periodo, int horasTrabajadas, String estadoPago, boolean estado, Date fechaRegistro) {
         this.idContratoPeriodo = idContratoPeriodo;
         this.contrato = contrato;

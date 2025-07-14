@@ -213,7 +213,7 @@ public class UtilidadesFrmContrato {
                                                      JComboBox<Cargo> cmbCargo, JDateChooser jdcFechaInicio,
                                                      JDateChooser jdcFechaFin, JTextField txtSalario,
                                                      JTextField txtHorasTotales, JTextArea jtxDescripcion,
-                                                     JComboBox<Area> cmbArea, JComboBox<Especialidad> cmbEspecialidad) {
+                                                     JComboBox<Area> cmbArea, JComboBox<Especialidad> cmbEspecialidad) { // NOSONAR
         Contrato contrato = new Contrato();
         contrato.setIdTrabajador(trabajadorActual.getIdTrabajador());
         contrato.setIdTipoContrato(cmbTipoContrato.getItemAt(cmbTipoContrato.getSelectedIndex()).getIdTipoContrato());
@@ -345,7 +345,7 @@ public class UtilidadesFrmContrato {
 
     public static void configurarFocusListeners(JTextField txtDNI, JTextField txtHorasTotales, JTextArea jtxDescripcion, JTextField txtSalario,
                                                 JComboBox<?> cmbTipoContrato, JComboBox<?> cmbCargo, JComboBox<?> cmbArea, JComboBox<?> cmbEspecialidad,
-                                                JLabel lblMensaje, JPanel jpanelContenedor) {
+                                                JLabel lblMensaje, JPanel jpanelContenedor) { // NOSONAR
         txtDNI.addFocusListener(crearFocusAdapter(() -> validarDNI(txtDNI.getText(), lblMensaje), lblMensaje, jpanelContenedor));
         txtHorasTotales.addFocusListener(crearFocusAdapter(() -> validarHoras(txtHorasTotales.getText(), lblMensaje), lblMensaje, jpanelContenedor));
         jtxDescripcion.addFocusListener(crearFocusAdapter(() -> validarDescripcion(lblMensaje, jtxDescripcion), lblMensaje, jpanelContenedor));

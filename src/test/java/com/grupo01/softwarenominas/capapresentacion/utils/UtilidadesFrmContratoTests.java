@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Usuario
  */
-public class UtilidadesFrmContratoTestTercero {
+public class UtilidadesFrmContratoTests {
 
     private JLabel lblMensaje;
     private JTextArea txtDescripcion;
@@ -113,9 +113,6 @@ public class UtilidadesFrmContratoTestTercero {
         fin.setDate(ayer);
         inicio.setDate(hoy);
 
-        // Esperar un poco si se ejecuta sobre AWT
-        try { Thread.sleep(50); } catch (InterruptedException ignored) {}
-
         assertNull(fin.getDate());
         assertEquals("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.", mensaje.getText());
     }
@@ -175,9 +172,9 @@ public class UtilidadesFrmContratoTestTercero {
         JComboBox<Object> cmbEspecialidad = new JComboBox<>(new Object[]{especialidad});
 
         JTextField txtSalario = new JTextField("2000");
-        JLabel lblMensaje = new JLabel();
+        JLabel lblMensajeTest = new JLabel();
 
-        boolean resultado = UtilidadesFrmContrato.validarSalario(cmbTipoContrato, cmbCargo, cmbArea, cmbEspecialidad, txtSalario, lblMensaje);
+        boolean resultado = UtilidadesFrmContrato.validarSalario(cmbTipoContrato, cmbCargo, cmbArea, cmbEspecialidad, txtSalario, lblMensajeTest);
         assertTrue(resultado);
     }
 
@@ -245,9 +242,6 @@ public class UtilidadesFrmContratoTestTercero {
         // Simulamos una fecha de inicio (esto dispara el listener configurado)
         Date hoy = new Date();
         jdcInicio.setDate(hoy);
-
-        // Esperamos un breve momento para asegurar la actualización de los componentes (opcional)
-        try { Thread.sleep(50); } catch (InterruptedException ignored) {}
 
         assertNotNull(jdcFin.getDate()); // Debe haberse calculado la fecha final
         assertFalse(jdcFin.isEnabled()); // El campo debe estar deshabilitado

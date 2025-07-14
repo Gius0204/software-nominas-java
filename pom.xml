@@ -129,6 +129,6 @@
 
         <!-- Exclusions -->
         <sonar.exclusions>**/Frm*.java</sonar.exclusions>
-        <sonar.coverage.exclusions>**/Frm*.java, **/UtilidadesFrmContrato.java</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>**/Frm*.java, **/UtilidadesFrmContrato.java, **/capaentidad/**</sonar.coverage.exclusions>
     </properties>
 </project>

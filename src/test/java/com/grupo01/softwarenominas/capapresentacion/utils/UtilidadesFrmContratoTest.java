@@ -257,11 +257,11 @@ public class UtilidadesFrmContratoTest {
 
     @Test
     public void testCrearFocusAdapterNoExcepcion() {
-        JPanel panel = new JPanel();
+        JPanel paneltest = new JPanel();
         JLabel lbl = new JLabel();
         Runnable validator = () -> lbl.setText("OK");
 
-        FocusAdapter adapter = UtilidadesFrmContrato.crearFocusAdapter(validator, lbl, panel);
+        FocusAdapter adapter = UtilidadesFrmContrato.crearFocusAdapter(validator, lbl, paneltest);
         adapter.focusLost(null);
 
         assertEquals("OK", lbl.getText());
