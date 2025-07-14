@@ -13,7 +13,6 @@ import java.util.Date;
 @Setter
 @Builder
 @NoArgsConstructor
-@ToString(of = "nombre")
 @AllArgsConstructor
 public class PeriodoPago {
     private int idPeriodoPago;
@@ -23,4 +22,9 @@ public class PeriodoPago {
     private String descripcion;
     private boolean estado;
     private Date fechaRegistro;
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
