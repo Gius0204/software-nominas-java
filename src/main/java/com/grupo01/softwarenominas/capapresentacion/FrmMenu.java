@@ -1,6 +1,7 @@
 
 package com.grupo01.softwarenominas.capapresentacion;
 
+import javax.annotation.processing.Generated;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
@@ -22,6 +23,7 @@ public class FrmMenu extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    @Generated("FormDesigner")
     private void initComponents() {
 
         javax.swing.JPanel panelMov = new javax.swing.JPanel();
@@ -117,35 +119,39 @@ public class FrmMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @Generated("FormDesigner")
     private void btnRegistrarNominaActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarNominaActionPerformed
         FrmNomina nomina = new FrmNomina();
         nomina.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarNominaActionPerformed
 
+    @Generated("FormDesigner")
     private void btnRegistrarContratoActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarContratoActionPerformed
         FrmContrato contrato = new FrmContrato();
         contrato.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarContratoActionPerformed
 
+    @Generated("FormDesigner")
     private void btnRegistrarTrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarTrabajadorActionPerformed
         FrmTrabajador trabajador = new FrmTrabajador();
         trabajador.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegistrarTrabajadorActionPerformed
-
+    
+    @Generated("FormDesigner")
     private void btnRegistrarTrabajador1ActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegistrarTrabajador1ActionPerformed
         System.exit(WIDTH);
     }//GEN-LAST:event_btnRegistrarTrabajador1ActionPerformed
-
+    @Generated("FormDesigner")
     private void panelMovMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMovMouseDragged
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
 
         this.setLocation(x - xmouse,y - ymouse);
     }//GEN-LAST:event_panelMovMouseDragged
-
+    @Generated("FormDesigner")
     private void panelMovMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMovMousePressed
         xmouse = evt.getX();
         ymouse = evt.getY();
@@ -154,6 +160,7 @@ public class FrmMenu extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    @Generated("FormDesigner")
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

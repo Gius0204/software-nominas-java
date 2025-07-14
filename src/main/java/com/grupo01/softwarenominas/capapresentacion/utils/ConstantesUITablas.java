@@ -15,3 +15,4 @@ public class ConstantesUITablas {
     public static final String[] COLUMNAS_TRABAJADOR = { NOMBRES, "ApellidoPaterno", "ApellidoMaterno", "TipoDocumento", DOCUMENTO_IDENTIDAD, "Telefono", "CorreoElectronico" };// NOSONAR
 
 }
+

@@ -15,23 +15,54 @@ import com.grupo01.softwarenominas.capanegocio.nominanegocio.NominaNegocioRegist
 import com.grupo01.softwarenominas.capanegocio.nominanegocio.NominaNegocioVerificacion;
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
+
+import javax.annotation.processing.Generated;
 import javax.swing.*;
 
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUINomina;
+import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITablas;
 
-
+@Getter
+@Setter
+@AllArgsConstructor
 public class FrmNomina extends javax.swing.JFrame {
-    private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
-    private final transient ContratoNegocioListado negocioContratoListado = new ContratoNegocioListado();
-    private final transient ContratoNegocioLlenado negocioContratoLlenado = new ContratoNegocioLlenado();
-    private final transient NominaNegocioListado negocioNominaListado = new NominaNegocioListado();
-    private final transient NominaNegocioRegistro negocioNominaRegistro = new NominaNegocioRegistro();
-    private final transient NominaNegocioLlenado negocioNominaLlenado = new NominaNegocioLlenado();
-    private final transient NominaNegocioVerificacion negocioNominaVerificacion = new NominaNegocioVerificacion();
+    private transient TrabajadorNegocioLlenado negocioTrabajadorLlenado;
+    private transient ContratoNegocioListado negocioContratoListado;
+    private transient ContratoNegocioLlenado negocioContratoLlenado;
+    private transient NominaNegocioListado negocioNominaListado;
+    private transient NominaNegocioRegistro negocioNominaRegistro;
+    private transient NominaNegocioLlenado negocioNominaLlenado;
+    private transient NominaNegocioVerificacion negocioNominaVerificacion;
 
 
     public FrmNomina() {
+        this(new TrabajadorNegocioLlenado(), new ContratoNegocioListado(), new ContratoNegocioLlenado(),
+            new NominaNegocioListado(), new NominaNegocioRegistro(), new NominaNegocioLlenado(), new NominaNegocioVerificacion());
+        
+    }
+
+    public FrmNomina(TrabajadorNegocioLlenado negocioTrabajadorLlenado, 
+                     ContratoNegocioListado negocioContratoListado, 
+                     ContratoNegocioLlenado negocioContratoLlenado,
+                     NominaNegocioListado negocioNominaListado, 
+                     NominaNegocioRegistro negocioNominaRegistro, 
+                     NominaNegocioLlenado negocioNominaLlenado, 
+                     NominaNegocioVerificacion negocioNominaVerificacion) {
+
+        this.negocioTrabajadorLlenado = negocioTrabajadorLlenado;
+        this.negocioContratoListado = negocioContratoListado;
+        this.negocioContratoLlenado = negocioContratoLlenado;
+        this.negocioNominaListado = negocioNominaListado;
+        this.negocioNominaRegistro = negocioNominaRegistro;
+        this.negocioNominaLlenado = negocioNominaLlenado;
+        this.negocioNominaVerificacion = negocioNominaVerificacion;
+
         initComponents();
         
         inicializarFormulario();
@@ -63,7 +94,7 @@ public class FrmNomina extends javax.swing.JFrame {
 
     }
     
-    private void listarContratosTabla(){
+    public void listarContratosTabla(){
         int idPeriodo = Utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago2);
         if (idPeriodo > 0) {
             int resultados = negocioContratoListado.listarContratosPorPeriodo(tableContrato, idPeriodo);
@@ -83,19 +114,13 @@ public class FrmNomina extends javax.swing.JFrame {
         
     }
     
-    private void inicializarTablaContrato(){
-            String[] columnasDeseadas = {
-                "FechaInicio", "FechaFin", "HorasTotales", "HorasTrabajadas", "EstadoPago", "DocumentoIdentidad", "Nombres",
-                "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
-                "TipoContratoNombre", "CargoNombre"
-            };
-            
-            Utilidades.configurarTabla(tableContrato, columnasDeseadas);
+    public void inicializarTablaContrato(){
+            Utilidades.configurarTabla(tableContrato, ConstantesUITablas.COLUMNAS_NOMINA);
 
             lblContratos.setText("Seleccione un Periodo antes, por favor");
     }
     
-    private void listarNominasTabla(){
+    public void listarNominasTabla(){
         int idPeriodo = Utilidades.obtenerIdPeriodoSeleccionado(cmbPeriodoPago1);
         if (idPeriodo > 0) {
             int resultados = negocioNominaListado.listarNominasPorPeriodo(tableNominas, idPeriodo);
@@ -115,20 +140,14 @@ public class FrmNomina extends javax.swing.JFrame {
         }
     }
     
-    private void inicializarTablaNominas(){
-        String[] columnasDeseadas = {
-            "Nombres", "DocumentoIdentidad", "PeriodoPago", "HorasTotales", "HorasTrabajadas", "EstadoPago",
-            "SalarioBase", "PagoHorasExtras", "GratificacionLegal","AsignacionFamiliar", "CTS", "TotalIngresos", 
-            "DescuentoHorasNoCompletadas", "DescuentoSeguroSalud", "DescuentoSeguroVida","DescuentoSeguroAccidentes", "DescuentoAFP", "DescuentoRenta",
-            "TotalDescuentos", "SueldoNeto", "MetodoPago"
-        };
+    public void inicializarTablaNominas(){
 
-        Utilidades.configurarTabla(tableNominas, columnasDeseadas);
+        Utilidades.configurarTabla(tableNominas, ConstantesUITablas.COLUMNAS_NOMINA);
 
         lblNominas.setText("Seleccione un Periodo antes, por favor");
     }
     
-    private boolean verificarDeudasGlobales(int[] filasSeleccionadas, PeriodoPago periodo) {
+    public boolean verificarDeudasGlobales(int[] filasSeleccionadas, PeriodoPago periodo) {
         if (!negocioNominaVerificacion.existePeriodoAnteriorPendiente(periodo.getIdPeriodoPago())) {
             return false;
         }
@@ -159,7 +178,7 @@ public class FrmNomina extends javax.swing.JFrame {
         return true;
     }
 
-    private int procesarContratosSeleccionados(int[] filasSeleccionadas, PeriodoPago periodo, String metodoPago) {
+    public int procesarContratosSeleccionados(int[] filasSeleccionadas, PeriodoPago periodo, String metodoPago) {
         int registrosExitosos = 0;
 
         for (int fila : filasSeleccionadas) {
@@ -203,16 +222,55 @@ public class FrmNomina extends javax.swing.JFrame {
         return registrosExitosos;
     }
 
-    private String obtenerDocumentoIdentidadFila(int fila) {
+    public String obtenerDocumentoIdentidadFila(int fila) {
         return tableContrato.getValueAt(fila, 5).toString();
     }
 
-    private void mostrarMensaje(String mensaje) {
+    public void mostrarMensaje(String mensaje) {
         lblProcesados.setText(mensaje);
+    }
+
+    public void regresar(){
+        FrmMenu menu = new FrmMenu();
+        menu.setVisible(true);
+        this.setVisible(false);
+    }
+
+    public void procesar(){
+      try {
+            int[] filasSeleccionadas = tableContrato.getSelectedRows();
+            if (filasSeleccionadas.length == 0) {
+                mostrarMensaje("Seleccione al menos un contrato.");
+                return;
+            }
+
+            PeriodoPago periodo = (PeriodoPago) cmbPeriodoPago2.getSelectedItem();
+            String metodoPago = cmbMetodoPago.getSelectedItem().toString();
+
+            if (verificarDeudasGlobales(filasSeleccionadas, periodo)) {
+                return;
+            }
+
+            int registrosExitosos = procesarContratosSeleccionados(filasSeleccionadas, periodo, metodoPago);
+
+            if (registrosExitosos > 0) {
+                mostrarMensaje("Se registraron " + registrosExitosos + " nóminas exitosamente.");
+                listarContratosTabla();
+                listarNominasTabla();
+            } else {
+                mostrarMensaje("No se registró ninguna nómina.");
+            }
+
+        } catch (Exception ex) {
+            mostrarMensaje("Error al procesar la nómina: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al procesar la nómina: " + ex.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    
+    @Generated("FormDesigner")
     private void initComponents() {
 
       javax.swing.JLabel labelMetodoPago ;
@@ -442,41 +500,14 @@ public class FrmNomina extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @Generated("FormDesigner")
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnRegresarActionPerformed
-        FrmMenu menu = new FrmMenu();
-        menu.setVisible(true);
-        this.setVisible(false);
+        regresar();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
+    @Generated("FormDesigner")
     private void btnProcesarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnProcesarActionPerformed
-        try {
-            int[] filasSeleccionadas = tableContrato.getSelectedRows();
-            if (filasSeleccionadas.length == 0) {
-                mostrarMensaje("Seleccione al menos un contrato.");
-                return;
-            }
-
-            PeriodoPago periodo = (PeriodoPago) cmbPeriodoPago2.getSelectedItem();
-            String metodoPago = cmbMetodoPago.getSelectedItem().toString();
-
-            if (verificarDeudasGlobales(filasSeleccionadas, periodo)) {
-                return;
-            }
-
-            int registrosExitosos = procesarContratosSeleccionados(filasSeleccionadas, periodo, metodoPago);
-
-            if (registrosExitosos > 0) {
-                mostrarMensaje("Se registraron " + registrosExitosos + " nóminas exitosamente.");
-                listarContratosTabla();
-                listarNominasTabla();
-            } else {
-                mostrarMensaje("No se registró ninguna nómina.");
-            }
-
-        } catch (Exception ex) {
-            mostrarMensaje("Error al procesar la nómina: " + ex.getMessage());
-            JOptionPane.showMessageDialog(this, "Error al procesar la nómina: " + ex.getMessage());
-        }
+        procesar();
     }//GEN-LAST:event_btnProcesarActionPerformed
       
 
@@ -507,7 +538,7 @@ public class FrmNomina extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new FrmNomina().setVisible(true));
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify //NOSONAR //GEN-BEGIN:variables
 
     private javax.swing.JComboBox<String> cmbMetodoPago;
     private javax.swing.JComboBox<PeriodoPago> cmbPeriodoPago1;

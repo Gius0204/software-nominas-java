@@ -1,6 +1,7 @@
 
 package com.grupo01.softwarenominas.capapresentacion;
 
+import javax.annotation.processing.Generated;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.grupo01.softwarenominas.capaentidad.Contrato;
@@ -32,6 +33,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    @Generated("FormDesigner")
     private void initComponents() {
         javax.swing.JButton btnGuardarCambios;
         javax.swing.JLabel jLabel27;
@@ -104,7 +106,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    @Generated("FormDesigner")
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR //GEN-FIRST:event_btnGuardarCambiosActionPerformed
         negocioContratoRegistro.guardarHorasTrabajadasDesdeTabla(jtbTablaHorasTrabajadas);
         this.dispose();
@@ -113,6 +115,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
+    @Generated("FormDesigner")
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -151,7 +154,7 @@ public class FrmDialogHorasTrabajadas extends javax.swing.JDialog {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify//NOSONAR //GEN-BEGIN:variables
     
     private javax.swing.JTable jtbTablaHorasTrabajadas;
     private javax.swing.JTextField txtHorasTotales;

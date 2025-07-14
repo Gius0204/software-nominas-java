@@ -5,21 +5,43 @@ import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegoc
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioValidacion;
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
+
+import javax.annotation.processing.Generated;
 import javax.swing.*;
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITrabajador;
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITablas;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class FrmTrabajador extends javax.swing.JFrame {
-    private final transient TrabajadorNegocioListado negocioListado = new TrabajadorNegocioListado();
-    private final transient TrabajadorNegocioRegistro negocioRegistro = new TrabajadorNegocioRegistro();
-    private final transient TrabajadorNegocioValidacion negocioValidacion = new TrabajadorNegocioValidacion();
-    private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
+    private transient TrabajadorNegocioListado negocioListado;
+    private transient TrabajadorNegocioRegistro negocioRegistro;
+    private transient TrabajadorNegocioValidacion negocioValidacion;
+    private transient TrabajadorNegocioLlenado negocioTrabajadorLlenado;
 
     private transient Trabajador trabajadorActual;
     private boolean modoEdicion = false;
-    
+
     public FrmTrabajador() {
+        this(new TrabajadorNegocioListado(), new TrabajadorNegocioRegistro(), new TrabajadorNegocioValidacion(),
+            new TrabajadorNegocioLlenado());
+        
+    }
+    
+    public FrmTrabajador(TrabajadorNegocioListado negocioListado, TrabajadorNegocioRegistro negocioRegistro, TrabajadorNegocioValidacion negocioValidacion, TrabajadorNegocioLlenado negocioTrabajadorLlenado) {
+        
+        this.negocioListado = negocioListado;
+        this.negocioRegistro = negocioRegistro;
+        this.negocioValidacion = negocioValidacion;
+        this.negocioTrabajadorLlenado = negocioTrabajadorLlenado;
+
         initComponents();
         inicializarFormulario();
     }
@@ -35,7 +57,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         configurarListeners();
     }
     
-    private void configurarListeners() {
+    public void configurarListeners() {
         jhcHabilitarFechas.addActionListener(e -> {
             if (jhcHabilitarFechas.isSelected()) {
                 Date fechaInicio = jdcFechaInicial.getDate();
@@ -91,7 +113,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         );
     }
 
-    private void cargarFormularioConTrabajador() {
+    public void cargarFormularioConTrabajador() {
         txtNombres.setText(trabajadorActual.getNombres());
         txtApellidoPaterno.setText(trabajadorActual.getApellidoPaterno());
         txtApellidoMaterno.setText(trabajadorActual.getApellidoMaterno());
@@ -109,7 +131,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         else rbFemenino.setSelected(true);
     }
 
-    private Trabajador construirTrabajadorDesdeFormulario() {
+    public Trabajador construirTrabajadorDesdeFormulario() {
         Trabajador t = modoEdicion && trabajadorActual != null ? trabajadorActual : new Trabajador();
 
         t.setNombres(txtNombres.getText());
@@ -128,7 +150,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         return t;
     }
     
-    private void limpiarCampos() {
+    public void limpiarCampos() {
         Utilidades.limpiarCamposTexto(txtNombres, txtApellidoPaterno, txtApellidoMaterno,
                 txtDocumentoIdentidad, txtTelefono, txtCorreo, txtDireccion, txtDescripcion);
                 
@@ -143,8 +165,51 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnRegresar.setText("CERRAR");
     }
 
+    public void registrar(){
+      Trabajador t = construirTrabajadorDesdeFormulario();
+        String validacion = negocioValidacion.validarTrabajador(t);
+        if (validacion != null) {
+            JOptionPane.showMessageDialog(this, validacion);
+            return;
+        }
+
+        boolean ok = modoEdicion ? negocioRegistro.actualizarTrabajador(t) : negocioRegistro.registrarTrabajador(t);
+        if (ok) {
+            mostrarJOptionPane("Operación exitosa");
+        } else {
+            mostrarJOptionPane("Error al registrar/actualizar");
+        }
+
+        limpiarCampos();
+        listarTrabajadoresTabla(null, null);
+    }
+
+    public void mostrarJOptionPane(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void regresar(){
+      if (modoEdicion && trabajadorActual != null) {
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar trabajador?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (negocioRegistro.eliminarTrabajador(trabajadorActual.getIdTrabajador())) {
+                    JOptionPane.showMessageDialog(this, "Eliminado");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar");
+                }
+                limpiarCampos();
+                listarTrabajadoresTabla(null, null);
+            }
+        } else {
+            FrmMenu menu = new FrmMenu();
+            menu.setVisible(true);
+            this.setVisible(false);
+        }        
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    @Generated("FormDesigner")
     private void initComponents() {
       
         javax.swing.JButton btnLimpiar;
@@ -427,50 +492,24 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
 
+    
+
+    @Generated("FormDesigner")
     private void btnRegistraActionPerformed(java.awt.event.ActionEvent evt) { //NOSONAR
-        Trabajador t = construirTrabajadorDesdeFormulario();
-        String validacion = negocioValidacion.validarTrabajador(t);
-        if (validacion != null) {
-            JOptionPane.showMessageDialog(this, validacion);
-            return;
-        }
-
-        boolean ok = modoEdicion ? negocioRegistro.actualizarTrabajador(t) : negocioRegistro.registrarTrabajador(t);
-        if (ok) {
-            JOptionPane.showMessageDialog(this, "Operación exitosa");
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al registrar/actualizar");
-        }
-
-        limpiarCampos();
-        listarTrabajadoresTabla(null, null);
+        registrar();
     }
-    
-    
 
+    @Generated("FormDesigner")
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnRegresarActionPerformed
-        if (modoEdicion && trabajadorActual != null) {
-            int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar trabajador?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                if (negocioRegistro.eliminarTrabajador(trabajadorActual.getIdTrabajador())) {
-                    JOptionPane.showMessageDialog(this, "Eliminado");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Error al eliminar");
-                }
-                limpiarCampos();
-                listarTrabajadoresTabla(null, null);
-            }
-        } else {
-            FrmMenu menu = new FrmMenu();
-            menu.setVisible(true);
-            this.setVisible(false);
-        }        
+        regresar();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
+    @Generated("FormDesigner")
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiarCampos();
     }//GEN-LAST:event_btnLimpiarActionPerformed
     
+    @Generated("FormDesigner")
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -524,7 +563,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new FrmTrabajador().setVisible(true));
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify //NOSONAR //GEN-BEGIN:variables
         private javax.swing.JTextField txtNombres;
         private javax.swing.JTextField txtDocumentoIdentidad;
         private javax.swing.JTextArea txtDescripcion;

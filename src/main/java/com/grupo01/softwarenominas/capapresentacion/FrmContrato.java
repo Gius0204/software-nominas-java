@@ -14,28 +14,37 @@ import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioLl
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioRegistro;
 import com.grupo01.softwarenominas.capanegocio.trabajadornegocio.TrabajadorNegocioLlenado;
 import com.grupo01.softwarenominas.capanegocio.contratonegocio.ContratoNegocioCalculo.Resultado;
-import com.grupo01.softwarenominas.capapresentacion.validacionespresentacion.FiltroSalario;
+import com.toedter.calendar.JDateChooser;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Calendar;
-import java.util.Date;
+
+import javax.annotation.processing.Generated;
 import javax.swing.*;
 
 import com.grupo01.softwarenominas.capapresentacion.utils.Utilidades;
+import com.grupo01.softwarenominas.capapresentacion.utils.UtilidadesFrmContrato;
 import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUIContrato;
-import javax.swing.text.AbstractDocument;
+import com.grupo01.softwarenominas.capapresentacion.utils.ConstantesUITablas;
 
+import javax.swing.text.JTextComponent;
+
+@Getter
+@Setter
 public class FrmContrato extends javax.swing.JFrame {   
 
-    private final transient ContratoNegocioLlenado negocioContratoLlenado = new ContratoNegocioLlenado();
-    private final transient ContratoNegocioCalculo negocioContratoCalculo = new ContratoNegocioCalculo();
-    private final transient ContratoNegocioListado negocioContratoListado = new ContratoNegocioListado();
-    private final transient ContratoNegocioRegistro negocioContratoRegistro = new ContratoNegocioRegistro();
-    private final transient TrabajadorNegocioLlenado negocioTrabajadorLlenado = new TrabajadorNegocioLlenado();
+    private transient ContratoNegocioLlenado negocioContratoLlenado;
+    private transient ContratoNegocioCalculo negocioContratoCalculo;
+    private transient ContratoNegocioListado negocioContratoListado;
+    private transient ContratoNegocioRegistro negocioContratoRegistro;
+    private transient TrabajadorNegocioLlenado negocioTrabajadorLlenado;
+
+    UtilidadesFrmContrato util;
+
 
     private static final long serialVersionUID = 1L;
     private transient Trabajador trabajadorActual;
@@ -45,259 +54,152 @@ public class FrmContrato extends javax.swing.JFrame {
     private boolean modoEdicionContrato = false;    
     
     public FrmContrato() {
+        this(new ContratoNegocioLlenado(), new ContratoNegocioCalculo(), new ContratoNegocioListado(),
+            new ContratoNegocioRegistro(), new TrabajadorNegocioLlenado());
+        
+    }
+
+    public FrmContrato(ContratoNegocioLlenado contratoLlenado,
+                      ContratoNegocioCalculo contratoCalculo,
+                      ContratoNegocioListado contratoListado,
+                      ContratoNegocioRegistro contratoRegistro,
+                      TrabajadorNegocioLlenado trabajadorLlenado) {
+
+        this.negocioContratoLlenado = contratoLlenado;
+        this.negocioContratoCalculo = contratoCalculo;
+        this.negocioContratoListado = contratoListado;
+        this.negocioContratoRegistro = contratoRegistro;
+        this.negocioTrabajadorLlenado = trabajadorLlenado;
+
+        this.util = new UtilidadesFrmContrato(negocioContratoListado, negocioContratoLlenado, negocioContratoCalculo);
+
         initComponents();
         inicializarFormulario();
-        
     }
 
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
-        rtnESSALUD.setSelected(true);
+        UtilidadesFrmContrato.configurarComponentesIniciales(rtnESSALUD, jhcHabilitarFechas, jhcSeguroSalud,
+                btnRegistrar, btnEditarHorasTrabajadas, jdcFechaFin);
+
         negocioContratoLlenado.cargarAreas(cmbArea);
         negocioContratoLlenado.cargarTiposContrato(cmbTipoContrato);
-        negocioContratoLlenado.cargarCargos(cmbCargo);       
-        inicializarTablaContrato();       
-        listarContratosTabla(jtbTabla, null, null, "", "");        
-        jdcFechaInicial.addPropertyChangeListener("date", evt -> {
-            Date fechaInicio = jdcFechaInicial.getDate();
-            Date fechaFin = jdcFechaFinal.getDate();
+        negocioContratoLlenado.cargarCargos(cmbCargo);
 
-            if (fechaInicio != null && fechaFin != null && fechaFin.before(fechaInicio)) {
-                jdcFechaFinal.setDate(null);
-                lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
-            }
-        });
+        Utilidades.configurarTabla(jtbTabla, ConstantesUITablas.COLUMNAS_CONTRATO);
+
+        util.listarContratosTabla(jtbTabla, null, null, "", "", lblMensajeBuscar);
+
+        UtilidadesFrmContrato.configurarFechaInicioYFin(jdcFechaInicial, jdcFechaFinal, lblMensajeBuscar);
 
         inicializarListenersTabla();
-        inicializarTrueOrFalseComponents();
-        configurarListeners();
-        configurarListenersCombobox();
-        listenersFechas(); 
-        inicializarCamposValidados();       
-        configurarFocusListeners();
-    }
-    
-    private void inicializarTrueOrFalseComponents(){
-        txtSalario.setEditable(false);
-        jdcFechaFin.setDate(null);
-        jdcFechaFin.setEnabled(false);
-        btnRegistrar.setEnabled(false);
-        btnEditarHorasTrabajadas.setEnabled(false);       
-        jhcHabilitarFechas.setSelected(true);
-        jhcSeguroSalud.setSelected(true);
-    }
-    
-    private void inicializarCamposValidados(){
-        Utilidades.aplicarFiltroNumerico(9, txtDNI, txtDocumentoBuscar);
-        Utilidades.aplicarFiltroNumerico(3, txtHorasTotales);
-        Utilidades.aplicarFiltroTextoGeneral(txtNombres, txtNombresBuscar, jtxDescripcion);
-        ((AbstractDocument) txtSalario.getDocument()).setDocumentFilter(new FiltroSalario());
+
+        UtilidadesFrmContrato.aplicarFiltros(txtDNI, txtDocumentoBuscar, txtHorasTotales,
+                txtNombres, txtNombresBuscar, jtxDescripcion, txtSalario);
+
+
+        UtilidadesFrmContrato.configurarListenersDuracion(
+            rtn3meses, rtn6meses, rtn1anio, txtDNI,
+            this::calcularFechaFin, this::buscarTrabajadorPorDNI
+        );
+
+        UtilidadesFrmContrato.configurarListenersActivadores(
+            jhcHabilitarFechas, jdcFechaInicial, jdcFechaFinal,jhcSeguroSalud,
+            rtnESSALUD, rtnEPS
+        );
+
+        util.configurarListenersCombobox(
+            cmbArea, cmbEspecialidad, cmbTipoContrato, cmbCargo, 
+            this::actualizarSalarioSiListo
+        );
+
+        UtilidadesFrmContrato.configurarListenersFechas(
+            jdcFechaInicio, jdcFechaFin, rtn3meses, rtn6meses, rtn1anio
+        );
+
+        UtilidadesFrmContrato.configurarFocusListeners(
+            txtDNI, txtHorasTotales, jtxDescripcion, txtSalario,
+            cmbTipoContrato, cmbCargo, cmbArea, cmbEspecialidad,
+            lblMensaje, jpanelContenedor
+        );
+
         
     }
-    
-    public void inicializarTablaContrato(){
-            String[] columnasDeseadas = {
-                "FechaInicio", "FechaFin", "HorasTotales", "DocumentoIdentidad", "Nombres", 
-                "ApellidoPaterno", "ApellidoMaterno", "AreaNombre", "Especialidad",
-                "TipoContratoNombre", "CargoNombre"
-            };
-
-            Utilidades.configurarTabla(jtbTabla, columnasDeseadas);
+    public boolean formularioValido() {
+        return UtilidadesFrmContrato.validarDNI(txtDNI.getText().trim(), lblMensaje) && UtilidadesFrmContrato.validarHoras(txtHorasTotales.getText(), lblMensaje) && UtilidadesFrmContrato.validarDescripcion(lblMensaje, jtxDescripcion) && UtilidadesFrmContrato.validarSalario(cmbTipoContrato, cmbCargo, cmbArea, cmbEspecialidad, txtSalario, lblMensaje)
+                && UtilidadesFrmContrato.validarCombos(cmbTipoContrato, cmbCargo, cmbArea, cmbEspecialidad)
+                && UtilidadesFrmContrato.validarFechas(jdcFechaInicio, jdcFechaFin);
     }
 
-    private void configurarListeners() {
-        ActionListener duracionListener = e -> calcularFechaFin();
-        rtn3meses.addActionListener(duracionListener);
-        rtn6meses.addActionListener(duracionListener);
-        rtn1anio.addActionListener(duracionListener);
-        txtDNI.addActionListener(e -> buscarTrabajadorPorDNI());
-        jhcHabilitarFechas.addActionListener(e -> {
-            boolean habilitar = jhcHabilitarFechas.isSelected();
-            jdcFechaInicial.setEnabled(habilitar);
-            jdcFechaFinal.setEnabled(habilitar);
-
-            if (!habilitar) {
-                jdcFechaInicial.setDate(null);
-                jdcFechaFinal.setDate(null);
-            }
-        });      
-        jhcSeguroSalud.addActionListener(e -> {
-            boolean habilitar = jhcSeguroSalud.isSelected();
-            rtnESSALUD.setEnabled(habilitar);
-            rtnEPS.setEnabled(habilitar);
-        });
+    public void limpiar() {
+        UtilidadesFrmContrato.limpiarCampos(
+                new JTextComponent[]{txtDNI, txtNombres, txtHorasTotales, txtSalario, jtxDescripcion, txtDocumentoBuscar, txtNombresBuscar},
+                new JComboBox[]{cmbArea, cmbCargo, cmbTipoContrato},
+                new JDateChooser[]{jdcFechaInicio, jdcFechaFin},
+                new JRadioButton[]{rtn3meses, rtn6meses, rtn1anio},
+                new JCheckBox[]{jcbAsignacion, jcbSeguroAccidentes, jcbSeguroVida},
+                btnRegistrar
+        );
     }
 
+    public Contrato mapearFormularioAContrato() {
+        return UtilidadesFrmContrato.mapearFormularioAContrato(trabajadorActual, cmbTipoContrato, cmbCargo, jdcFechaInicio,
+                jdcFechaFin, txtSalario, txtHorasTotales, jtxDescripcion, cmbArea, cmbEspecialidad);
+    }
+
+    public DetalleContrato mapearFormularioADetalleContrato(int idContrato) {
+        return UtilidadesFrmContrato.mapearFormularioADetalleContrato(idContrato, jhcSeguroSalud, rtnESSALUD,
+                rtnEPS, jcbSeguroVida, jcbSeguroAccidentes, jcbAsignacion);
+    }
+
+    public void mostrarMensaje(String mensaje, Color color) {
+        UtilidadesFrmContrato.mostrarMensaje(lblMensaje, mensaje, color);
+    }
+
+    @Generated("FormDesigner")
     private void inicializarListenersTabla() {
-    jtbTabla.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            int fila = jtbTabla.getSelectedRow();
-            if (fila != -1) {
-                String documentoIdentidad = jtbTabla.getValueAt(fila, 3).toString();
-                lblMensaje.setText("Contrato encontrado: DNI " + documentoIdentidad);
-
-                Trabajador t = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(documentoIdentidad);
-                Contrato c = negocioContratoLlenado.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
-                DetalleContrato dc = negocioContratoLlenado.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
-
-                if (t != null && c != null && dc != null) {
-                    trabajadorActual = t;
-                    contratoActual = c;
-                    detalleContratoActual = dc;
-
-                    modoEdicionContrato = true;
-                    btnRegistrar.setText("EDITAR");
-                    btnLimpiar.setText("NUEVO");
-
-                    rtn3meses.setEnabled(false);
-                    rtn6meses.setEnabled(false);
-                    rtn1anio.setEnabled(false);
-                    jdcFechaInicio.setEnabled(false);
-
-                    btnEditarHorasTrabajadas.setEnabled(true);
-
-                    cargarFormularioConContrato();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se encontró información del contrato.");
-                }
-            }
-        }
-    });
-}
-
-
-    private void configurarListenersCombobox(){
-        cmbArea.addActionListener(e -> {
-            Area area = (Area) cmbArea.getSelectedItem();
-            if (area != null) {
-                negocioContratoLlenado.cargarEspecialidadesPorArea(cmbEspecialidad, area.getIdArea());
-            }
-            actualizarSalarioSiListo();
-        });
-        cmbTipoContrato.addActionListener(e -> actualizarSalarioSiListo());
-        cmbCargo.addActionListener(e -> actualizarSalarioSiListo());
-        
-        cmbEspecialidad.addActionListener(e -> actualizarSalarioSiListo());
-    }
-
-    private void resetUI() {
-        lblMensaje.setForeground(UIManager.getColor(ConstantesUIContrato.COLOR_LABEL_FOREGROUND));
-        jpanelContenedor.setBackground(UIManager.getColor(ConstantesUIContrato.COLOR_PANEL_BACKGROUND));
-    }
-    
-    private void validarHorasTotales() {
-        String horasTexto = txtHorasTotales.getText().trim();
-        try {
-            int horas = Integer.parseInt(horasTexto);
-            if (horas < 80 || horas > 200) {
-                lblMensaje.setText("Las horas deben estar entre 80 y 200.");
-            }
-        } catch (NumberFormatException ex) {
-            lblMensaje.setText("Ingrese un número válido para horas.");
-        }
-    }
-
-    private void validarComboTipoContrato() {
-        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-        if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT)) {
-            lblMensaje.setText("Seleccionar un tipo de contrato.");
-        }
-    }
-
-    private void validarComboCargo() {
-        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-        if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)) {
-            lblMensaje.setText("Seleccionar un cargo.");
-        }
-    }
-
-    private void validarComboArea() {
-        Area area = (Area) cmbArea.getSelectedItem();
-        if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)) {
-            lblMensaje.setText("Seleccionar un área.");
-        }
-    }
-
-    private void validarComboEspecialidad() {
-        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-        if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)) {
-            lblMensaje.setText("Seleccionar una especialidad.");
-        }
-    }
-
-    private FocusAdapter crearFocusAdapter(Runnable validador) {
-        return new FocusAdapter() {
+        jtbTabla.addMouseListener(new MouseAdapter() {
             @Override
-            public void focusLost(FocusEvent e) {
-                resetUI();
-                validador.run();
-                validarFormularioCompleto();
-            }
-        };
-    }
+            public void mouseClicked(MouseEvent e) {
+                int fila = jtbTabla.getSelectedRow();
+                if (fila != -1) {
+                    String documentoIdentidad = jtbTabla.getValueAt(fila, 3).toString();
+                    lblMensaje.setText("Contrato encontrado: DNI " + documentoIdentidad);
 
-    private void configurarFocusListeners() {
-        txtDNI.addFocusListener(crearFocusAdapter(this::validarDNI));
-        txtHorasTotales.addFocusListener(crearFocusAdapter(this::validarHorasTotales));
-        jtxDescripcion.addFocusListener(crearFocusAdapter(this::validarDescripcion));
-        txtSalario.addFocusListener(crearFocusAdapter(this::validarSalario));
-        cmbTipoContrato.addFocusListener(crearFocusAdapter(this::validarComboTipoContrato));
-        cmbCargo.addFocusListener(crearFocusAdapter(this::validarComboCargo));
-        cmbArea.addFocusListener(crearFocusAdapter(this::validarComboArea));
-        cmbEspecialidad.addFocusListener(crearFocusAdapter(this::validarComboEspecialidad));
-    }
+                    Trabajador t = negocioTrabajadorLlenado.buscarPorDocumentoIdentidad(documentoIdentidad);
+                    Contrato c = negocioContratoLlenado.obtenerContratoPorDocumentoIdentidad(documentoIdentidad);
+                    DetalleContrato dc = negocioContratoLlenado.obtenerDetalleContratoPorDocumentoIdentidad(documentoIdentidad);
 
-    private void listenersFechas(){
-        jdcFechaInicio.getJCalendar().setMinSelectableDate(new java.util.Date());
+                    if (t != null && c != null && dc != null) {
+                        trabajadorActual = t;
+                        contratoActual = c;
+                        detalleContratoActual = dc;
 
-        jdcFechaInicio.getDateEditor().addPropertyChangeListener(evt -> {
-            if ("date".equals(evt.getPropertyName())) {
-                if (jdcFechaInicio.getDate() == null || (!rtn3meses.isSelected() && !rtn6meses.isSelected() && !rtn1anio.isSelected())) {
-                    jdcFechaFin.setDate(null);
-                } else {
-                    calcularFechaFin();
+                        modoEdicionContrato = true;
+                        btnRegistrar.setText("EDITAR");
+                        btnLimpiar.setText("NUEVO");
+
+                        rtn3meses.setEnabled(false);
+                        rtn6meses.setEnabled(false);
+                        rtn1anio.setEnabled(false);
+                        jdcFechaInicio.setEnabled(false);
+
+                        btnEditarHorasTrabajadas.setEnabled(true);
+
+                        cargarFormularioConContrato();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontró información del contrato.");
+                    }
                 }
-                jdcFechaFin.setEnabled(false); 
             }
         });
     }
-    
-    private void validarFormularioCompleto() {
-        btnRegistrar.setEnabled(formularioValido());
-    }
-    
+
     private void calcularFechaFin() {
-        Date fechaInicio = jdcFechaInicio.getDate();
-        if (fechaInicio == null) {
-            jdcFechaFin.setDate(null);
-            return;
-        }
-
-        int meses;
-        if (rtn3meses.isSelected()) {
-            meses = 3;
-        } else if (rtn6meses.isSelected()) {
-            meses = 6;
-        } else if (rtn1anio.isSelected()) {
-            meses = 12;
-        } else {
-            meses = 0;
-        }
-
-        if (meses > 0) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(fechaInicio);
-            cal.add(Calendar.MONTH, meses);
-            jdcFechaFin.setDate(cal.getTime());
-        } else {
-            jdcFechaFin.setDate(null);
-        }
-
-        jdcFechaFin.setEnabled(false);
+        UtilidadesFrmContrato.calcularFechaFin(jdcFechaInicio, jdcFechaFin, rtn3meses, rtn6meses, rtn1anio);
     }
 
-    private void buscarTrabajadorPorDNI() {
+    public void buscarTrabajadorPorDNI() {
         String dni = txtDNI.getText().trim();
         if (dni.isEmpty()) return;
 
@@ -317,29 +219,7 @@ public class FrmContrato extends javax.swing.JFrame {
         }
     }
     
-    private void limpiar(){
-        Utilidades.limpiarCamposTexto(
-            txtDNI, txtNombres, txtHorasTotales, txtSalario, jtxDescripcion, 
-            txtDocumentoBuscar, txtNombresBuscar
-        );
-        
-        cmbArea.setSelectedIndex(0);
-        cmbCargo.setSelectedIndex(0);
-        cmbTipoContrato.setSelectedIndex(0);
-        
-        jdcFechaInicio.setDate(null);
-        jdcFechaFin.setDate(null);
-        rtn3meses.setSelected(false);
-        rtn6meses.setSelected(false);
-        rtn1anio.setSelected(false);
-        jcbAsignacion.setSelected(false);
-        jcbSeguroAccidentes.setSelected(false);
-        jcbSeguroVida.setSelected(false);
-        
-        btnRegistrar.setEnabled(false);
-    }
-    
-    private void salirModoEditar(){
+    public void salirModoEditar(){
         modoEdicionContrato = false;
         trabajadorActual = null;
         contratoActual = null;
@@ -354,34 +234,19 @@ public class FrmContrato extends javax.swing.JFrame {
     }
     
     private void actualizarSalarioSiListo() {
-        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-        Area area = (Area) cmbArea.getSelectedItem();
-        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
 
-        if (cmbTipoContrato.getSelectedIndex() == 0 ||
-            cmbCargo.getSelectedIndex() == 0 ||
-            cmbArea.getSelectedIndex() == 0 ||
-            cmbEspecialidad.getSelectedIndex() == 0) {
+        Resultado resultado = util.actualizarSalarioSiListo(
+            cmbTipoContrato, cmbCargo, cmbArea, cmbEspecialidad
+        );
+
+        if (resultado == null) {
             return;
         }
-
-        Resultado resultado = negocioContratoCalculo.actualizarSalarioSiListo(tipoContrato, cargo, area, especialidad);
 
         txtSalario.setText(resultado.salario());
         txtSalario.setEditable(resultado.estado());
         lblMensaje.setText(resultado.mensaje());
         
-    }
-
-    
-    public boolean validarHoras(String horasStr) {
-        try {
-            int horas = Integer.parseInt(horasStr);
-            return horas >= 80 && horas <= 200;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     private void cargarFormularioConContrato() {
@@ -451,153 +316,7 @@ public class FrmContrato extends javax.swing.JFrame {
         }
     }
     
-    public void listarContratosTabla(JTable tabla, Date fechaInicio, Date fechaFin, String documentoIdentidad, String nombres){
-        int resultados = negocioContratoListado.listarContratosFiltrado(tabla, fechaInicio, fechaFin, documentoIdentidad, nombres);
-        
-        Utilidades.ajustarTabla(tabla);
-
-        lblMensajeBuscar.setText(
-            switch (resultados) {
-                case 0 -> "No se encontraron contratos en la base de datos.";
-                case 1 -> "Se encontró 1 contrato.";
-                default -> "Se encontraron " + resultados + " contratos.";
-            }
-        );
-
-    }
-
-    private boolean formularioValido() {
-        return validarDNI() && validarHoras() && validarDescripcion() && validarSalario() && validarCombos() && validarFechas();
-    }
-
-    private boolean validarDNI() {
-        String dni = txtDNI.getText().trim();
-        if (!dni.matches("^\\d{8,9}$")) {
-            lblMensaje.setText("El DNI debe tener entre 8 y 9 dígitos numéricos.");
-        }
-        return dni.matches("^\\d{8,9}$");
-    }
-
-    private boolean validarHoras() {
-        return validarHoras(txtHorasTotales.getText().trim());
-    }
-
-    private boolean validarDescripcion() {
-        String descripcion = jtxDescripcion.getText().trim();
-        if (descripcion.length() > 250 || !descripcion.matches("[a-zA-Z0-9\\s]*")) {
-            lblMensaje.setText("La descripción debe tener solo letras y números (máx. 250).");
-        }
-        return descripcion.length() <= 250 && descripcion.matches("[a-zA-Z0-9\\s]*");
-    }
-
-    private String validarRangoSalario(String salarioTexto) {
-        try {
-            double salario = Double.parseDouble(salarioTexto);
-            if (salario < 1025 || salario >= 1_000_000) {
-                return "El salario debe ser mayor al mínimo de 1025 soles y tener hasta 6 cifras.";
-            }
-        } catch (NumberFormatException ex) {
-            return "Ingrese un número válido para salario.";
-        }
-        return null; // Sin error
-    }
-
-    private String validarCombosMensaje() {
-        TipoContrato tipoContrato = (TipoContrato) cmbTipoContrato.getSelectedItem();
-        Cargo cargo = (Cargo) cmbCargo.getSelectedItem();
-        Area area = (Area) cmbArea.getSelectedItem();
-        Especialidad especialidad = (Especialidad) cmbEspecialidad.getSelectedItem();
-
-        if (tipoContrato.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_TIPO_CONTRATO_DEFAULT)) {
-            return "Seleccionar un tipo de contrato.";
-        }
-        if (cargo.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_CARGO_DEFAULT)) {
-            return "Seleccionar un cargo.";
-        }
-        if (area.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_AREA_DEFAULT)) {
-            return "Seleccionar un área.";
-        }
-        if (especialidad.getNombre().equalsIgnoreCase(ConstantesUIContrato.TEXTO_ESPECIALIDAD_DEFAULT)) {
-            return "Seleccionar una especialidad.";
-        }
-
-        return null; // Sin error
-    }
-
-    private boolean validarSalario() {
-        String tipo = cmbTipoContrato.getSelectedItem().toString();
-        String salarioTexto = txtSalario.getText().trim();
-
-        if (tipo.equalsIgnoreCase(ConstantesUIContrato.TEXTO_SERVICIO_EXTERNO)) {
-            String error = validarRangoSalario(salarioTexto);
-            if (error != null) {
-                lblMensaje.setText(error);
-                return false;
-            }
-        } else {
-            String errorCombos = validarCombosMensaje();
-            if (errorCombos != null) {
-                lblMensaje.setText(errorCombos);
-                return false;
-            }
-
-            String errorSalario = validarRangoSalario(salarioTexto);
-            if (errorSalario != null) {
-                lblMensaje.setText(errorSalario);
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
-    private boolean validarCombos() {
-        return !(cmbTipoContrato.getSelectedIndex() == 0 || cmbCargo.getSelectedIndex() == 0 ||
-                cmbArea.getSelectedIndex() == 0 || cmbEspecialidad.getSelectedIndex() == 0);
-    }
-
-    private boolean validarFechas() {
-        return jdcFechaInicio.getDate() != null && jdcFechaFin.getDate() != null;
-    }
-
-    private Contrato mapearFormularioAContrato() {
-        Contrato contrato = new Contrato();
-        contrato.setIdTrabajador(trabajadorActual.getIdTrabajador());
-        contrato.setIdTipoContrato(((TipoContrato) cmbTipoContrato.getSelectedItem()).getIdTipoContrato());
-        contrato.setIdCargo(((Cargo) cmbCargo.getSelectedItem()).getIdCargo());
-        contrato.setFechaInicio(jdcFechaInicio.getDate());
-        contrato.setFechaFin(jdcFechaFin.getDate());
-        contrato.setSalarioBase(Double.parseDouble(txtSalario.getText()));
-        contrato.setHorasTotales(Integer.parseInt(txtHorasTotales.getText()));
-        contrato.setDescripcion(jtxDescripcion.getText());
-        contrato.setIdArea(((Area) cmbArea.getSelectedItem()).getIdArea());
-        contrato.setIdEspecialidad(((Especialidad) cmbEspecialidad.getSelectedItem()).getIdEspecialidad());
-        return contrato;
-    }
-
-    private DetalleContrato mapearFormularioADetalleContrato(int idContrato) {
-        DetalleContrato detalle = new DetalleContrato();
-        detalle.setIdContrato(idContrato);
-
-        String tipoSeguro = "NINGUNO";
-        if (jhcSeguroSalud.isSelected()) {
-            if (rtnESSALUD.isSelected()) {
-                tipoSeguro = ConstantesUIContrato.TEXTO_ESSALUD;
-            } else if (rtnEPS.isSelected()) {
-                tipoSeguro = "EPS";
-            } else {
-                tipoSeguro = "NINGUNO";
-            }
-        }
-        detalle.setTipoSeguroSalud(tipoSeguro);
-        detalle.setTieneSeguroDeVida(jcbSeguroVida.isSelected());
-        detalle.setTieneSeguroDeAccidentes(jcbSeguroAccidentes.isSelected());
-        detalle.setTieneAsignacionFamiliar(jcbAsignacion.isSelected());
-        return detalle;
-    }
-
-    private void procesarContrato() {
+    public void procesarContrato() {
         if (!formularioValido()) {
             mostrarMensaje("Formulario incompleto o inválido.", Color.RED);
             return;
@@ -611,10 +330,10 @@ public class FrmContrato extends javax.swing.JFrame {
             registrarContratoYDetalle(contrato);
         }
 
-        listarContratosTabla(jtbTabla, null, null, "", "");
+        util.listarContratosTabla(jtbTabla, null, null, "", "", lblMensajeBuscar);
     }
 
-    private void actualizarContratoYDetalle(Contrato contrato) {
+    public void actualizarContratoYDetalle(Contrato contrato) {
         contrato.setIdContrato(contratoActual.getIdContrato());
 
         if (negocioContratoRegistro.actualizarContrato(contrato)) {
@@ -632,7 +351,7 @@ public class FrmContrato extends javax.swing.JFrame {
         }
     }
 
-    private void registrarContratoYDetalle(Contrato contrato) {
+    public void registrarContratoYDetalle(Contrato contrato) {
         ResultadoOperacion resultado = negocioContratoRegistro.registrarContrato(contrato);
 
         if (resultado.isExito()) {
@@ -650,15 +369,20 @@ public class FrmContrato extends javax.swing.JFrame {
     }
 
 
-    private void mostrarMensaje(String mensaje, Color color) {
-        lblMensaje.setText("<html><div style='text-align: center; width: 300px;'>" + mensaje + "</div></html>");
-        lblMensaje.setForeground(color);
+    public void abrirHorasTrabajadasDialog(){
+        FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(this, true); // modal
+        dialog.inicializarConContrato(contratoActual);
+        dialog.setVisible(true);
     }
 
-
+    private void volverAlMenu() {
+        UtilidadesFrmContrato.regresarMenu();
+        this.dispose();
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    @Generated("FormDesigner")
     private void initComponents() {
         javax.swing.ButtonGroup bgDuracion = new javax.swing.ButtonGroup();
         javax.swing.ButtonGroup bgTipoSeguroSalud = new javax.swing.ButtonGroup();
@@ -1046,63 +770,35 @@ public class FrmContrato extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-   
+    @Generated("FormDesigner")
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnRegresarActionPerformed
-        FrmMenu menu = new FrmMenu();
-        menu.setVisible(true);
-        this.setVisible(false);
+        volverAlMenu();
     }//GEN-LAST:event_btnRegresarActionPerformed
-
+    @Generated("FormDesigner")
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnLimpiarActionPerformed
         limpiar();
         salirModoEditar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
-
+    @Generated("FormDesigner")
     private void btnEditarHorasTrabajadasActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnEditarHorasTrabajadasActionPerformed
-        //int idContratoSeleccionado = contratoActual.getIdContrato(); // Tu método para extraer ID seleccionado
-        FrmDialogHorasTrabajadas dialog = new FrmDialogHorasTrabajadas(this, true); // modal
-        dialog.inicializarConContrato(contratoActual);
-        dialog.setVisible(true);
+        abrirHorasTrabajadasDialog();
 
     }//GEN-LAST:event_btnEditarHorasTrabajadasActionPerformed
-
+    @Generated("FormDesigner")
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnRegistrarActionPerformed
         procesarContrato();
     }//GEN-LAST:event_btnRegistrarActionPerformed
-
+    @Generated("FormDesigner")
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//NOSONAR//GEN-FIRST:event_btnBuscarActionPerformed
         
-        
-        String documento = txtDocumentoBuscar.getText().trim();
-        String nombres = txtNombresBuscar.getText().trim();
+        util.buscarTabla(txtDocumentoBuscar.getText().trim(), txtNombresBuscar.getText().trim(), jtbTabla, jhcHabilitarFechas, jdcFechaInicial, jdcFechaFinal, lblMensajeBuscar);
 
-        Date fechaInicio = null;
-        Date fechaFin = null;
-
-        if (jhcHabilitarFechas.isSelected()) {
-            if (jdcFechaInicial.getDate() != null) {
-                fechaInicio = jdcFechaInicial.getDate();
-            }
-            
-            if (jdcFechaFinal.getDate() != null) {
-                fechaFin = jdcFechaFinal.getDate();
-            }
-            
-            if (fechaInicio != null && fechaFin != null && fechaFin.before(fechaInicio)) {
-                jdcFechaFinal.setDate(null);
-                lblMensajeBuscar.setText("Vuelva a escoger la Fecha Fin para esta Fecha Inicio elegida.");
-                return;
-            }
-            
-        }
-
-        listarContratosTabla(jtbTabla, fechaInicio, fechaFin, documento, nombres);
-        
     }//GEN-LAST:event_btnBuscarActionPerformed
   
     /**
      * @param args the command line arguments
      */
+    @Generated("FormDesigner")
     public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1128,7 +824,7 @@ public class FrmContrato extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new FrmContrato().setVisible(true));
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify //NOSONAR //GEN-BEGIN:variables
         private javax.swing.JTextField txtNombres;
         private javax.swing.JTextField txtDNI;
         private javax.swing.JTextField txtSalario;

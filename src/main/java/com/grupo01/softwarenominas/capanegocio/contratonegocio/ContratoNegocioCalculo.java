@@ -74,7 +74,7 @@ public class ContratoNegocioCalculo {
         }
     }
 
-  private double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
+  public double obtenerSalarioBase(int idArea, int idEspecialidad, int idCargo, int idTipoContrato) {
         return contratoDAO.obtenerSalarioBase(
                 idArea,
                 idEspecialidad,
