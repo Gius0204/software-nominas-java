@@ -27,6 +27,8 @@ public class FrmTrabajador extends javax.swing.JFrame {
     private void inicializarFormulario() {
         setLocationRelativeTo(null);
         Utilidades.aplicarFiltroNumerico(9, txtDocumentoIdentidad,txtTelefono);
+
+        
         Utilidades.aplicarFiltroTextoGeneral(txtNombres, txtApellidoPaterno, txtApellidoMaterno, txtDireccion, txtDescripcion);
         Utilidades.configurarTabla(tableTrabajador, ConstantesUITablas.COLUMNAS_TRABAJADOR);
         listarTrabajadoresTabla(null, null);
